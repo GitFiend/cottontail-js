@@ -1,4 +1,4 @@
-import {CustomMeta, DomMeta, Meta, MetaKind} from '../jsx'
+import {CustomMeta, DomMeta, Meta, MetaKind} from '../create-element'
 import {Component, DomComponent, ParentComponent, RootComponent} from './component'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 
@@ -56,7 +56,14 @@ export class ReqFrame {
     return new DomComponent(tree, parent, domParent)
   }
 
-  private renderSubComponents() {
+  private renderSubComponents(
+    domParent: DomComponent | RootComponent,
+    parent: ParentComponent,
+    children: Meta,
+    prevComponents: Component[],
+  ) {
+    const newComponents: Component[] = []
+
     //
   }
 

@@ -1,4 +1,4 @@
-import {Props} from './lib/component'
+import {CustomComponent, Props} from './lib/component'
 
 export type Meta = DomMeta | CustomMeta
 
@@ -13,7 +13,7 @@ export class DomMeta {
   constructor(
     public name: string,
     public props: Props | null,
-    public children: Meta | null,
+    public children: Meta[],
   ) {}
 }
 
@@ -23,7 +23,7 @@ export class CustomMeta {
   constructor(
     public name: Function,
     public props: Props | null,
-    public children: Meta | null,
+    public children: Meta[],
   ) {}
 }
 
@@ -31,7 +31,7 @@ export class CustomMeta {
 export function createElement(
   name: string | Function,
   props: Props | null,
-  children?: Meta,
+  ...children: Meta[]
 ): Meta {
   if (typeof name === 'string') {
     return new DomMeta(name, props, children ?? null)
@@ -40,4 +40,4 @@ export function createElement(
   }
 }
 
-export function Fragment() {}
+export class Fragment extends CustomComponent {}

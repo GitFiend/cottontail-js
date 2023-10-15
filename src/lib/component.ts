@@ -1,4 +1,4 @@
-import {CustomMeta, DomMeta, MetaKind} from '../jsx'
+import {CustomMeta, DomMeta, MetaKind} from '../create-element'
 import {ElementNamespace, setAttributesFromProps} from './set-attributes'
 
 interface BaseProps {
@@ -41,12 +41,18 @@ export class DomComponent {
 
   removeSelf() {
     this.domParent.element.removeChild(this.element)
+
+    for (const c of this.subComponents) {
+      c.removeSelf()
+    }
+    this.subComponents.length = 0
   }
 }
 
 export class CustomComponent {
   subComponents: Component[] = []
   kind = MetaKind.custom as const
+  removed = false
 
   constructor(
     public meta: CustomMeta,
@@ -56,5 +62,22 @@ export class CustomComponent {
 
   renderSubComponents() {}
 
-  removeSelf() {}
+  componentDidMount(): void {}
+
+  componentDidUpdate(): void {}
+
+  componentWillUnmount(): void {}
+
+  removeSelf() {
+    if (__DEV__ && this.removed) {
+      console.error('already removed')
+    }
+    this.componentWillUnmount()
+
+    for (const c of this.subComponents) {
+      c.removeSelf()
+    }
+    this.subComponents.length = 0
+    this.removed = true
+  }
 }

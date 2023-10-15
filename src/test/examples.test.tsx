@@ -1,4 +1,4 @@
-import {createElement, Fragment} from '../jsx'
+import {createElement, Fragment} from '../create-element'
 import {JSX} from 'react'
 
 describe('simple div', () => {
@@ -26,7 +26,18 @@ describe('simple div', () => {
     ).toEqual(createElement(Omg, null, createElement('div', null)))
   })
 
-  test('Custom component with 2 children gets transformed', () => {
+  test('div with 2 children transformed', () => {
+    expect(
+      <div>
+        <div />
+        <div />
+      </div>,
+    ).toEqual(
+      createElement('div', null, createElement('div', null), createElement('div', null)),
+    )
+  })
+
+  test('Fragment with child gets transformed', () => {
     expect(
       <>
         <div />

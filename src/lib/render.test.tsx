@@ -1,5 +1,5 @@
 import {ReqFrame} from './render'
-import {createElement} from '../jsx'
+import {createElement} from '../create-element'
 
 describe('render', () => {
   test('simple', () => {
