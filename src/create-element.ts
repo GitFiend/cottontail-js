@@ -40,4 +40,12 @@ export function createElement(
   }
 }
 
-export class Fragment extends CustomComponent {}
+export class Fragment extends CustomComponent<{}> {
+  selectState(): {} {
+    return {}
+  }
+
+  render() {
+    return null
+  }
+}

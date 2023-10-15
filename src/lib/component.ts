@@ -1,4 +1,4 @@
-import {CustomMeta, DomMeta, MetaKind} from '../create-element'
+import {CustomMeta, DomMeta, Meta, MetaKind} from '../create-element'
 import {ElementNamespace, setAttributesFromProps} from './set-attributes'
 
 interface BaseProps {
@@ -49,16 +49,51 @@ export class DomComponent {
   }
 }
 
-export class CustomComponent {
+interface SelectState<T = unknown> {
+  selectState(): T
+  state: T
+}
+
+export abstract class CustomComponent<P extends Props = Props, S = unknown>
+  implements SelectState<S>
+{
   subComponents: Component[] = []
   kind = MetaKind.custom as const
   removed = false
 
+  // Required to for jsx types.
+  // Can we override react class component somehow?
+  context: any
+  setState: any
+  forceUpdate: any
+  refs: any
+  state: any
+
   constructor(
-    public meta: CustomMeta,
-    public parent: ParentComponent,
-    public domParent: DomComponent | RootComponent,
+    public props: P, // public meta: CustomMeta,
+    // public parent: ParentComponent,
+  ) // public domParent: DomComponent | RootComponent,
+  {}
+
+  // Can't pass everything in constructor due to how jsx works.
+  init(
+    meta: CustomMeta,
+    parent: ParentComponent,
+    domParent: DomComponent | RootComponent,
   ) {}
+
+  abstract selectState(): S
+
+  // TODO: Cache selected state?
+  // get state(): S {
+  //   return this.selectState()
+  // }
+
+  abstract render(): Meta | string | null
+
+  update() {
+    // this.state = this.selectState()
+  }
 
   renderSubComponents() {}
 

@@ -59,13 +59,20 @@ export class ReqFrame {
   private renderSubComponents(
     domParent: DomComponent | RootComponent,
     parent: ParentComponent,
-    children: Meta,
+    children: Meta[],
     prevComponents: Component[],
   ) {
     const newComponents: Component[] = []
 
-    //
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i]
+      const prev = prevComponents[i]
+
+      // TODO
+    }
   }
+
+  private renderSubComponent() {}
 
   private renderCustom(
     tree: CustomMeta,
