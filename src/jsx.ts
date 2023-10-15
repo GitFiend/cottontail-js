@@ -1,16 +1,43 @@
-export class ElementMeta {
+import {Props} from './lib/component'
+
+export type Meta = DomMeta | CustomMeta
+
+export enum MetaKind {
+  dom,
+  custom,
+}
+
+export class DomMeta {
+  kind = MetaKind.dom as const
+
   constructor(
-    public kind: string | Function,
-    public props: object | null,
-    public children: ElementMeta | null,
+    public name: string,
+    public props: Props | null,
+    public children: Meta | null,
+  ) {}
+}
+
+export class CustomMeta {
+  kind = MetaKind.custom as const
+
+  constructor(
+    public name: Function,
+    public props: Props | null,
+    public children: Meta | null,
   ) {}
 }
 
 // Could we look up the current tree instead of constructing again?
 export function createElement(
-  kind: string | Function,
-  props: object | null,
-  children?: ElementMeta,
-): ElementMeta {
-  return new ElementMeta(kind, props, children ?? null)
+  name: string | Function,
+  props: Props | null,
+  children?: Meta,
+): Meta {
+  if (typeof name === 'string') {
+    return new DomMeta(name, props, children ?? null)
+  } else {
+    return new CustomMeta(name, props, children ?? null)
+  }
 }
+
+export function Fragment() {}
