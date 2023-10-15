@@ -1,1 +1,1 @@
-export function reqFrame() {}
+export function requestFrame() {}

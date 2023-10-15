@@ -1,6 +1,7 @@
 import {CustomComponent} from '../lib/component'
 import {createElement} from '../create-element'
-import {reqFrame} from '../index'
+import {requestFrame} from '../index'
+import {ReqFrame} from '../lib/render'
 
 class Store {
   num = 4
@@ -36,7 +37,9 @@ class Numbers extends CustomComponent<{store: Store}> {
         <button
           onClick={() => {
             this.props.store.num++
-            reqFrame()
+
+            // App will re-render on next monitor frame.
+            requestFrame()
           }}
         >
           Add
@@ -46,8 +49,9 @@ class Numbers extends CustomComponent<{store: Store}> {
   }
 }
 
-function runApp() {
-  const store = new Store()
+// Run app
+const reqFrame = new ReqFrame(document.body)
 
-  return <Numbers store={store} />
-}
+const store = new Store()
+
+reqFrame.render(<Numbers store={store} />)
