@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es2018",
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "jsx": "react",
+    "jsxFactory": "createElement",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "strict": true
+  },
+  "include": [
+    "src",
+    "test",
+    "globals.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "target~~",
+    "output-code"
+  ],
+  "compileOnSave": false
+}
