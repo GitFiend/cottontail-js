@@ -1,6 +1,6 @@
 describe('benchmark to get a sense of how fast it will be to compare lots of objects per frame', () => {
   test('lots of object creations and comparisons', () => {
-    const numComparisons = 1000
+    const numComparisons = 2000
     const objects1 = []
     const objects2 = []
 

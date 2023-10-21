@@ -15,7 +15,7 @@ class Store {
   }
 }
 
-class Numbers extends CustomComponent<{store: Store}> {
+class Numbers extends CustomComponent<Numbers, {store: Store}> {
   selectState() {
     const {store} = this.props
     const {num, square} = store

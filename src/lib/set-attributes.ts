@@ -15,9 +15,11 @@ export function setAttributesFromProps(
   const attributes = Object.keys(props)
 
   for (const attr of attributes) {
+    // @ts-ignore
     const value = props[attr]
 
     if (value !== undefined) {
+      // @ts-ignore
       setAttribute(element, namespace, attr, props[attr])
     }
   }
