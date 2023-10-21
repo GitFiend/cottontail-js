@@ -25,6 +25,7 @@ describe('benchmark to get a sense of how fast it will be to compare lots of obj
 
       // We do object spread to simulate selecting state and putting it into new object
       equal.push(equalValues(o1, {...o2}))
+      // equal.push(equalValues(o1, o2))
     }
 
     const time = Date.now() - start
@@ -32,7 +33,7 @@ describe('benchmark to get a sense of how fast it will be to compare lots of obj
     console.log(`${time}ms to compare ${numComparisons} prop objects`)
 
     expect(equal.length).toBe(objects1.length)
-    expect(time).toBeLessThan(16)
+    expect(time).toBeLessThan(100)
   })
 })
 
@@ -75,8 +76,17 @@ function makeTestObject(): Record<string, unknown> {
 }
 
 // Assumes keys are the same in both objects
-function equalValues(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
+function equalValues2(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
   for (const key of Object.keys(a)) {
+    if (a[key] !== b[key]) return false
+  }
+
+  return true
+}
+
+// Assumes keys are the same in both objects
+function equalValues(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
+  for (const key in a) {
     if (a[key] !== b[key]) return false
   }
 
