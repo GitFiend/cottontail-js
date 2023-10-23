@@ -1,4 +1,4 @@
-import {CustomComponent} from '../lib/component'
+import {CustomComponent, State} from '../lib/component'
 import {createElement} from '../create-element'
 import {requestFrame} from '../index'
 import {ReqFrame} from '../lib/render'
@@ -15,16 +15,36 @@ class Store {
   }
 }
 
-class Numbers extends CustomComponent<{store: Store}> {
+interface NumbersProps {
+  store: Store
+}
+
+interface NumbersState {
+  num: number
+  square: number
+  otherNum: number
+  on: boolean
+}
+
+class Numbers extends CustomComponent<NumbersProps, NumbersState> {
+  // Just declare type here instead of passing it to CustomComponent?
+  state = {
+    num: 0,
+    square: 0,
+    otherNum: 0,
+    on: false,
+  }
+
   selectState() {
     const {store} = this.props
-    const {num, square} = store
 
-    return {num, square, otherNum: store.getOtherNumber()}
+    this.state.num = store.num
+    this.state.square = store.square
+    this.state.otherNum = store.getOtherNumber()
   }
 
   render() {
-    const {num, square} = this.selectState()
+    const {num, square} = this.state
 
     return (
       <div>

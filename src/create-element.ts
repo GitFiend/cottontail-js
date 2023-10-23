@@ -41,6 +41,8 @@ export function createElement(
 }
 
 export class Fragment extends CustomComponent<{}> {
+  state = {}
+
   selectState(): {} {
     return {}
   }
