@@ -5,12 +5,8 @@ export interface Props extends Object {
   key?: string
 }
 
-// export interface Props extends BaseProps {
-//   [name: string]: unknown
-// }
-
-export type Component = DomComponent | CustomComponent
-export type ParentComponent = RootComponent | DomComponent | CustomComponent
+export type Component = DomComponent | CustomComponent<any, any>
+export type ParentComponent = RootComponent | DomComponent | CustomComponent<any, any>
 
 export class RootComponent {
   component: Component | null = null
@@ -35,6 +31,8 @@ export class DomComponent {
     if (meta.props) {
       setAttributesFromProps(this.element, ElementNamespace.html, meta.props)
     }
+
+    domParent.element.append(this.element)
   }
 
   renderSubComponents() {}
@@ -73,18 +71,20 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
 
   // Required to for jsx types.
   // Can we override react class component somehow?
-  context: any
+  context: unknown
   setState: any
   forceUpdate: any
   refs: any
 
   constructor(
     public props: P, // public meta: CustomMeta,
-    // public parent: ParentComponent,
-  ) // public domParent: DomComponent | RootComponent,
-  {}
+    // public domParent: DomComponent | RootComponent,
+  ) // public parent: ParentComponent,
+  {
+    // this.state = this.selectState()
+  }
 
-  // Can't pass everything in constructor due to how jsx works.
+  // Can't pass everything in constructor due to how jsx works/react types?
   init(
     meta: CustomMeta,
     parent: ParentComponent,
@@ -98,9 +98,9 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
 
   abstract render(): Meta | string | null
 
-  update() {
-    // this.state = this.selectState()
-  }
+  // update() {
+  //   this.state = this.selectState()
+  // }
 
   renderSubComponents() {}
 

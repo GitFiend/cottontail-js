@@ -34,9 +34,9 @@ export function createElement(
   ...children: Meta[]
 ): Meta {
   if (typeof name === 'string') {
-    return new DomMeta(name, props, children ?? null)
+    return new DomMeta(name, props, children)
   } else {
-    return new CustomMeta(name, props, children ?? null)
+    return new CustomMeta(name, props, children)
   }
 }
 

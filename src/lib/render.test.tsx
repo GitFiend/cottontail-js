@@ -5,6 +5,10 @@ describe('render', () => {
   test('simple', () => {
     const req = new ReqFrame(document.body)
 
-    req.render(<div />)
+    req.render(<div className="Omg" />)
+
+    console.log(document.body.children)
+
+    expect(document.body.children.length).toEqual(1)
   })
 })
