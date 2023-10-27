@@ -14,7 +14,7 @@ export class Cottontail {
 
   render(tree: Meta) {
     // store result ?
-    renderTree(tree, null, this.root, this.root)
+    renderTree(tree, null, this.root, this.root, 0)
   }
 }
 
@@ -23,13 +23,14 @@ export function renderTree(
   prev: Component | null,
   parent: ParentComponent,
   domParent: DomComponent | RootComponent,
+  index: number,
 ) {
   if (typeof tree === 'string') {
-    renderText(tree, prev, parent, domParent)
+    renderText(tree, prev, parent, domParent, index)
   } else if (tree.kind === MetaKind.dom) {
-    renderDom(tree, prev, parent, domParent)
+    renderDom(tree, prev, parent, domParent, index)
   } else {
-    renderCustom(tree, prev, parent, domParent)
+    renderCustom(tree, prev, parent, domParent, index)
   }
 }
 
@@ -38,9 +39,10 @@ export function renderText(
   prev: Component | null,
   parent: ParentComponent,
   domParent: DomComponent | RootComponent,
+  index: number,
 ) {
   if (!prev) {
-    return new TextComponent(text, parent, domParent)
+    return new TextComponent(text, parent, domParent, index)
   }
 
   if (prev?.kind === MetaKind.text) {
@@ -52,7 +54,7 @@ export function renderText(
 
   prev.removeSelf()
 
-  return new TextComponent(text, parent, domParent)
+  return new TextComponent(text, parent, domParent, index)
 }
 
 export function renderDom(
@@ -60,9 +62,10 @@ export function renderDom(
   prev: Component | null,
   parent: ParentComponent,
   domParent: DomComponent | RootComponent,
+  index: number,
 ) {
   if (!prev) {
-    return new DomComponent(tree, parent, domParent)
+    return new DomComponent(tree, parent, domParent, index)
   }
 
   if (tree.kind === prev.kind && tree.name === prev.meta.name) {
@@ -81,7 +84,7 @@ export function renderDom(
 
   prev.removeSelf()
 
-  return new DomComponent(tree, parent, domParent)
+  return new DomComponent(tree, parent, domParent, index)
 }
 
 export function renderSubComponents(
@@ -107,6 +110,7 @@ export function renderCustom(
   prev: Component | null,
   parent: ParentComponent,
   domParent: DomComponent | RootComponent,
+  index: number,
 ) {
   //
 }

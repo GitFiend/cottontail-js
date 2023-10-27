@@ -2,6 +2,7 @@ import {CustomMeta, Meta, MetaKind} from '../../create-element'
 import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
 import {Component, ParentComponent, Props} from './types'
+import {Order} from '../order'
 
 export abstract class State {}
 
@@ -16,6 +17,10 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
   subComponents: Component[] = []
   kind = MetaKind.custom as const
   removed = false
+
+  order: string = ''
+  key: string = ''
+  index = 0
 
   abstract state: S
   abstract selectState(props: P): void
@@ -40,7 +45,12 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
     meta: CustomMeta,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
-  ) {}
+    index: number,
+  ) {
+    this.index = index
+    this.order = Order.key(parent.order, index)
+    this.key = this.props.key ?? parent.key + index
+  }
 
   abstract render(): Meta | string | null
 

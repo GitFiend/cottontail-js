@@ -9,3 +9,4 @@ export interface Props extends Object {
 
 export type Component = DomComponent | CustomComponent<any, any> | TextComponent
 export type ParentComponent = RootComponent | DomComponent | CustomComponent<any, any>
+export type ElementComponent = DomComponent | TextComponent
