@@ -4,7 +4,8 @@
     "description": "Prototyping Rust UI library in Javascript",
     "homepage": "https://github.com/GitFiend/req-frame-js",
     "scripts": {
-        "test": "jest --config ./jest.config.js --watch"
+        "test": "jest --config ./jest.config.js --watch",
+        "start": "esbuild src/scratch/app.tsx --outfile=src/scratch/out/out.js --bundle --watch"
     },
     "author": "Toby Suggate <sugto555@gmail.com>",
     "license": "Apache-2.0",
@@ -12,6 +13,7 @@
         "@types/jest": "^29.5.5",
         "@types/react": "^18.2.28",
         "dotenv": "^16.3.1",
+        "esbuild": "0.19.5",
         "jest": "^29.7.0",
         "jest-environment-jsdom": "^29.7.0",
         "prettier": "^3.0.3",
