@@ -1,7 +1,7 @@
-import {CustomComponent, State} from '../lib/component'
+import {CustomComponent, State} from '../lib/components/custom-component'
 import {createElement} from '../create-element'
 import {requestFrame} from '../index'
-import {ReqFrame} from '../lib/render'
+import {Cottontail} from '../lib/render'
 
 class Store {
   num = 4
@@ -70,7 +70,7 @@ class Numbers extends CustomComponent<NumbersProps, NumbersState> {
 }
 
 // Run app
-const reqFrame = new ReqFrame(document.body)
+const reqFrame = new Cottontail(document.body)
 
 const store = new Store()
 

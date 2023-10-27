@@ -1,8 +1,10 @@
 import {CustomMeta, DomMeta, Meta, MetaKind} from '../create-element'
-import {Component, DomComponent, ParentComponent, RootComponent} from './component'
+import {Component, ParentComponent} from './components/custom-component'
 import {ElementNamespace, updateAttributes} from './set-attributes'
+import {RootComponent} from './components/root-component'
+import {DomComponent} from './components/dom-component'
 
-export class ReqFrame {
+export class Cottontail {
   root: RootComponent
 
   constructor(element: HTMLElement) {
@@ -82,4 +84,13 @@ export class ReqFrame {
   ) {
     //
   }
+}
+
+export function render(tree: Meta, element: HTMLElement | null) {
+  if (!element) {
+    throw new Error('Cottontail render: Root element is null')
+  }
+
+  const req = new Cottontail(element)
+  req.render(tree)
 }

@@ -1,4 +1,4 @@
-import {CustomComponent, Props} from './lib/component'
+import {CustomComponent, Props} from './lib/components/custom-component'
 
 export type Meta = DomMeta | CustomMeta
 

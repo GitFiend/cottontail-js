@@ -1,4 +1,4 @@
-import {Props} from './component'
+import {Props} from './components/custom-component'
 import {RefObject} from './ref'
 
 export enum ElementNamespace {
@@ -94,7 +94,9 @@ function setAttribute(
       break
     case 'value':
     case 'style':
-      ;(element as any)[attr] = value
+      for (const style in value) {
+        ;(element as any)[attr][style] = value[style]
+      }
       break
     case 'ref':
       ;(value as RefObject<unknown>).current = element
@@ -113,6 +115,10 @@ function setAttribute(
       }
       break
   }
+}
+
+function setStyles(style: Record<string, unknown>) {
+  // TODO: Handle numbers for things like width?
 }
 
 function setSvgAttribute(element: Element, attr: string, value: any) {

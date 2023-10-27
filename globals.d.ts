@@ -1,5 +1,5 @@
 import type {DomMeta, CustomMeta} from './src/create-element'
-import {CustomComponent} from './src/lib/component'
+import {CustomComponent} from './src/lib/components/custom-component'
 
 declare global {
   declare const __DEV__: boolean

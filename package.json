@@ -5,7 +5,7 @@
     "homepage": "https://github.com/GitFiend/req-frame-js",
     "scripts": {
         "test": "jest --config ./jest.config.js --watch",
-        "start": "esbuild src/scratch/app.tsx --outfile=src/scratch/out/out.js --bundle --watch"
+        "start": "esbuild src/scratch/app.tsx --outfile=src/scratch/out/out.js --bundle --watch --sourcemap --jsx=automatic"
     },
     "author": "Toby Suggate <sugto555@gmail.com>",
     "license": "Apache-2.0",
