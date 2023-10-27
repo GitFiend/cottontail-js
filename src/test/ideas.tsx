@@ -1,4 +1,4 @@
-import {CustomComponent, State} from '../lib/components/custom-component'
+import {CustomComponent} from '../lib/components/custom-component'
 import {createElement} from '../create-element'
 import {requestFrame} from '../index'
 import {Cottontail} from '../lib/render'

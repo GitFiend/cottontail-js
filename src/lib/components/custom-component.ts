@@ -34,8 +34,8 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
 
   constructor(
     public props: P, // public meta: CustomMeta,
-    // public parent: ParentComponent,
-  ) // public domParent: DomComponent | RootComponent,
+    // public domParent: DomComponent | RootComponent,
+  ) // public parent: ParentComponent,
   {
     // this.state = this.selectState()
   }
@@ -67,6 +67,8 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
       console.error('already removed')
     }
     this.componentWillUnmount()
+
+    // Should we detach elements now?
 
     for (const c of this.subComponents) {
       c.removeSelf()

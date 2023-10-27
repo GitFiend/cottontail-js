@@ -42,8 +42,6 @@ export class DomComponent {
     }
   }
 
-  renderSubComponents() {}
-
   removeSelf() {
     this.domParent.element.removeChild(this.element)
 

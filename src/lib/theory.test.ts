@@ -35,6 +35,29 @@ describe('benchmark to get a sense of how fast it will be to compare lots of obj
     expect(equal.length).toBe(objects1.length)
     expect(time).toBeLessThan(100)
   })
+
+  test('class as state holder', () => {
+    class A {
+      a = 5
+      b = 3
+      c = 'asdf'
+    }
+
+    const a = new A()
+
+    expect(Object.keys(a)).toEqual(['a', 'b', 'c'])
+
+    const keys: string[] = []
+    const values: any[] = []
+
+    for (const key in a) {
+      keys.push(key)
+      values.push(a[key as keyof A])
+    }
+
+    expect(keys).toEqual(['a', 'b', 'c'])
+    expect(values).toEqual([5, 3, 'asdf'])
+  })
 })
 
 function makeTestObject(): Record<string, unknown> {
