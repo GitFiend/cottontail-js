@@ -9,7 +9,7 @@ render(
       background: 'red',
     }}
   >
-    <div></div>
+    <span style={{fontSize: '100px'}}>Hello</span>
   </div>,
   document.getElementById('root'),
 )

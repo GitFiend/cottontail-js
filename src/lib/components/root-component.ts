@@ -1,4 +1,4 @@
-import {Component} from './custom-component'
+import {Component} from './types'
 
 export class RootComponent {
   component: Component | null = null

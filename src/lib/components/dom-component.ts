@@ -1,7 +1,8 @@
 import {DomMeta, MetaKind} from '../../create-element'
 import {RootComponent} from './root-component'
 import {ElementNamespace, setAttributesFromProps} from '../set-attributes'
-import {Component, ParentComponent} from './custom-component'
+import {renderTree} from '../render'
+import {Component, ParentComponent} from './types'
 
 export class DomComponent {
   element: HTMLElement
@@ -22,6 +23,10 @@ export class DomComponent {
     }
 
     domParent.element.append(this.element)
+
+    for (const child of meta.children) {
+      renderTree(child, null, this, this)
+    }
   }
 
   renderSubComponents() {}

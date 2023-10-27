@@ -1,8 +1,10 @@
-import {CustomComponent, Props} from './lib/components/custom-component'
+import {CustomComponent} from './lib/components/custom-component'
+import {Props} from './lib/components/types'
 
-export type Meta = DomMeta | CustomMeta
+export type Meta = DomMeta | CustomMeta | string
 
 export enum MetaKind {
+  text,
   dom,
   custom,
 }

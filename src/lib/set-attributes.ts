@@ -1,5 +1,5 @@
-import {Props} from './components/custom-component'
 import {RefObject} from './ref'
+import {Props} from './components/types'
 
 export enum ElementNamespace {
   html,
