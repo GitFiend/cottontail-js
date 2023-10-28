@@ -6,7 +6,7 @@ import {AnyComponent, ParentComponent} from '../components/types'
 import {TextComponent} from '../components/text-component'
 import {Remove} from './remove'
 import {Order} from './order'
-import {CustomComponent, makeCustomComponent} from '../components/custom-component'
+import {Component, makeCustomComponent} from '../components/custom-component'
 
 export class Render {
   static component(
@@ -108,7 +108,7 @@ export class Render {
     directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
-  ): CustomComponent<any, any> {
+  ): Component<any, any> {
     if (!prev) {
       return makeCustomComponent(meta, directParent, domParent, index)
     }
@@ -140,7 +140,7 @@ export class Render {
         }
       }
 
-      ;(prev as CustomComponent).updateWithNewProps(meta.props)
+      ;(prev as Component).updateWithNewProps(meta.props)
       return prev
     }
 

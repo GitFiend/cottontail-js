@@ -1,8 +1,8 @@
 import {createElement} from '../create-element'
 import {renderRoot} from '../lib/cottontail'
-import {CustomComponent} from '../lib/components/custom-component'
+import {Component} from '../lib/components/custom-component'
 
-class Thing extends CustomComponent<{}> {
+class Thing extends Component<{}> {
   state = {
     num: 0,
   }
