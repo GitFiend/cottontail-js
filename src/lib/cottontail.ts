@@ -3,6 +3,7 @@ import {Meta} from '../create-element'
 import {Render} from './render/render'
 import {AnyComponent} from './components/types'
 
+// TODO: Support more than one instance at a time.
 export class Cottontail {
   private readonly root: RootComponent
   private prev: AnyComponent | null = null
@@ -22,12 +23,18 @@ export class Cottontail {
     this.render()
   }
 
-  private render() {
+  queued = false
+  private render = () => {
     this.prev = Render.component(this.meta, this.prev, this.root, this.root, 0)
+    this.queued = false
   }
 
-  next = () => {
-    this.render()
+  nextRender = () => {
+    if (this.queued) {
+      return
+    }
+    this.queued = true
+    requestAnimationFrame(this.render)
   }
 }
 
@@ -35,6 +42,6 @@ export function renderRoot(meta: Meta, element: HTMLElement | null) {
   const c = new Cottontail(meta, element)
 
   return {
-    update: c.next,
+    render: c.nextRender,
   }
 }

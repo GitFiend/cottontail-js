@@ -6,16 +6,7 @@ import {Order} from '../render/order'
 import {equalValues} from '../render/util'
 import {Render} from '../render/render'
 
-export abstract class State {}
-
-interface SelectState<P> {
-  state: State
-  selectState(props: P): void
-}
-
-export abstract class CustomComponent<P extends Props = {}, S extends State = State>
-  implements SelectState<P>
-{
+export abstract class CustomComponent<P extends Props = {}, S extends {} = {}> {
   kind = MetaKind.custom as const
   subComponents = new Map<string, AnyComponent>()
 
@@ -48,6 +39,7 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
       !equalValues(this.state as any, this.prevState as any)
     ) {
       this.props = props
+      // TODO: Copy across properties when we compare instead of allocating new object.
       this.prevState = {...this.state}
 
       this.update()

@@ -26,11 +26,11 @@ class Thing extends CustomComponent<{}> {
 
   onClick = () => {
     this.state.num++
-    update()
+    render()
   }
 }
 
-export const {update} = renderRoot(
+export const {render} = renderRoot(
   <div>
     <Thing />
   </div>,

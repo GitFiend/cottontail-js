@@ -1,5 +1,5 @@
 import {createElement} from '../../create-element'
-import {Cottontail, renderRoot} from '../cottontail'
+import {renderRoot} from '../cottontail'
 
 describe('render', () => {
   test('simple', () => {
