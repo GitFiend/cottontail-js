@@ -1,8 +1,8 @@
-import {DomComponent} from './components/dom-component'
-import {Component} from './components/types'
-import {MetaKind} from '../create-element'
-import {CustomComponent} from './components/custom-component'
-import {TextComponent} from './components/text-component'
+import {DomComponent} from '../components/dom-component'
+import {Component} from '../components/types'
+import {MetaKind} from '../../create-element'
+import {CustomComponent} from '../components/custom-component'
+import {TextComponent} from '../components/text-component'
 import {Order} from './order'
 
 export class Remove {

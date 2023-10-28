@@ -1,5 +1,5 @@
-import {createElement} from '../create-element'
-import {Cottontail} from './cottontail'
+import {createElement} from '../../create-element'
+import {Cottontail} from '../cottontail'
 
 describe('render', () => {
   test('simple', () => {

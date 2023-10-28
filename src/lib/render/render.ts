@@ -1,9 +1,9 @@
-import {CustomMeta, DomMeta, Meta, MetaKind} from '../create-element'
+import {CustomMeta, DomMeta, Meta, MetaKind} from '../../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
-import {RootComponent} from './components/root-component'
-import {DomComponent} from './components/dom-component'
-import {Component, ParentComponent} from './components/types'
-import {TextComponent} from './components/text-component'
+import {RootComponent} from '../components/root-component'
+import {DomComponent} from '../components/dom-component'
+import {Component, ParentComponent} from '../components/types'
+import {TextComponent} from '../components/text-component'
 import {Remove} from './remove'
 
 export class Render {

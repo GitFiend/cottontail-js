@@ -1,9 +1,9 @@
 import {DomMeta, MetaKind} from '../../create-element'
 import {RootComponent} from './root-component'
-import {ElementNamespace, setAttributesFromProps} from '../set-attributes'
-import {Render} from '../render'
+import {ElementNamespace, setAttributesFromProps} from '../render/set-attributes'
+import {Render} from '../render/render'
 import {Component, ElementComponent, ParentComponent} from './types'
-import {Order} from '../order'
+import {Order} from '../render/order'
 
 export class DomComponent {
   element: HTMLElement

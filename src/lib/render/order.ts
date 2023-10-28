@@ -1,6 +1,6 @@
-import {RootComponent} from './components/root-component'
-import {DomComponent} from './components/dom-component'
-import {ElementComponent} from './components/types'
+import {RootComponent} from '../components/root-component'
+import {DomComponent} from '../components/dom-component'
+import {ElementComponent} from '../components/types'
 
 // export function checkOrder(inserted: ElementComponent[]) {
 //   if (!__DEV__) return

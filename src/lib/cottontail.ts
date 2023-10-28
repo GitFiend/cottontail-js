@@ -1,6 +1,6 @@
 import {RootComponent} from './components/root-component'
 import {Meta} from '../create-element'
-import {Render} from './render'
+import {Render} from './render/render'
 
 export class Cottontail {
   root: RootComponent

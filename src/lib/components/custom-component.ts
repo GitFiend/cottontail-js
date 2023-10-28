@@ -2,7 +2,7 @@ import {CustomMeta, Meta, MetaKind} from '../../create-element'
 import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
 import {Component, ParentComponent, Props} from './types'
-import {Order} from '../order'
+import {Order} from '../render/order'
 
 export abstract class State {}
 
@@ -34,8 +34,8 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
 
   constructor(
     public props: P, // public meta: CustomMeta,
-    // public domParent: DomComponent | RootComponent,
-  ) // public parent: ParentComponent,
+    // public parent: ParentComponent,
+  ) // public domParent: DomComponent | RootComponent,
   {
     // this.state = this.selectState()
   }
