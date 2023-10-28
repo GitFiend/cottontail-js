@@ -106,7 +106,7 @@ function setAttribute(
         break
 
       if (attr.startsWith('on')) {
-        element.addEventListener(attr.slice(2), value)
+        element.addEventListener(attr.slice(2).toLowerCase(), value)
       } else if (typeof value === 'boolean') {
         if (value) element.setAttribute(attr, '')
         else element.removeAttribute(attr)
@@ -136,7 +136,7 @@ function setSvgAttribute(element: Element, attr: string, value: any) {
 
 function deleteAttribute(element: Element, attr: string, oldValue: unknown): void {
   if (attr.startsWith('on')) {
-    element.removeEventListener(attr.slice(2), oldValue as any)
+    element.removeEventListener(attr.slice(2).toLowerCase(), oldValue as any)
   } else if (attr === 'className') {
     element.removeAttribute('class')
   } else if (attr === 'ref') {

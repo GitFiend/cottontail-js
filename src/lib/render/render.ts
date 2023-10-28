@@ -6,7 +6,7 @@ import {AnyComponent, ParentComponent} from '../components/types'
 import {TextComponent} from '../components/text-component'
 import {Remove} from './remove'
 import {Order} from './order'
-import {makeCustomComponent} from '../components/custom-component'
+import {CustomComponent, makeCustomComponent} from '../components/custom-component'
 
 export class Render {
   static component(
@@ -15,7 +15,7 @@ export class Render {
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
-  ) {
+  ): AnyComponent {
     if (typeof meta === 'string') {
       return Render.text(meta, prev, parent, domParent, index)
     } else if (meta.kind === MetaKind.dom) {
@@ -31,9 +31,11 @@ export class Render {
     domParent: DomComponent | RootComponent,
     index: number,
   ) {
-    if (!prev) {
+    if (prev === null) {
       return new DomComponent(meta, directParent, domParent, index)
     }
+
+    console.log(meta.name, meta.props)
 
     if (meta.kind === prev.kind && meta.name === prev.meta.name) {
       const prevOrder = prev.order
@@ -53,7 +55,12 @@ export class Render {
         prev.meta.props,
       )
       prev.meta = meta
-      Render.subComponents(prev, prev, meta.children, prev.subComponents)
+      prev.subComponents = Render.subComponents(
+        prev,
+        prev,
+        meta.children,
+        prev.subComponents,
+      )
 
       return prev
     }
@@ -103,12 +110,12 @@ export class Render {
     directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
-  ): any {
+  ): CustomComponent<any, any> {
     if (!prev) {
       return makeCustomComponent(meta, directParent, domParent, index)
     }
 
-    if (prev.kind === MetaKind.custom && prev.meta.name instanceof meta.name) {
+    if (prev.kind === MetaKind.custom && prev.meta.name.name === meta.name.name) {
       const prevOrder = prev.order
       const newOrder = Order.key(directParent.order, index)
 
