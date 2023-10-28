@@ -26,31 +26,25 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
   abstract state: S
   abstract selectState(props: P): void
 
-  // Required to for jsx types.
-  // Pull in React type defs and modify them?
-  context: unknown
-  setState: any
-  forceUpdate: any
-  refs: any
-
   constructor(
-    public props: P, // public meta: CustomMeta,
-    // public domParent: DomComponent | RootComponent,
-  ) // public parent: ParentComponent,
-  {
+    public props: P,
+    public meta: CustomMeta,
+    public parent: ParentComponent,
+    public domParent: DomComponent | RootComponent,
+  ) {
     // this.state = this.selectState()
   }
 
   // Can't pass everything in constructor due to how jsx works/react types?
   init(
     meta: CustomMeta,
-    parent: ParentComponent,
+    directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
   ) {
     this.index = index
-    this.order = Order.key(parent.order, index)
-    this.key = this.props.key ?? parent.key + index
+    this.order = Order.key(directParent.order, index)
+    this.key = this.props.key ?? directParent.key + index
   }
 
   abstract render(): Meta | string | null

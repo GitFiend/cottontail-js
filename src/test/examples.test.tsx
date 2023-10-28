@@ -1,5 +1,5 @@
 import {createElement, Fragment} from '../create-element'
-import {JSX} from 'react'
+import {JSX} from '../jsx-types'
 
 describe('simple div', () => {
   test('div with no props gets transformed', () => {

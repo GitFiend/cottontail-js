@@ -1,6 +1,5 @@
 import {CustomComponent} from '../lib/components/custom-component'
 import {createElement} from '../create-element'
-import {requestFrame} from '../index'
 
 import {Cottontail} from '../lib/cottontail'
 
@@ -18,6 +17,7 @@ class Store {
 
 interface NumbersProps {
   store: Store
+  other: number
 }
 
 interface NumbersState {
@@ -60,7 +60,7 @@ class Numbers extends CustomComponent<NumbersProps, NumbersState> {
             this.props.store.num++
 
             // App will re-render on next monitor frame.
-            requestFrame()
+            // requestFrame()
           }}
         >
           Add
@@ -75,4 +75,4 @@ const reqFrame = new Cottontail(document.body)
 
 const store = new Store()
 
-reqFrame.render(<Numbers store={store} />)
+reqFrame.render(<Numbers store={store} other={4} />)

@@ -113,13 +113,12 @@ export class Render {
     children: Meta[],
     prevComponents: Map<string, AnyComponent>,
   ) {
-    const newComponents = new Map<string, AnyComponent>()
-
-    const len = children.length - 1
-
     // if (__DEV__) {
     //   checkChildrenKeys(children)
     // }
+
+    const newComponents = new Map<string, AnyComponent>()
+    const len = children.length - 1
 
     for (let i = len; i >= 0; i--) {
       const child = children[i]
