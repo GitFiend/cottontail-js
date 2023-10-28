@@ -3,7 +3,6 @@ import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
 import {AnyComponent, ParentComponent, Props} from './types'
 import {Order} from '../render/order'
-import {RefObject} from './ref'
 import {equalValues} from '../render/util'
 import {Render} from '../render/render'
 
@@ -25,11 +24,6 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
 
   removed = false
 
-  // TODO
-  _ref: RefObject<this> = {
-    current: this,
-  }
-
   abstract state: S
   selectState(props: P) {}
   private prevState: S | {} = {}
@@ -46,7 +40,7 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
     this.key = this.props?.key ?? directParent.key + index
   }
 
-  updateWithNewProps(props: P) {
+  updateWithNewProps(props: P): void {
     this.selectState(props)
 
     if (

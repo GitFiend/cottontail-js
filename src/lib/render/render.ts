@@ -140,7 +140,7 @@ export class Render {
         }
       }
 
-      prev.updateWithNewProps(meta.props)
+      ;(prev as CustomComponent).updateWithNewProps(meta.props)
       return prev
     }
 

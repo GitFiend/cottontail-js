@@ -1,13 +1,9 @@
 import {createElement} from '../../create-element'
-import {Cottontail} from '../cottontail'
+import {Cottontail, renderRoot} from '../cottontail'
 
 describe('render', () => {
   test('simple', () => {
-    const req = new Cottontail(document.body)
-
-    req.render(<div className="Omg" />)
-
-    console.log(document.body.children)
+    renderRoot(<div className="Omg" />, document.body)
 
     expect(document.body.children.length).toEqual(1)
   })

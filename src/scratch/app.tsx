@@ -1,5 +1,5 @@
 import {createElement} from '../create-element'
-import {renderRoot2} from '../lib/cottontail'
+import {renderRoot} from '../lib/cottontail'
 import {CustomComponent} from '../lib/components/custom-component'
 
 class Thing extends CustomComponent<{}> {
@@ -17,21 +17,20 @@ class Thing extends CustomComponent<{}> {
         }}
       >
         <span style={{fontSize: '100px'}}>Hello</span>
-        <button
-          style={{width: '120px'}}
-          onClick={() => {
-            this.state.num++
-            update()
-          }}
-        >
+        <button style={{width: '120px'}} onClick={this.onClick}>
           {`Num Clicks: ${this.state.num}`}
         </button>
       </div>
     )
   }
+
+  onClick = () => {
+    this.state.num++
+    update()
+  }
 }
 
-export const {update} = renderRoot2(
+export const {update} = renderRoot(
   <div>
     <Thing />
   </div>,

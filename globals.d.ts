@@ -1,5 +1,4 @@
 import type {DomMeta, CustomMeta} from './src/create-element'
-import {CustomComponent} from './src/lib/components/custom-component'
 
 declare global {
   declare const __DEV__: boolean
@@ -9,8 +8,4 @@ declare global {
     interface Element extends DomMeta {}
     interface ElementClass extends CustomMeta {}
   }
-
-  // namespace React {
-  //   interface Component extends any {}
-  // }
 }
