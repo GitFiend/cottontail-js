@@ -26,7 +26,7 @@ export class TextComponent {
     domParent.element.append(this.element)
   }
 
-  removeSelf() {
-    // TODO
-  }
+  // removeSelf() {
+  //   // TODO
+  // }
 }

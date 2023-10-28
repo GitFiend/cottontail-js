@@ -14,7 +14,7 @@ interface SelectState<P> {
 export abstract class CustomComponent<P extends Props = {}, S extends State = State>
   implements SelectState<P>
 {
-  subComponents: Component[] = []
+  subComponents = new Map<string, Component>()
   kind = MetaKind.custom as const
   removed = false
 
@@ -26,7 +26,7 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
   abstract selectState(props: P): void
 
   // Required to for jsx types.
-  // Can we override react class component somehow?
+  // Pull in React type defs and modify them?
   context: unknown
   setState: any
   forceUpdate: any
@@ -54,26 +54,24 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
 
   abstract render(): Meta | string | null
 
-  renderSubComponents() {}
-
   componentDidMount(): void {}
 
   componentDidUpdate(): void {}
 
   componentWillUnmount(): void {}
 
-  removeSelf() {
-    if (__DEV__ && this.removed) {
-      console.error('already removed')
-    }
-    this.componentWillUnmount()
-
-    // Should we detach elements now?
-
-    for (const c of this.subComponents) {
-      c.removeSelf()
-    }
-    this.subComponents.length = 0
-    this.removed = true
-  }
+  // removeSelf() {
+  //   if (__DEV__ && this.removed) {
+  //     console.error('already removed')
+  //   }
+  //   this.componentWillUnmount()
+  //
+  //   // Should we detach elements now?
+  //
+  //   for (const c of this.subComponents) {
+  //     c.removeSelf()
+  //   }
+  //   this.subComponents.length = 0
+  //   this.removed = true
+  // }
 }

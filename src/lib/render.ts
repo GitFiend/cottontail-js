@@ -4,6 +4,7 @@ import {RootComponent} from './components/root-component'
 import {DomComponent} from './components/dom-component'
 import {Component, ParentComponent} from './components/types'
 import {TextComponent} from './components/text-component'
+import {removeComponent} from './remove'
 
 export class Cottontail {
   root: RootComponent
@@ -52,7 +53,8 @@ export function renderText(
     return prev
   }
 
-  prev.removeSelf()
+  // prev.removeSelf()
+  removeComponent(prev)
 
   return new TextComponent(text, parent, domParent, index)
 }
@@ -77,12 +79,13 @@ export function renderDom(
     )
 
     prev.meta = tree
-    prev.renderSubComponents()
+    renderSubComponents(prev, prev, tree.children, prev.subComponents)
 
     return prev
   }
 
-  prev.removeSelf()
+  removeComponent(prev)
+  // prev.removeSelf()
 
   return new DomComponent(tree, parent, domParent, index)
 }

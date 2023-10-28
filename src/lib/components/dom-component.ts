@@ -12,10 +12,9 @@ export class DomComponent {
   order: string
   key: string
 
-  subComponents: Component[] = []
-
   inserted: ElementComponent[] = []
 
+  subComponents = new Map<string, Component>()
   // key is an element, value is the previous element
   siblings = new WeakMap<Element | Text, Element | Text | null>()
 
@@ -40,14 +39,5 @@ export class DomComponent {
       const child = meta.children[i]
       renderTree(child, null, this, this, i)
     }
-  }
-
-  removeSelf() {
-    this.domParent.element.removeChild(this.element)
-
-    for (const c of this.subComponents) {
-      c.removeSelf()
-    }
-    this.subComponents.length = 0
   }
 }
