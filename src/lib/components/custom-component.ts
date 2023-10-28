@@ -16,6 +16,8 @@ export abstract class Component<P extends Props = {}, S extends {} = {}> {
   removed = false
 
   abstract state: S
+
+  // Call this 'onRenderCalled'? 'beforeRender'? 'beforeUpdate'?
   selectState(props: P) {}
   private prevState: S | {} = {}
 
@@ -34,6 +36,7 @@ export abstract class Component<P extends Props = {}, S extends {} = {}> {
   updateWithNewProps(props: P): void {
     this.selectState(props)
 
+    // Do we check both props and state? 1 component type? Or do we have a pure props type?
     if (
       !equalValues(this.props as any, props as any) ||
       !equalValues(this.state as any, this.prevState as any)

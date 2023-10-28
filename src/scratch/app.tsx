@@ -35,7 +35,7 @@ class Thing extends Component<{store: Store}> {
       >
         <span style={{fontSize: '100px'}}>Hello</span>
         <button style={{width: '120px'}} onClick={this.props.store.onClick}>
-          {`Num Clicks: ${this.state.num}`}
+          {`Num Clicks: ${this.state.num}, square: ${this.props.store.square}`}
         </button>
       </div>
     )

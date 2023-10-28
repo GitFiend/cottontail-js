@@ -1,2 +1,2 @@
 export * from './create-element'
-export * from './lib/components/ref'
+export {createRef} from './lib/components/ref'
