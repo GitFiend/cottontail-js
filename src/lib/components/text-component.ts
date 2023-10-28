@@ -7,7 +7,6 @@ import {Order} from '../render/order'
 export class TextComponent {
   kind = MetaKind.text as const
   element: Text
-
   order: string
   key: string
 
@@ -25,8 +24,4 @@ export class TextComponent {
 
     domParent.element.append(this.element)
   }
-
-  // removeSelf() {
-  //   // TODO
-  // }
 }

@@ -1,12 +1,12 @@
 import {DomComponent} from '../components/dom-component'
-import {Component} from '../components/types'
+import {AnyComponent} from '../components/types'
 import {MetaKind} from '../../create-element'
 import {CustomComponent} from '../components/custom-component'
 import {TextComponent} from '../components/text-component'
 import {Order} from './order'
 
 export class Remove {
-  static component(component: Component) {
+  static component(component: AnyComponent) {
     switch (component.kind) {
       case MetaKind.text:
         return Remove.textComponent(component)
@@ -32,9 +32,9 @@ export class Remove {
   }
 
   static customComponent(component: CustomComponent) {
-    if (__DEV__ && component.removed) {
-      console.error('already removed')
-    }
+    // if (__DEV__ && component.removed) {
+    //   console.error('already removed')
+    // }
 
     component.componentWillUnmount()
 

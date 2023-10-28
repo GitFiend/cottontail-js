@@ -1,5 +1,5 @@
 import {RootComponent} from './components/root-component'
-import {Meta} from '../create-element'
+import {CustomMeta, Meta} from '../create-element'
 import {Render} from './render/render'
 
 export class Cottontail {
@@ -9,17 +9,20 @@ export class Cottontail {
     this.root = new RootComponent(element)
   }
 
-  render(tree: Meta) {
+  render(tree: Exclude<Meta, null>) {
     // store result ?
     Render.component(tree, null, this.root, this.root, 0)
   }
 }
 
-export function renderRoot(tree: Meta, element: HTMLElement | null) {
-  if (!element) {
+export function renderRoot(meta: Meta, element: HTMLElement | null) {
+  if (element === null) {
     throw new Error('Cottontail render: Root element is null')
+  }
+  if (meta === null) {
+    throw new Error('Cottontail render: Meta is null')
   }
 
   const req = new Cottontail(element)
-  req.render(tree)
+  req.render(meta)
 }

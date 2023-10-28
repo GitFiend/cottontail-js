@@ -7,6 +7,6 @@ export interface Props extends Object {
   key?: string
 }
 
-export type Component = DomComponent | CustomComponent<any, any> | TextComponent
+export type AnyComponent = DomComponent | CustomComponent<any, any> | TextComponent
 export type ParentComponent = RootComponent | DomComponent | CustomComponent<any, any>
 export type ElementComponent = DomComponent | TextComponent

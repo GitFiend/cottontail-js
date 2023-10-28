@@ -1,7 +1,7 @@
 import {CustomMeta, Meta, MetaKind} from '../../create-element'
 import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
-import {Component, ParentComponent, Props} from './types'
+import {AnyComponent, ParentComponent, Props} from './types'
 import {Order} from '../render/order'
 
 export abstract class State {}
@@ -14,13 +14,14 @@ interface SelectState<P> {
 export abstract class CustomComponent<P extends Props = {}, S extends State = State>
   implements SelectState<P>
 {
-  subComponents = new Map<string, Component>()
   kind = MetaKind.custom as const
-  removed = false
+  subComponents = new Map<string, AnyComponent>()
 
   order: string = ''
   key: string = ''
   index = 0
+
+  removed = false
 
   abstract state: S
   abstract selectState(props: P): void
@@ -34,8 +35,8 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
 
   constructor(
     public props: P, // public meta: CustomMeta,
-    // public parent: ParentComponent,
-  ) // public domParent: DomComponent | RootComponent,
+    // public domParent: DomComponent | RootComponent,
+  ) // public parent: ParentComponent,
   {
     // this.state = this.selectState()
   }
@@ -59,19 +60,4 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
   componentDidUpdate(): void {}
 
   componentWillUnmount(): void {}
-
-  // removeSelf() {
-  //   if (__DEV__ && this.removed) {
-  //     console.error('already removed')
-  //   }
-  //   this.componentWillUnmount()
-  //
-  //   // Should we detach elements now?
-  //
-  //   for (const c of this.subComponents) {
-  //     c.removeSelf()
-  //   }
-  //   this.subComponents.length = 0
-  //   this.removed = true
-  // }
 }

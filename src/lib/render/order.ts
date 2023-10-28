@@ -1,26 +1,7 @@
 import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
 import {ElementComponent} from '../components/types'
-
-// export function checkOrder(inserted: ElementComponent[]) {
-//   if (!__DEV__) return
-//
-//   let prev: ElementComponent | null = null
-//
-//   for (const c of inserted) {
-//     console.log(c.key, prev?.key)
-//     if (prev !== null) {
-//       if (prev.element !== c.element.previousElementSibling) {
-//         console.log('elements out of order')
-//         // debugger
-//       }
-//       if (prev.order > c.order) {
-//         console.log('keys out of order')
-//       }
-//     }
-//     prev = c
-//   }
-// }
+import {Meta} from '../../create-element'
 
 export function applyInserts(parent: RootComponent | DomComponent): void {
   const {inserted, siblings, element} = parent
@@ -120,5 +101,43 @@ export class Order {
       // RunStack.removeStack.add(child.element)
       child.element.remove()
     }
+  }
+}
+
+// export function checkOrder(inserted: ElementComponent[]) {
+//   if (!__DEV__) return
+//
+//   let prev: ElementComponent | null = null
+//
+//   for (const c of inserted) {
+//     console.log(c.key, prev?.key)
+//     if (prev !== null) {
+//       if (prev.element !== c.element.previousElementSibling) {
+//         console.log('elements out of order')
+//         // debugger
+//       }
+//       if (prev.order > c.order) {
+//         console.log('keys out of order')
+//       }
+//     }
+//     prev = c
+//   }
+// }
+
+function checkChildrenKeys(children: Meta[]) {
+  let numKeys = 0
+  const set = new Set<string>()
+
+  for (const child of children) {
+    if (child !== null && typeof child !== 'string') {
+      if (typeof child.props?.key === 'string') {
+        numKeys++
+        set.add(child.props.key)
+      }
+    }
+  }
+
+  if (numKeys !== set.size) {
+    console.error(`Subtrees contain duplicate keys: `, children)
   }
 }

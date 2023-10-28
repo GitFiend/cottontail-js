@@ -1,9 +1,9 @@
-import {Component} from './types'
+import {AnyComponent} from './types'
 import {TextComponent} from './text-component'
 import {DomComponent} from './dom-component'
 
 export class RootComponent {
-  component: Component | null = null
+  component: AnyComponent | null = null
 
   order = '1'
   key = 'root'

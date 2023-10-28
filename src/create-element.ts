@@ -1,7 +1,7 @@
 import {CustomComponent} from './lib/components/custom-component'
 import {Props} from './lib/components/types'
 
-export type Meta = DomMeta | CustomMeta | string
+export type Meta = DomMeta | CustomMeta | string | null
 
 export enum MetaKind {
   text,

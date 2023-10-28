@@ -2,103 +2,174 @@ import {CustomMeta, DomMeta, Meta, MetaKind} from '../../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
-import {Component, ParentComponent} from '../components/types'
+import {AnyComponent, ParentComponent} from '../components/types'
 import {TextComponent} from '../components/text-component'
 import {Remove} from './remove'
+import {Order} from './order'
 
 export class Render {
   static component(
-    meta: Meta,
-    prev: Component | null,
+    meta: Exclude<Meta, null>,
+    prev: AnyComponent | null,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
   ) {
     if (typeof meta === 'string') {
-      Render.text(meta, prev, parent, domParent, index)
+      return Render.text(meta, prev, parent, domParent, index)
     } else if (meta.kind === MetaKind.dom) {
-      Render.dom(meta, prev, parent, domParent, index)
-    } else {
-      Render.custom(meta, prev, parent, domParent, index)
+      return Render.dom(meta, prev, parent, domParent, index)
     }
+    return Render.custom(meta, prev, parent, domParent, index)
   }
 
   static dom(
-    tree: DomMeta,
-    prev: Component | null,
-    parent: ParentComponent,
+    meta: DomMeta,
+    prev: AnyComponent | null,
+    directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
   ) {
     if (!prev) {
-      return new DomComponent(tree, parent, domParent, index)
+      return new DomComponent(meta, directParent, domParent, index)
     }
 
-    if (tree.kind === prev.kind && tree.name === prev.meta.name) {
+    if (meta.kind === prev.kind && meta.name === prev.meta.name) {
+      const prevOrder = prev.order
+      const newOrder = Order.key(directParent.order, index)
+
+      if (prevOrder !== newOrder) {
+        prev.index = index
+        prev.order = newOrder
+
+        Order.move(domParent, prev)
+      }
+
       updateAttributes(
         prev.element,
         ElementNamespace.html,
-        tree.props ?? {},
+        meta.props ?? {},
         prev.meta.props,
       )
-
-      prev.meta = tree
-      Render.subComponents(prev, prev, tree.children, prev.subComponents)
+      prev.meta = meta
+      Render.subComponents(prev, prev, meta.children, prev.subComponents)
 
       return prev
     }
 
     Remove.component(prev)
-    // prev.removeSelf()
-
-    return new DomComponent(tree, parent, domParent, index)
+    return new DomComponent(meta, directParent, domParent, index)
   }
 
   static text(
-    text: string,
-    prev: Component | null,
-    parent: ParentComponent,
+    meta: string,
+    prev: AnyComponent | null,
+    directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
   ) {
     if (!prev) {
-      return new TextComponent(text, parent, domParent, index)
+      return new TextComponent(meta, directParent, domParent, index)
     }
 
     if (prev?.kind === MetaKind.text) {
-      prev.meta = text
-      prev.element.textContent = text
+      const prevOrder = prev.order
+      const newOrder = Order.key(directParent.order, index)
 
+      if (prevOrder !== newOrder) {
+        prev.index = index
+        prev.order = newOrder
+
+        Order.move(domParent, prev)
+      }
+
+      if (prev.meta === meta) {
+        return prev
+      }
+
+      prev.element.nodeValue = meta
+      prev.meta = meta
       return prev
     }
 
     Remove.component(prev)
-
-    return new TextComponent(text, parent, domParent, index)
+    return new TextComponent(meta, directParent, domParent, index)
   }
 
   static custom(
     tree: CustomMeta,
-    prev: Component | null,
+    prev: AnyComponent | null,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
-  ) {
-    //
+  ): any {
+    // @ts-ignore
+    return new tree.props.name(tree.props, parent, domParent, index)
   }
 
   static subComponents(
+    directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
-    parent: ParentComponent,
     children: Meta[],
-    prevComponents: Map<string, Component>,
+    prevComponents: Map<string, AnyComponent>,
   ) {
-    const newComponents: Component[] = []
+    const newComponents = new Map<string, AnyComponent>()
 
-    for (let i = -1; i < children.length; i++) {
+    const len = children.length - 1
+
+    // if (__DEV__) {
+    //   checkChildrenKeys(children)
+    // }
+
+    for (let i = len; i >= 0; i--) {
       const child = children[i]
 
-      // TODO
+      if (child !== null) {
+        Render.subComponent(
+          child,
+          directParent,
+          domParent,
+          prevComponents,
+          newComponents,
+          i,
+        )
+      }
     }
+
+    for (const c of prevComponents.values()) {
+      Remove.component(c)
+    }
+
+    return newComponents
+  }
+
+  static subComponent(
+    meta: Exclude<Meta, null>,
+    parent: ParentComponent,
+    domParent: DomComponent | RootComponent,
+    prevChildren: Map<string, AnyComponent>,
+    newChildren: Map<string, AnyComponent>,
+    index: number,
+  ) {
+    if (typeof meta === 'string') {
+      const key = index.toString()
+
+      const s = Render.text(meta, prevChildren.get(key) ?? null, parent, domParent, index)
+      prevChildren.delete(key)
+      newChildren.set(key, s)
+      return s
+    }
+
+    const key: string = meta.props?.key ?? index.toString()
+    const s = Render.component(
+      meta,
+      prevChildren.get(key) ?? null,
+      parent,
+      domParent,
+      index,
+    )
+    prevChildren.delete(key)
+    newChildren.set(key, s)
+    return s
   }
 }
