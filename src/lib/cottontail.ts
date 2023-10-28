@@ -52,7 +52,7 @@ export function renderRoot2(meta: Meta, element: HTMLElement | null) {
   const c = new Cottontail2(meta, element)
 
   return {
-    run: c.next,
+    update: c.next,
   }
 }
 

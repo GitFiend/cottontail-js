@@ -6,7 +6,6 @@ class Thing extends CustomComponent<{}> {
   state = {
     num: 0,
   }
-  selectState(props: {}) {}
 
   render() {
     return (
@@ -15,7 +14,6 @@ class Thing extends CustomComponent<{}> {
           width: `100px`,
           height: `100px`,
           background: 'red',
-          zIndex: 0,
         }}
       >
         <span style={{fontSize: '100px'}}>Hello</span>
@@ -23,7 +21,7 @@ class Thing extends CustomComponent<{}> {
           style={{width: '120px'}}
           onClick={() => {
             this.state.num++
-            run()
+            update()
           }}
         >
           {`Num Clicks: ${this.state.num}`}
@@ -33,7 +31,7 @@ class Thing extends CustomComponent<{}> {
   }
 }
 
-export const {run} = renderRoot2(
+export const {update} = renderRoot2(
   <div>
     <Thing />
   </div>,

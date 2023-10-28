@@ -31,7 +31,7 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
   }
 
   abstract state: S
-  abstract selectState(props: P): void
+  selectState(props: P) {}
   private prevState: S | {} = {}
 
   constructor(
