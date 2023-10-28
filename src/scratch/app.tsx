@@ -6,9 +6,7 @@ class Thing extends CustomComponent<{}> {
   state = {
     num: 0,
   }
-  selectState(props: {}) {
-    return {}
-  }
+  selectState(props: {}) {}
 
   render() {
     return (
@@ -22,13 +20,13 @@ class Thing extends CustomComponent<{}> {
       >
         <span style={{fontSize: '100px'}}>Hello</span>
         <button
+          style={{width: '120px'}}
           onClick={() => {
-            console.log('heelo', this.state)
             this.state.num++
             run()
           }}
         >
-          {this.state.num.toString()}
+          {`Num Clicks: ${this.state.num}`}
         </button>
       </div>
     )

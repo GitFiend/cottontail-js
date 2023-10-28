@@ -32,6 +32,7 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
 
   abstract state: S
   abstract selectState(props: P): void
+  private prevState: S | {} = {}
 
   constructor(
     public props: P,
@@ -46,8 +47,15 @@ export abstract class CustomComponent<P extends Props = {}, S extends State = St
   }
 
   updateWithNewProps(props: P) {
-    if (!equalValues(this.props as any, props as any)) {
+    this.selectState(props)
+
+    if (
+      !equalValues(this.props as any, props as any) ||
+      !equalValues(this.state as any, this.prevState as any)
+    ) {
       this.props = props
+      this.prevState = {...this.state}
+
       this.update()
       this.componentDidUpdate()
     }

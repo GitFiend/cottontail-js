@@ -35,8 +35,6 @@ export class Render {
       return new DomComponent(meta, directParent, domParent, index)
     }
 
-    console.log(meta.name, meta.props)
-
     if (meta.kind === prev.kind && meta.name === prev.meta.name) {
       const prevOrder = prev.order
       const newOrder = Order.key(directParent.order, index)
