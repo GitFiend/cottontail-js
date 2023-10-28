@@ -1,3 +1,5 @@
+import {equalValues} from './render/util'
+
 describe('benchmark to get a sense of how fast it will be to compare lots of objects per frame', () => {
   test('lots of object creations and comparisons', () => {
     const numComparisons = 2000
@@ -101,15 +103,6 @@ function makeTestObject(): Record<string, unknown> {
 // Assumes keys are the same in both objects
 function equalValues2(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
   for (const key of Object.keys(a)) {
-    if (a[key] !== b[key]) return false
-  }
-
-  return true
-}
-
-// Assumes keys are the same in both objects
-function equalValues(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
-  for (const key in a) {
     if (a[key] !== b[key]) return false
   }
 

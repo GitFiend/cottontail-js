@@ -24,7 +24,7 @@ export class CustomMeta {
 
   constructor(
     public name: Function,
-    public props: Props | null,
+    public props: Props,
     public children: Meta[],
   ) {}
 }
@@ -38,7 +38,7 @@ export function createElement(
   if (typeof name === 'string') {
     return new DomMeta(name, props, children)
   } else {
-    return new CustomMeta(name, props, children)
+    return new CustomMeta(name, props ?? {}, children)
   }
 }
 

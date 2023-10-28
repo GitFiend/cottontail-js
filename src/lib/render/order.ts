@@ -1,7 +1,6 @@
 import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
 import {ElementComponent} from '../components/types'
-import {Meta} from '../../create-element'
 
 export function applyInserts(parent: RootComponent | DomComponent): void {
   const {inserted, siblings, element} = parent
@@ -123,21 +122,3 @@ export class Order {
 //     prev = c
 //   }
 // }
-
-function checkChildrenKeys(children: Meta[]) {
-  let numKeys = 0
-  const set = new Set<string>()
-
-  for (const child of children) {
-    if (child !== null && typeof child !== 'string') {
-      if (typeof child.props?.key === 'string') {
-        numKeys++
-        set.add(child.props.key)
-      }
-    }
-  }
-
-  if (numKeys !== set.size) {
-    console.error(`Subtrees contain duplicate keys: `, children)
-  }
-}

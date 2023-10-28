@@ -6,6 +6,7 @@ import {AnyComponent, ParentComponent} from '../components/types'
 import {TextComponent} from '../components/text-component'
 import {Remove} from './remove'
 import {Order} from './order'
+import {makeCustomComponent} from '../components/custom-component'
 
 export class Render {
   static component(
@@ -97,14 +98,48 @@ export class Render {
   }
 
   static custom(
-    tree: CustomMeta,
+    meta: CustomMeta,
     prev: AnyComponent | null,
-    parent: ParentComponent,
+    directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
   ): any {
-    // @ts-ignore
-    return new tree.props.name(tree.props, parent, domParent, index)
+    if (!prev) {
+      return makeCustomComponent(meta, directParent, domParent, index)
+    }
+
+    if (prev.kind === MetaKind.custom && prev.meta.name instanceof meta.name) {
+      const prevOrder = prev.order
+      const newOrder = Order.key(directParent.order, index)
+
+      if (newOrder !== prevOrder) {
+        prev.index = index
+        prev.order = newOrder
+
+        for (const c of prev.subComponents.values()) {
+          const no = Order.key(prev.order, c.index)
+
+          if (c.order !== no) {
+            c.order = no
+
+            switch (c.kind) {
+              case MetaKind.dom:
+              case MetaKind.text:
+                Order.move(domParent, c)
+                break
+              case MetaKind.custom:
+                c.update()
+                break
+            }
+          }
+        }
+      }
+
+      prev.updateWithNewProps(meta.props)
+      return prev
+    }
+
+    return makeCustomComponent(meta, directParent, domParent, index)
   }
 
   static subComponents(
