@@ -4,125 +4,101 @@ import {RootComponent} from './components/root-component'
 import {DomComponent} from './components/dom-component'
 import {Component, ParentComponent} from './components/types'
 import {TextComponent} from './components/text-component'
-import {removeComponent} from './remove'
+import {Remove} from './remove'
 
-export class Cottontail {
-  root: RootComponent
-
-  constructor(element: HTMLElement) {
-    this.root = new RootComponent(element)
+export class Render {
+  static component(
+    meta: Meta,
+    prev: Component | null,
+    parent: ParentComponent,
+    domParent: DomComponent | RootComponent,
+    index: number,
+  ) {
+    if (typeof meta === 'string') {
+      Render.text(meta, prev, parent, domParent, index)
+    } else if (meta.kind === MetaKind.dom) {
+      Render.dom(meta, prev, parent, domParent, index)
+    } else {
+      Render.custom(meta, prev, parent, domParent, index)
+    }
   }
 
-  render(tree: Meta) {
-    // store result ?
-    renderTree(tree, null, this.root, this.root, 0)
-  }
-}
+  static dom(
+    tree: DomMeta,
+    prev: Component | null,
+    parent: ParentComponent,
+    domParent: DomComponent | RootComponent,
+    index: number,
+  ) {
+    if (!prev) {
+      return new DomComponent(tree, parent, domParent, index)
+    }
 
-export function renderTree(
-  tree: Meta,
-  prev: Component | null,
-  parent: ParentComponent,
-  domParent: DomComponent | RootComponent,
-  index: number,
-) {
-  if (typeof tree === 'string') {
-    renderText(tree, prev, parent, domParent, index)
-  } else if (tree.kind === MetaKind.dom) {
-    renderDom(tree, prev, parent, domParent, index)
-  } else {
-    renderCustom(tree, prev, parent, domParent, index)
-  }
-}
+    if (tree.kind === prev.kind && tree.name === prev.meta.name) {
+      updateAttributes(
+        prev.element,
+        ElementNamespace.html,
+        tree.props ?? {},
+        prev.meta.props,
+      )
 
-export function renderText(
-  text: string,
-  prev: Component | null,
-  parent: ParentComponent,
-  domParent: DomComponent | RootComponent,
-  index: number,
-) {
-  if (!prev) {
-    return new TextComponent(text, parent, domParent, index)
-  }
+      prev.meta = tree
+      Render.subComponents(prev, prev, tree.children, prev.subComponents)
 
-  if (prev?.kind === MetaKind.text) {
-    prev.meta = text
-    prev.element.textContent = text
+      return prev
+    }
 
-    return prev
-  }
+    Remove.component(prev)
+    // prev.removeSelf()
 
-  // prev.removeSelf()
-  removeComponent(prev)
-
-  return new TextComponent(text, parent, domParent, index)
-}
-
-export function renderDom(
-  tree: DomMeta,
-  prev: Component | null,
-  parent: ParentComponent,
-  domParent: DomComponent | RootComponent,
-  index: number,
-) {
-  if (!prev) {
     return new DomComponent(tree, parent, domParent, index)
   }
 
-  if (tree.kind === prev.kind && tree.name === prev.meta.name) {
-    updateAttributes(
-      prev.element,
-      ElementNamespace.html,
-      tree.props ?? {},
-      prev.meta.props,
-    )
+  static text(
+    text: string,
+    prev: Component | null,
+    parent: ParentComponent,
+    domParent: DomComponent | RootComponent,
+    index: number,
+  ) {
+    if (!prev) {
+      return new TextComponent(text, parent, domParent, index)
+    }
 
-    prev.meta = tree
-    renderSubComponents(prev, prev, tree.children, prev.subComponents)
+    if (prev?.kind === MetaKind.text) {
+      prev.meta = text
+      prev.element.textContent = text
 
-    return prev
+      return prev
+    }
+
+    Remove.component(prev)
+
+    return new TextComponent(text, parent, domParent, index)
   }
 
-  removeComponent(prev)
-  // prev.removeSelf()
-
-  return new DomComponent(tree, parent, domParent, index)
-}
-
-export function renderSubComponents(
-  domParent: DomComponent | RootComponent,
-  parent: ParentComponent,
-  children: Meta[],
-  prevComponents: Component[],
-) {
-  const newComponents: Component[] = []
-
-  for (let i = -1; i < children.length; i++) {
-    const child = children[i]
-    const prev = prevComponents[i]
-
-    // TODO
-  }
-}
-
-export function renderSubComponent() {}
-
-export function renderCustom(
-  tree: CustomMeta,
-  prev: Component | null,
-  parent: ParentComponent,
-  domParent: DomComponent | RootComponent,
-  index: number,
-) {
-  //
-}
-
-export function render(tree: Meta, element: HTMLElement | null) {
-  if (!element) {
-    throw new Error('Cottontail render: Root element is null')
+  static custom(
+    tree: CustomMeta,
+    prev: Component | null,
+    parent: ParentComponent,
+    domParent: DomComponent | RootComponent,
+    index: number,
+  ) {
+    //
   }
 
-  const req = new Cottontail(element)
-  req.render(tree)
+  static subComponents(
+    domParent: DomComponent | RootComponent,
+    parent: ParentComponent,
+    children: Meta[],
+    prevComponents: Map<string, Component>,
+  ) {
+    const newComponents: Component[] = []
+
+    for (let i = -1; i < children.length; i++) {
+      const child = children[i]
+
+      // TODO
+    }
+  }
 }

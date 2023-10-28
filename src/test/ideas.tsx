@@ -1,7 +1,8 @@
 import {CustomComponent} from '../lib/components/custom-component'
 import {createElement} from '../create-element'
 import {requestFrame} from '../index'
-import {Cottontail} from '../lib/render'
+
+import {Cottontail} from '../lib/cottontail'
 
 class Store {
   num = 4

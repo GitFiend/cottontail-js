@@ -1,7 +1,7 @@
 import {DomMeta, MetaKind} from '../../create-element'
 import {RootComponent} from './root-component'
 import {ElementNamespace, setAttributesFromProps} from '../set-attributes'
-import {renderTree} from '../render'
+import {Render} from '../render'
 import {Component, ElementComponent, ParentComponent} from './types'
 import {Order} from '../order'
 
@@ -37,7 +37,7 @@ export class DomComponent {
 
     for (let i = 0; i < meta.children.length; i++) {
       const child = meta.children[i]
-      renderTree(child, null, this, this, i)
+      Render.component(child, null, this, this, i)
     }
   }
 }

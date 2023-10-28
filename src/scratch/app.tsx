@@ -1,7 +1,7 @@
-import {render} from '../lib/render'
 import {createElement} from '../create-element'
+import {renderRoot} from '../lib/cottontail'
 
-render(
+renderRoot(
   <div>
     <div
       style={{
