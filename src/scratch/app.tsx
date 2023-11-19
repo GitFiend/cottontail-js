@@ -1,6 +1,6 @@
 import {createElement} from '../create-element'
 import {renderRoot} from '../lib/cottontail'
-import {Component} from '../lib/components/custom-component'
+import {CTComponent} from '../lib/components/custom-component'
 
 class Store {
   num = 0
@@ -15,7 +15,7 @@ class Store {
   }
 }
 
-class Thing extends Component<{store: Store}> {
+class Thing extends CTComponent<{store: Store}> {
   state = {
     num: 0,
   }

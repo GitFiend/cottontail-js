@@ -1,4 +1,4 @@
-import type {DomMeta, CustomMeta} from './src/create-element'
+import type {DomMeta, CustomMeta} from './src'
 
 declare global {
   declare const __DEV__: boolean

@@ -1,4 +1,4 @@
-import {Component} from '../lib/components/custom-component'
+import {CTComponent} from '../lib/components/custom-component'
 import {createElement} from '../create-element'
 import {renderRoot} from '../lib/cottontail'
 
@@ -26,7 +26,7 @@ interface NumbersState {
   on: boolean
 }
 
-class Numbers extends Component<NumbersProps, NumbersState> {
+class Numbers extends CTComponent<NumbersProps, NumbersState> {
   // Just declare type here instead of passing it to CustomComponent?
   state = {
     num: 0,

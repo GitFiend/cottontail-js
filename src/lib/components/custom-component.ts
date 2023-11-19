@@ -6,7 +6,7 @@ import {Order} from '../render/order'
 import {equalValues} from '../render/util'
 import {Render} from '../render/render'
 
-export abstract class Component<P extends Props = {}, S extends {} = {}> {
+export abstract class CTComponent<P extends Props = {}, S extends {} = {}> {
   kind = MetaKind.custom as const
   subComponents = new Map<string, AnyComponent>()
 
@@ -81,7 +81,7 @@ type CustomComponentConstructor = new (
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,
   index: number,
-) => Component<any, any>
+) => CTComponent<any, any>
 
 export function makeCustomComponent(
   meta: CustomMeta,
