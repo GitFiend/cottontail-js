@@ -56,6 +56,8 @@ export abstract class CTComponent<P extends Props = {}, S extends {} = {}> {
   }
 
   update() {
+    // Get the elements to render. We detect observable calls here?
+    // This goes an on a global stack, so we can track it?
     const res = this.render()
 
     this.subComponents = Render.subComponents(
