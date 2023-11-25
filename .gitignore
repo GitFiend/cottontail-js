@@ -180,3 +180,5 @@ dist
 /output-code/
 
 /src/scratch/out/
+
+.DS_Store
