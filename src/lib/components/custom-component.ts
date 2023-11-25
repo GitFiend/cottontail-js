@@ -16,17 +16,9 @@ export abstract class CTComponent<P extends Props = {}> {
   order: string = ''
   key: string = ''
 
-  // removed = false
-
   __ref: RefObject<CTComponent> = {
     current: this,
   }
-
-  // abstract state: S
-
-  // Call this 'onRenderCalled'? 'beforeRender'? 'beforeUpdate'?
-  // selectState(props: P) {}
-  // private prevState: S | {} = {}
 
   constructor(
     public props: P,
@@ -41,16 +33,9 @@ export abstract class CTComponent<P extends Props = {}> {
   }
 
   updateWithNewProps(props: P): void {
-    // this.selectState(props)
-
     // Do we check both props and state? 1 component type? Or do we have a pure props type?
-    if (
-      !equalValues(this.props as any, props as any)
-      // !equalValues(this.state as any, this.prevState as any)
-    ) {
+    if (!equalValues(this.props as any, props as any)) {
       this.props = props
-      // TODO: Copy across properties when we compare instead of allocating new object.
-      // this.prevState = {...this.state}
 
       this.update()
       this.componentDidUpdate()

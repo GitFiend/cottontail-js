@@ -8,9 +8,9 @@ export function charge$Runes(object: Object) {
       const value: unknown = object[key as keyof object]
 
       if (!(value instanceof Function)) {
-        // TODO: Investigate whether to make a Rune a class, or just use closed over state here.
-
         const valueName = `__${key}`
+
+        // TODO: Investigate whether to make a Rune a class, or just use closed over state here.
         const componentRefs = new Set<RefObject<CTComponent>>()
 
         Object.defineProperties(object, {
@@ -43,13 +43,5 @@ export function charge$Runes(object: Object) {
         })
       }
     }
-  }
-}
-
-class Model {
-  $a = 4
-
-  constructor() {
-    charge$Runes(this)
   }
 }

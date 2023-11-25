@@ -23,25 +23,11 @@ export class Cottontail {
     this.render()
   }
 
-  // queued = false
   private render = () => {
     this.prev = Render.component(this.meta, this.prev, this.root, this.root, 0)
-    // this.queued = false
   }
-
-  // nextRender = () => {
-  //   if (this.queued) {
-  //     return
-  //   }
-  //   this.queued = true
-  //   requestAnimationFrame(this.render)
-  // }
 }
 
 export function renderRoot(meta: Meta, element: HTMLElement | null) {
   new Cottontail(meta, element)
-
-  // return {
-  //   render: c.nextRender,
-  // }
 }
