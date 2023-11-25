@@ -1,7 +1,7 @@
 import {DomComponent} from '../components/dom-component'
 import {AnyComponent} from '../components/types'
 import {MetaKind} from '../../create-element'
-import {CTComponent} from '../components/custom-component'
+import {$Component} from '../components/custom-component'
 import {TextComponent} from '../components/text-component'
 import {Order} from './order'
 
@@ -31,7 +31,7 @@ export class Remove {
     component.subComponents.clear()
   }
 
-  static customComponent(component: CTComponent) {
+  static customComponent(component: $Component) {
     // if (__DEV__ && component.removed) {
     //   console.error('already removed')
     // }

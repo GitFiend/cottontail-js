@@ -1,4 +1,4 @@
-import {CTComponent} from './lib/components/custom-component'
+import {$Component} from './lib/components/custom-component'
 import {Props} from './lib/components/types'
 
 export type Meta = DomMeta | CustomMeta | string | null
@@ -42,7 +42,7 @@ export function createElement(
   }
 }
 
-export class Fragment extends CTComponent<{}> {
+export class Fragment extends $Component<{}> {
   state = {}
 
   selectState(): {} {

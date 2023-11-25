@@ -1,6 +1,6 @@
 import {createElement} from '../create-element'
 import {renderRoot} from '../lib/cottontail'
-import {CTComponent} from '../lib/components/custom-component'
+import {$Component} from '../lib/components/custom-component'
 import {charge$Runes} from '../lib/model/model'
 
 class Store {
@@ -19,7 +19,7 @@ class Store {
   }
 }
 
-class Thing extends CTComponent<{store: Store}> {
+class Thing extends $Component<{store: Store}> {
   render() {
     const {store} = this.props
 

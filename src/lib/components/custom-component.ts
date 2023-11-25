@@ -9,14 +9,14 @@ import {RefObject} from './ref'
 import {GlobalStack} from '../model/global-stack'
 import {charge$Runes} from '../model/model'
 
-export abstract class CTComponent<P extends Props = {}> {
+export abstract class $Component<P extends Props = {}> {
   kind = MetaKind.custom as const
   subComponents = new Map<string, AnyComponent>()
 
   order: string = ''
   key: string = ''
 
-  __ref: RefObject<CTComponent> = {
+  __ref: RefObject<$Component> = {
     current: this,
   }
 
@@ -82,7 +82,7 @@ type CustomComponentConstructor = new (
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,
   index: number,
-) => CTComponent<any>
+) => $Component<any>
 
 export function makeCustomComponent(
   meta: CustomMeta,
