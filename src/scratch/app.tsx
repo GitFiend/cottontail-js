@@ -1,30 +1,28 @@
 import {createElement} from '../create-element'
 import {renderRoot} from '../lib/cottontail'
 import {CTComponent} from '../lib/components/custom-component'
+import {charge$Runes} from '../lib/model/model'
 
 class Store {
-  num = 0
+  $num = 0
+
+  constructor() {
+    charge$Runes(this)
+  }
 
   get square() {
-    return this.num ** 2
+    return this.$num ** 2
   }
 
   onClick = () => {
-    this.num++
-    render()
+    this.$num++
   }
 }
 
 class Thing extends CTComponent<{store: Store}> {
-  state = {
-    num: 0,
-  }
-
-  selectState(props: {store: Store}) {
-    this.state.num = props.store.num
-  }
-
   render() {
+    const {store} = this.props
+
     return (
       <div
         style={{
@@ -34,8 +32,8 @@ class Thing extends CTComponent<{store: Store}> {
         }}
       >
         <span style={{fontSize: '100px'}}>Hello</span>
-        <button style={{width: '120px'}} onClick={this.props.store.onClick}>
-          {`Num Clicks: ${this.state.num}, square: ${this.props.store.square}`}
+        <button style={{width: '120px'}} onClick={store.onClick}>
+          {`Num Clicks: ${store.$num}, square: ${store.square}`}
         </button>
       </div>
     )
@@ -44,7 +42,7 @@ class Thing extends CTComponent<{store: Store}> {
 
 const store = new Store()
 
-export const {render} = renderRoot(
+renderRoot(
   <div style={{display: 'flex', flexDirection: 'column'}}>
     <div style={{height: '150px'}}>
       <Thing store={store} />

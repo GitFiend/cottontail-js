@@ -23,25 +23,25 @@ export class Cottontail {
     this.render()
   }
 
-  queued = false
+  // queued = false
   private render = () => {
     this.prev = Render.component(this.meta, this.prev, this.root, this.root, 0)
-    this.queued = false
+    // this.queued = false
   }
 
-  nextRender = () => {
-    if (this.queued) {
-      return
-    }
-    this.queued = true
-    requestAnimationFrame(this.render)
-  }
+  // nextRender = () => {
+  //   if (this.queued) {
+  //     return
+  //   }
+  //   this.queued = true
+  //   requestAnimationFrame(this.render)
+  // }
 }
 
 export function renderRoot(meta: Meta, element: HTMLElement | null) {
-  const c = new Cottontail(meta, element)
+  new Cottontail(meta, element)
 
-  return {
-    render: c.nextRender,
-  }
+  // return {
+  //   render: c.nextRender,
+  // }
 }

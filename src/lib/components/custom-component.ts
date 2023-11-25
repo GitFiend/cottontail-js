@@ -5,21 +5,28 @@ import {AnyComponent, ParentComponent, Props} from './types'
 import {Order} from '../render/order'
 import {equalValues} from '../render/util'
 import {Render} from '../render/render'
+import {RefObject} from './ref'
+import {GlobalStack} from '../model/global-stack'
+import {charge$Runes} from '../model/model'
 
-export abstract class CTComponent<P extends Props = {}, S extends {} = {}> {
+export abstract class CTComponent<P extends Props = {}> {
   kind = MetaKind.custom as const
   subComponents = new Map<string, AnyComponent>()
 
   order: string = ''
   key: string = ''
 
-  removed = false
+  // removed = false
 
-  abstract state: S
+  __ref: RefObject<CTComponent> = {
+    current: this,
+  }
+
+  // abstract state: S
 
   // Call this 'onRenderCalled'? 'beforeRender'? 'beforeUpdate'?
-  selectState(props: P) {}
-  private prevState: S | {} = {}
+  // selectState(props: P) {}
+  // private prevState: S | {} = {}
 
   constructor(
     public props: P,
@@ -34,16 +41,16 @@ export abstract class CTComponent<P extends Props = {}, S extends {} = {}> {
   }
 
   updateWithNewProps(props: P): void {
-    this.selectState(props)
+    // this.selectState(props)
 
     // Do we check both props and state? 1 component type? Or do we have a pure props type?
     if (
-      !equalValues(this.props as any, props as any) ||
-      !equalValues(this.state as any, this.prevState as any)
+      !equalValues(this.props as any, props as any)
+      // !equalValues(this.state as any, this.prevState as any)
     ) {
       this.props = props
       // TODO: Copy across properties when we compare instead of allocating new object.
-      this.prevState = {...this.state}
+      // this.prevState = {...this.state}
 
       this.update()
       this.componentDidUpdate()
@@ -51,14 +58,19 @@ export abstract class CTComponent<P extends Props = {}, S extends {} = {}> {
   }
 
   mount() {
+    charge$Runes(this)
     this.update()
     this.componentDidMount()
   }
 
   update() {
+    GlobalStack.renderedList.add(this)
+
     // Get the elements to render. We detect observable calls here?
     // This goes an on a global stack, so we can track it?
+    GlobalStack.push(this.__ref)
     const res = this.render()
+    GlobalStack.pop()
 
     this.subComponents = Render.subComponents(
       this.directParent,
@@ -69,6 +81,8 @@ export abstract class CTComponent<P extends Props = {}, S extends {} = {}> {
   }
 
   abstract render(): Meta
+
+  // See remove.ts for clean up code.
 
   componentDidMount(): void {}
 
@@ -83,7 +97,7 @@ type CustomComponentConstructor = new (
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,
   index: number,
-) => CTComponent<any, any>
+) => CTComponent<any>
 
 export function makeCustomComponent(
   meta: CustomMeta,

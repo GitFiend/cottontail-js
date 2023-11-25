@@ -588,7 +588,7 @@ declare namespace React {
     render(): ReactNode
 
     readonly props: Readonly<P>
-    state: Readonly<S>
+    // state: Readonly<S>
     /**
      * @deprecated
      * https://legacy.reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs

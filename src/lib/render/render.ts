@@ -108,7 +108,7 @@ export class Render {
     directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
-  ): CTComponent<any, any> {
+  ): CTComponent {
     if (!prev) {
       return makeCustomComponent(meta, directParent, domParent, index)
     }

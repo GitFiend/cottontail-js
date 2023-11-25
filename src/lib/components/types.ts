@@ -7,6 +7,6 @@ export interface Props extends Object {
   key?: string
 }
 
-export type AnyComponent = DomComponent | CTComponent<any, any> | TextComponent
-export type ParentComponent = RootComponent | DomComponent | CTComponent<any, any>
+export type AnyComponent = DomComponent | CTComponent<any> | TextComponent
+export type ParentComponent = RootComponent | DomComponent | CTComponent<any>
 export type ElementComponent = DomComponent | TextComponent
