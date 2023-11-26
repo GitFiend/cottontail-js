@@ -1,5 +1,6 @@
 import {RefObject} from '../components/ref'
 import {Props} from '../components/types'
+import {setStyles} from './set-styles'
 
 export enum ElementNamespace {
   html,
@@ -12,6 +13,8 @@ export function setAttributesFromProps(
   namespace: ElementNamespace,
   props: Props,
 ): void {
+  // TODO: Handle Svg element namespace.
+
   const attributes = Object.keys(props)
 
   for (const attr of attributes) {
@@ -93,10 +96,13 @@ function setAttribute(
       element.setAttribute('class', value)
       break
     case 'value':
+      // What is this?
+      break
     case 'style':
-      for (const style in value) {
-        ;(element as any)[attr][style] = value[style]
-      }
+      // for (const style in value) {
+      //   ;(element as any)[attr][style] = value[style]
+      // }
+      setStyles(element as HTMLElement, value)
       break
     case 'ref':
       ;(value as RefObject<unknown>).current = element
@@ -115,10 +121,6 @@ function setAttribute(
       }
       break
   }
-}
-
-function setStyles(style: Record<string, unknown>) {
-  // TODO: Handle numbers for things like width?
 }
 
 function setSvgAttribute(element: Element, attr: string, value: any) {
