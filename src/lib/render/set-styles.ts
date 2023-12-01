@@ -5,7 +5,7 @@ export function setStyles(element: HTMLElement, styles: CSSProperties) {
     const value = (styles as any)[style]
 
     if (typeof value === 'number' && isPixValue(style)) {
-      ;(styles as any)[style] = value + 'px'
+      element.style[style as any] = value + 'px'
     } else {
       element.style[style as any] = value
     }
@@ -29,6 +29,7 @@ function isPixValue(styleName: string): boolean {
     case 'paddingLeft':
     case 'paddingRight':
     case 'paddingBottom':
+    case 'gap':
     case 'margin':
     case 'marginTop':
     case 'marginLeft':

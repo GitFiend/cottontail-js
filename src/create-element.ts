@@ -7,6 +7,7 @@ export enum MetaKind {
   text,
   dom,
   custom,
+  reaction,
 }
 
 export class DomMeta {

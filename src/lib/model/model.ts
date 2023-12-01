@@ -1,6 +1,7 @@
 import {RefObject} from '../components/ref'
 import {GlobalStack} from './global-stack'
 import {$Component} from '../components/custom-component'
+import {Reaction} from './reactions'
 
 export function charge$Runes(object: Object) {
   for (const key in object) {
@@ -11,7 +12,7 @@ export function charge$Runes(object: Object) {
         const valueName = `__${key}`
 
         // TODO: Investigate whether to make a Rune a class, or just use closed over state here.
-        const componentRefs = new Set<RefObject<$Component>>()
+        const componentRefs = new Set<RefObject<$Component | Reaction>>()
 
         Object.defineProperties(object, {
           [valueName]: {

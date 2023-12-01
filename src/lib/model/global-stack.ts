@@ -1,11 +1,13 @@
 import {RefObject} from '../components/ref'
 import {$Component} from '../components/custom-component'
+import {Reaction} from './reactions'
+import {MetaKind} from '../../create-element'
 
 export class GlobalStack {
-  private static componentRefs: RefObject<$Component>[] = []
-  private static dirtyComponents = new Set<RefObject<$Component>>()
+  private static componentRefs: RefObject<$Component | Reaction>[] = []
+  private static dirtyComponents = new Set<RefObject<$Component | Reaction>>()
 
-  static push(componentRef: RefObject<$Component>) {
+  static push(componentRef: RefObject<$Component | Reaction>) {
     this.componentRefs.push(componentRef)
   }
 
@@ -13,11 +15,11 @@ export class GlobalStack {
     this.componentRefs.pop()
   }
 
-  static getCurrent(): RefObject<$Component> | null {
+  static getCurrent(): RefObject<$Component | Reaction> | null {
     return this.componentRefs[this.componentRefs.length - 1] ?? null
   }
 
-  static markDirty(componentRef: RefObject<$Component>) {
+  static markDirty(componentRef: RefObject<$Component | Reaction>) {
     this.dirtyComponents.add(componentRef)
 
     this.queueRender()
@@ -41,14 +43,19 @@ export class GlobalStack {
   static renderedList = new Set<$Component>()
 
   private static renderList: $Component[] = []
+  private static reactionList: Reaction[] = []
 
   private static reRender = () => {
     console.time('reRender')
-    const {renderList, renderedList} = this
+    const {renderList, renderedList, reactionList} = this
 
     for (const c of this.dirtyComponents.values()) {
       if (c.current) {
-        renderList.push(c.current)
+        if (c.current.kind === MetaKind.custom) {
+          renderList.push(c.current)
+        } else {
+          reactionList.push(c.current)
+        }
       }
     }
 
