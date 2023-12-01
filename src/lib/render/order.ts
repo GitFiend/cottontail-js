@@ -55,10 +55,8 @@ export class Order {
           if (next != null) {
             inserted.splice(i + 1, 0, child)
 
-            // RunStack.insertsStack.add(parent)
             applyInserts(parent)
           } else {
-            // RunStack.insertsStack.add(parent)
             applyInserts(parent)
             inserted.push(child)
           }
@@ -69,7 +67,6 @@ export class Order {
     }
 
     inserted.unshift(child)
-    // RunStack.insertsStack.add(parent)
     applyInserts(parent)
   }
 
@@ -97,7 +94,6 @@ export class Order {
 
       siblings.delete(child.element)
 
-      // RunStack.removeStack.add(child.element)
       child.element.remove()
     }
   }

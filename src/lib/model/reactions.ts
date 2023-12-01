@@ -1,5 +1,6 @@
 import {RefObject} from '../components/ref'
 import {MetaKind} from '../create-element'
+import {GlobalStack} from './global-stack'
 
 export function $AutoRun() {}
 
@@ -10,9 +11,23 @@ class AutoRun {
 
   __ref: RefObject<AutoRun> = {current: this}
 
+  // TODO: Could we use a WeakRef here to hold onto the function instead?
+  //  What about anonymous functions?
   constructor(private fn: () => void) {}
 
-  run() {}
+  run() {
+    GlobalStack.push(this.__ref)
+
+    this.fn()
+
+    GlobalStack.pop()
+  }
+}
+
+export function autorun(fn: () => void) {
+  const autoRun = new AutoRun(fn)
+
+  autoRun.run()
 }
 
 class Reactor<T = any> {

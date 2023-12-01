@@ -45,7 +45,7 @@ const store = new Store()
 renderRoot(
   <div style={{display: 'flex', flexDirection: 'column'}}>
     <h1>Hi</h1>
-    {Array.from({length: 10}).map((_, i) => {
+    {Array.from({length: 1000}).map((_, i) => {
       return (
         <div style={{height: 150}} key={i}>
           <Thing store={store} />

@@ -10,13 +10,14 @@ import {GlobalStack} from '../model/global-stack'
 import {charge$Runes} from '../model/model'
 
 export abstract class $Component<P extends Props = {}> {
-  kind = MetaKind.custom as const
+  readonly kind = MetaKind.custom as const
   subComponents = new Map<string, AnyComponent>()
+  // TODO: Consider/test a previous and new subComponents map and swap them (Performance)
 
-  order: string = ''
-  key: string = ''
+  order: string
+  key: string
 
-  __ref: RefObject<$Component> = {
+  readonly __ref: RefObject<$Component> = {
     current: this,
   }
 
@@ -27,7 +28,6 @@ export abstract class $Component<P extends Props = {}> {
     public domParent: DomComponent | RootComponent,
     public index: number,
   ) {
-    this.index = index
     this.order = Order.key(directParent.order, index)
     this.key = this.props?.key ?? directParent.key + index
   }

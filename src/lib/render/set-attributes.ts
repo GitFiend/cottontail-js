@@ -13,11 +13,11 @@ export function setAttributesFromProps(
   namespace: ElementNamespace,
   props: Props,
 ): void {
-  // TODO: Handle Svg element namespace.
+  if (namespace === ElementNamespace.svg) {
+    console.warn('Svg namespace not implemented.')
+  }
 
-  const attributes = Object.keys(props)
-
-  for (const attr of attributes) {
+  for (const attr in props) {
     // @ts-ignore
     const value = props[attr]
 
@@ -99,8 +99,6 @@ function setAttribute(
       // What is this?
       break
     case 'style':
-      // TODO: Only update the styles that need it.
-      //  (This isn't done previously because we had a string value.)
       setStyles(element as HTMLElement, value)
       break
     case 'ref':
