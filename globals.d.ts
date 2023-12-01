@@ -1,4 +1,4 @@
-import type {DomMeta, CustomMeta} from './src'
+import type {DomMeta, CustomMeta} from './index'
 
 declare global {
   declare const __DEV__: boolean

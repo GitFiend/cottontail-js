@@ -1,4 +1,4 @@
-import {CustomMeta, DomMeta, Meta, MetaKind} from '../../create-element'
+import {CustomMeta, DomMeta, Meta, MetaKind} from '../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'

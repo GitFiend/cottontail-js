@@ -1,5 +1,5 @@
 import {RefObject} from '../components/ref'
-import {MetaKind} from '../../create-element'
+import {MetaKind} from '../create-element'
 
 export function $AutoRun() {}
 

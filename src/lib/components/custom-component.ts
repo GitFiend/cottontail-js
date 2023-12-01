@@ -1,4 +1,4 @@
-import {CustomMeta, Meta, MetaKind} from '../../create-element'
+import {CustomMeta, Meta, MetaKind} from '../create-element'
 import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
 import {AnyComponent, ParentComponent, Props} from './types'

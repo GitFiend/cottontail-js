@@ -1,7 +1,7 @@
 import {RefObject} from '../components/ref'
 import {$Component} from '../components/custom-component'
 import {Reaction} from './reactions'
-import {MetaKind} from '../../create-element'
+import {MetaKind} from '../create-element'
 
 export class GlobalStack {
   private static componentRefs: RefObject<$Component | Reaction>[] = []

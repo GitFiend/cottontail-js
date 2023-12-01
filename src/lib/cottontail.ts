@@ -1,5 +1,5 @@
 import {RootComponent} from './components/root-component'
-import {Meta} from '../create-element'
+import {Meta} from './create-element'
 import {Render} from './render/render'
 import {AnyComponent} from './components/types'
 

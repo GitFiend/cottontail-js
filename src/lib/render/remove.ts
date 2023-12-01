@@ -1,6 +1,6 @@
 import {DomComponent} from '../components/dom-component'
 import {AnyComponent} from '../components/types'
-import {MetaKind} from '../../create-element'
+import {MetaKind} from '../create-element'
 import {$Component} from '../components/custom-component'
 import {TextComponent} from '../components/text-component'
 import {Order} from './order'

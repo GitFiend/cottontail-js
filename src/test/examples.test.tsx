@@ -1,4 +1,4 @@
-import {createElement, Fragment} from '../create-element'
+import {createElement, Fragment} from '../lib/create-element'
 import {JSX} from '../jsx-types'
 
 describe('simple div', () => {

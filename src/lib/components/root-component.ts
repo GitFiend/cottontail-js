@@ -1,6 +1,4 @@
-import {AnyComponent} from './types'
-import {TextComponent} from './text-component'
-import {DomComponent} from './dom-component'
+import {AnyComponent, ElementComponent} from './types'
 
 export class RootComponent {
   component: AnyComponent | null = null
@@ -8,7 +6,7 @@ export class RootComponent {
   order = '1'
   key = 'root'
 
-  inserted: (DomComponent | TextComponent)[] = []
+  inserted: ElementComponent[] = []
 
   // key is an element, value is the previous element
   siblings = new WeakMap<Element | Text, Element | Text | null>()

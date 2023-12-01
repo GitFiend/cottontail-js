@@ -1,7 +1,7 @@
 import {DomComponent} from './dom-component'
 import {ParentComponent} from './types'
 import {RootComponent} from './root-component'
-import {MetaKind} from '../../create-element'
+import {MetaKind} from '../create-element'
 import {Order} from '../render/order'
 
 export class TextComponent {

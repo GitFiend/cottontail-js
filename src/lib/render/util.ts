@@ -1,4 +1,4 @@
-import {Meta} from '../../create-element'
+import {Meta} from '../create-element'
 
 // Assumes keys are the same in both objects
 export function equalValues(

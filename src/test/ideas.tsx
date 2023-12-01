@@ -1,5 +1,5 @@
 import {$Component} from '../lib/components/custom-component'
-import {createElement} from '../create-element'
+import {createElement} from '../lib/create-element'
 import {renderRoot} from '../lib/cottontail'
 
 class Store {

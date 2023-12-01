@@ -1,7 +1,7 @@
-import {createElement} from '../create-element'
 import {renderRoot} from '../lib/cottontail'
 import {$Component} from '../lib/components/custom-component'
 import {charge$Runes} from '../lib/model/model'
+import {createElement} from '../lib/create-element'
 
 class Store {
   $num = 0

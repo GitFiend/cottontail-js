@@ -1,4 +1,4 @@
-import {createElement} from '../../create-element'
+import {createElement} from '../create-element'
 import {renderRoot} from '../cottontail'
 
 describe('render', () => {

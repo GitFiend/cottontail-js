@@ -1,4 +1,4 @@
-import {DomMeta, MetaKind} from '../../create-element'
+import {DomMeta, MetaKind} from '../create-element'
 import {RootComponent} from './root-component'
 import {ElementNamespace, setAttributesFromProps} from '../render/set-attributes'
 import {Render} from '../render/render'

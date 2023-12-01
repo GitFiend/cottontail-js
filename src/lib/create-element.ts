@@ -1,5 +1,5 @@
-import {$Component} from './lib/components/custom-component'
-import {Props} from './lib/components/types'
+import {$Component} from './components/custom-component'
+import {Props} from './components/types'
 
 export type Meta = DomMeta | CustomMeta | string | null
 
