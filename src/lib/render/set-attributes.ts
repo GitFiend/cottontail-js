@@ -1,6 +1,6 @@
 import {RefObject} from '../components/ref'
 import {Props} from '../components/types'
-import {setStyles} from './set-styles'
+import {setStyles, updateStyles} from './set-styles'
 
 export enum ElementNamespace {
   html,
@@ -41,47 +41,47 @@ export function updateAttributes(
   }
 }
 
-// TODO: Could we remove a loop by using Array.from?
 function updateAttrInner(
   element: Element,
   namespace: ElementNamespace,
   newProps: object,
   oldProps: object,
 ): void {
-  const newKeys = Object.keys(newProps)
-  const oldKeys = Object.keys(oldProps)
-
-  for (const key of newKeys) {
+  for (const attr in newProps) {
     // @ts-ignore
-    const oldValue = oldProps[key]
+    const oldValue = oldProps[attr]
     // @ts-ignore
-    const newValue = newProps[key]
+    const newValue = newProps[attr]
 
+    // TODO: Does this remove styles? Bug?
     if (newValue === undefined) continue
 
     if (oldValue === undefined) {
-      setAttribute(element, namespace, key, newValue)
-    } //
-    else if (oldValue !== newValue) {
-      if (key.startsWith('on')) deleteAttribute(element, key, oldValue)
-
-      setAttribute(element, namespace, key, newValue)
+      setAttribute(element, namespace, attr, newValue)
+    } else if (oldValue !== newValue) {
+      if (attr.startsWith('on')) {
+        deleteAttribute(element, attr, oldValue)
+        setAttribute(element, namespace, attr, newValue)
+      } else if (attr === 'style') {
+        updateStyles(element as HTMLElement, oldValue, newValue)
+      } else {
+        setAttribute(element, namespace, attr, newValue)
+      }
     }
   }
 
-  for (const key of oldKeys) {
+  for (const attr in oldProps) {
     // @ts-ignore
-    const oldValue = oldProps[key]
+    const oldValue = oldProps[attr]
     // @ts-ignore
-    const newValue = newProps[key]
+    const newValue = newProps[attr]
 
     if (newValue === undefined && oldValue !== undefined) {
-      deleteAttribute(element, key, oldValue)
+      deleteAttribute(element, attr, oldValue)
     }
   }
 }
 
-// TODO: Improve types.
 function setAttribute(
   element: Element,
   namespace: ElementNamespace,
@@ -99,9 +99,8 @@ function setAttribute(
       // What is this?
       break
     case 'style':
-      // for (const style in value) {
-      //   ;(element as any)[attr][style] = value[style]
-      // }
+      // TODO: Only update the styles that need it.
+      //  (This isn't done previously because we had a string value.)
       setStyles(element as HTMLElement, value)
       break
     case 'ref':

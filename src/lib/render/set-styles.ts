@@ -4,11 +4,43 @@ export function setStyles(element: HTMLElement, styles: CSSProperties) {
   for (const style in styles) {
     const value = (styles as any)[style]
 
-    if (typeof value === 'number' && isPixValue(style)) {
-      element.style[style as any] = value + 'px'
-    } else {
-      element.style[style as any] = value
+    setStyle(element, style, value)
+  }
+}
+
+export function updateStyles(
+  element: HTMLElement,
+  oldStyles: CSSProperties,
+  newStyles: CSSProperties,
+) {
+  for (const style in newStyles) {
+    const oldValue = (oldStyles as any)[style]
+    const newValue = (newStyles as any)[style]
+
+    if (newValue === undefined) continue
+
+    if (oldValue === undefined) {
+      setStyle(element, style, newValue)
+    } else if (oldValue !== newValue) {
+      setStyle(element, style, newValue)
     }
+  }
+
+  for (const style in oldStyles) {
+    const oldValue = (oldStyles as any)[style]
+    const newValue = (newStyles as any)[style]
+
+    if (newValue === undefined && oldValue !== undefined) {
+      setStyle(element, style, '')
+    }
+  }
+}
+
+function setStyle(element: HTMLElement, style: string, value: any) {
+  if (typeof value === 'number' && isPixValue(style)) {
+    element.style[style as any] = value + 'px'
+  } else {
+    element.style[style as any] = value
   }
 }
 
