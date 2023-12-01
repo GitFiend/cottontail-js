@@ -22,6 +22,6 @@ export class TextComponent {
     this.order = order
     this.element = document.createTextNode(meta)
 
-    domParent.element.append(this.element)
+    Order.insert(domParent, this)
   }
 }

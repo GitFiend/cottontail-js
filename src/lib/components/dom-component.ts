@@ -37,8 +37,6 @@ export class DomComponent {
       this.subComponents,
     )
 
-    domParent.element.append(this.element)
-
     Order.insert(domParent, this)
   }
 }

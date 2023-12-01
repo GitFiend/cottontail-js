@@ -30,25 +30,43 @@ export class CustomMeta {
   ) {}
 }
 
+type ElementChildren = (Meta | number | (Meta | number)[])[]
+
 // Could we look up the current tree instead of constructing again?
 export function createElement(
   name: string | Function,
   props: Props | null,
-  ...children: Meta[]
+  ...children: ElementChildren
 ): Meta {
-  if (children.some(c => typeof c === 'number')) {
-    debugger
-  }
+  const sanitisedChildren = sanitiseChildren(children)
 
   if (typeof name === 'string') {
-    return new DomMeta(name, props, children.flat())
+    return new DomMeta(name, props, sanitisedChildren)
   } else {
-    return new CustomMeta(name, props ?? {}, children.flat())
+    return new CustomMeta(name, props ?? {}, sanitisedChildren)
   }
 }
 
-function sanitiseChildren(children: Meta[]) {
-  //
+function sanitiseChildren(children: ElementChildren): Meta[] {
+  const result: Meta[] = []
+
+  for (const child of children) {
+    if (Array.isArray(child)) {
+      for (const c of child) {
+        if (typeof c === 'number') {
+          result.push(c.toString())
+        } else {
+          result.push(c)
+        }
+      }
+    } else if (typeof child === 'number') {
+      result.push(child.toString())
+    } else {
+      result.push(child)
+    }
+  }
+
+  return result
 }
 
 export class Fragment extends $Component {
