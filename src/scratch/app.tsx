@@ -27,13 +27,13 @@ class Thing extends $Component<{store: Store}> {
       <div
         style={{
           width: 100,
-          height: `100px`,
+          height: 100,
           background: 'red',
         }}
       >
-        <span style={{fontSize: '100px'}}>Hello</span>
-        <button style={{width: '120px'}} onClick={store.onClick}>
-          {`Num Clicks: ${store.$num}, square: ${store.square}`}
+        <span style={{fontSize: 100}}>Hello</span>
+        <button style={{width: 120}} onClick={store.onClick}>
+          Num Clicks: {store.$num}, square: {store.square}
         </button>
       </div>
     )
@@ -44,48 +44,14 @@ const store = new Store()
 
 renderRoot(
   <div style={{display: 'flex', flexDirection: 'column'}}>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
-    <div style={{height: '150px'}}>
-      <Thing store={store} />
-    </div>
+    <h1>Hi</h1>
+    {Array.from({length: 10}).map((_, i) => {
+      return (
+        <div style={{height: 150}} key={i}>
+          <Thing store={store} />
+        </div>
+      )
+    })}
   </div>,
   document.getElementById('root'),
 )

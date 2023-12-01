@@ -35,21 +35,24 @@ export function createElement(
   props: Props | null,
   ...children: Meta[]
 ): Meta {
+  if (children.some(c => typeof c === 'number')) {
+    debugger
+  }
+
   if (typeof name === 'string') {
-    return new DomMeta(name, props, children)
+    return new DomMeta(name, props, children.flat())
   } else {
-    return new CustomMeta(name, props ?? {}, children)
+    return new CustomMeta(name, props ?? {}, children.flat())
   }
 }
 
-export class Fragment extends $Component<{}> {
-  state = {}
+function sanitiseChildren(children: Meta[]) {
+  //
+}
 
-  selectState(): {} {
-    return {}
-  }
-
+export class Fragment extends $Component {
   render() {
+    throw new Error('TODO Fragments!')
     return null
   }
 }
