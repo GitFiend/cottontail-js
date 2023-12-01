@@ -163,7 +163,7 @@ export class Render {
     for (let i = len; i >= 0; i--) {
       const child = children[i]
 
-      if (child !== null) {
+      if (child !== null && child !== undefined) {
         Render.subComponent(
           child,
           directParent,
@@ -210,5 +210,23 @@ export class Render {
     prevChildren.delete(key)
     newChildren.set(key, s)
     return s
+  }
+}
+
+function checkChildrenKeys(children: Meta[]): void {
+  let numKeys = 0
+  const set = new Set<string>()
+
+  for (const child of children) {
+    if (typeof child !== 'string' && child?.props) {
+      if (typeof child.props.key === 'string') {
+        numKeys++
+        set.add(child.props.key)
+      }
+    }
+  }
+
+  if (numKeys !== set.size) {
+    console.error(`Subtrees contain duplicate keys: `, children)
   }
 }

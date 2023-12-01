@@ -26,6 +26,7 @@ describe('benchmark to get a sense of how fast it will be to compare lots of obj
       const o2 = objects2[i]
 
       // We do object spread to simulate selecting state and putting it into new object
+      // @ts-ignore
       equal.push(equalValues(o1, {...o2}))
       // equal.push(equalValues(o1, o2))
     }
@@ -123,3 +124,81 @@ function shuffleArray(array: unknown[]): void {
     ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
   }
 }
+
+describe('construct objects', () => {
+  const num = 1000_000
+
+  function testArray() {
+    test('array', () => {
+      const array = []
+
+      console.time('array')
+      for (let i = 0; i < num; i++) {
+        array.push([0, 0, 0])
+      }
+
+      console.timeEnd('array')
+
+      expect(array.length).toEqual(num)
+    })
+  }
+
+  function testObject() {
+    test('object', () => {
+      const array = []
+
+      console.time('object')
+      for (let i = 0; i < num; i++) {
+        array.push({
+          x: 0,
+          y: 0,
+          z: 0,
+        })
+      }
+
+      console.timeEnd('object')
+
+      expect(array.length).toEqual(num)
+    })
+  }
+
+  function testClass() {
+    test('class', () => {
+      const array = []
+
+      class TestClass {
+        x = 0
+        y = 0
+        z = 0
+      }
+
+      console.time('class')
+      for (let i = 0; i < num; i++) {
+        array.push(new TestClass())
+      }
+
+      console.timeEnd('class')
+
+      expect(array.length).toEqual(num)
+    })
+  }
+
+  testArray()
+  testClass()
+  testObject()
+  testArray()
+  testClass()
+  testObject()
+  testArray()
+  testClass()
+  testObject()
+  testArray()
+  testClass()
+  testObject()
+  testArray()
+  testClass()
+  testObject()
+  testArray()
+  testClass()
+  testObject()
+})
