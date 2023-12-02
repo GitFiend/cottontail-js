@@ -1,13 +1,12 @@
-import {RefObject} from '../components/ref'
 import {$Component} from '../components/custom-component'
 import {Reaction} from './reactions'
 import {MetaKind} from '../create-element'
 
 export class GlobalStack {
-  private static componentRefs: RefObject<$Component | Reaction>[] = []
-  private static dirtyComponents = new Set<RefObject<$Component | Reaction>>()
+  private static componentRefs: WeakRef<$Component | Reaction>[] = []
+  private static dirtyComponents = new Set<WeakRef<$Component | Reaction>>()
 
-  static push(componentRef: RefObject<$Component | Reaction>) {
+  static push(componentRef: WeakRef<$Component | Reaction>) {
     this.componentRefs.push(componentRef)
   }
 
@@ -15,11 +14,11 @@ export class GlobalStack {
     this.componentRefs.pop()
   }
 
-  static getCurrent(): RefObject<$Component | Reaction> | null {
+  static getCurrent(): WeakRef<$Component | Reaction> | null {
     return this.componentRefs[this.componentRefs.length - 1] ?? null
   }
 
-  static markDirty(componentRef: RefObject<$Component | Reaction>) {
+  static markDirty(componentRef: WeakRef<$Component | Reaction>) {
     this.dirtyComponents.add(componentRef)
 
     this.queueRender()
@@ -42,21 +41,30 @@ export class GlobalStack {
   // If the component has updated due to props changed, we don't need to rerun
   static renderedList = new Set<$Component>()
 
-  private static renderList: $Component[] = []
-  private static reactionList: Reaction[] = []
+  private static readonly renderList: $Component[] = []
+  private static readonly reactionList = new Set<Reaction>()
 
   private static reRender = () => {
     console.time('reRender')
     const {renderList, renderedList, reactionList} = this
 
-    for (const c of this.dirtyComponents.values()) {
-      if (c.current) {
-        if (c.current.kind === MetaKind.custom) {
-          renderList.push(c.current)
+    for (const cRef of this.dirtyComponents.values()) {
+      const c = cRef.deref()
+
+      if (c) {
+        if (c.kind === MetaKind.custom) {
+          renderList.push(c)
         } else {
-          reactionList.push(c.current)
+          reactionList.add(c)
         }
       }
+    }
+
+    while (reactionList.size > 0) {
+      const reaction: Reaction = reactionList.values().next().value
+      reactionList.delete(reaction)
+
+      reaction.run()
     }
 
     // TODO: Check this

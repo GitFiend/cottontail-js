@@ -42,7 +42,7 @@ export class Remove {
       Remove.component(c)
     }
 
-    component.__ref.current = null
+    // component.__ref.current = null
     component.subComponents.clear()
   }
 }

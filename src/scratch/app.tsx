@@ -1,13 +1,18 @@
 import {renderRoot} from '../lib/cottontail'
 import {$Component} from '../lib/components/custom-component'
-import {charge$Runes} from '../lib/model/model'
+import {charge$Runes} from '../lib/model/runes'
 import {createElement} from '../lib/create-element'
+import {autorun} from '../lib/model/reactions'
 
 class Store {
   $num = 0
 
   constructor() {
     charge$Runes(this)
+
+    autorun(this, () => {
+      console.log('num changed', this.$num)
+    })
   }
 
   get square() {

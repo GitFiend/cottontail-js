@@ -1,6 +1,6 @@
 /// <reference path="./globals.d.ts" />
 /// <reference path="./src/jsx-types/index.d.ts" />
-export {charge$Runes} from './src/lib/model/model'
+export {charge$Runes} from './src/lib/model/runes'
 export * from './src/lib/create-element'
 export {createRef} from './src/lib/components/ref'
 export {renderRoot} from './src/lib/cottontail'

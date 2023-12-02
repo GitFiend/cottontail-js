@@ -1,4 +1,3 @@
-import {RefObject} from '../components/ref'
 import {GlobalStack} from './global-stack'
 import {$Component} from '../components/custom-component'
 import {Reaction} from './reactions'
@@ -12,7 +11,7 @@ export function charge$Runes(object: Object) {
         const valueName = `__${key}`
 
         // TODO: Investigate whether to make a Rune a class, or just use closed over state here.
-        const componentRefs = new Set<RefObject<$Component | Reaction>>()
+        const componentRefs = new Set<WeakRef<$Component | Reaction>>()
 
         Object.defineProperties(object, {
           [valueName]: {
@@ -31,7 +30,8 @@ export function charge$Runes(object: Object) {
             },
             set(value) {
               for (const componentRef of componentRefs.values()) {
-                if (componentRef.current === null) {
+                const component = componentRef.deref()
+                if (!component) {
                   componentRefs.delete(componentRef)
                 } else {
                   GlobalStack.markDirty(componentRef)

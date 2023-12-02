@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "module": "CommonJS",
-    "target": "es2018",
-    "experimentalDecorators": true,
+    "target": "es2022",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "jsx": "react",

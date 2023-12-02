@@ -202,3 +202,22 @@ describe('construct objects', () => {
   testClass()
   testObject()
 })
+
+describe('weak refs perf', () => {
+  test('make lots and deref', () => {
+    console.time('make lots and deref')
+
+    let num = 0
+    for (let i = 0; i < 100_000; i++) {
+      const a = {a: 3}
+      const b = new WeakRef(a)
+
+      const c = b.deref()
+
+      if (c) num++
+    }
+    console.timeEnd('make lots and deref')
+
+    expect(num).toBe(100_000)
+  })
+})

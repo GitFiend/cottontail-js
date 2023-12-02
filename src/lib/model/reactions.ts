@@ -1,21 +1,18 @@
-import {RefObject} from '../components/ref'
 import {MetaKind} from '../create-element'
 import {GlobalStack} from './global-stack'
 
-export function $AutoRun() {}
+export type Reaction = AutoRun<unknown> | Reactor
 
-export type Reaction = AutoRun | Reactor
+type ForbidPromise<T> = T extends Promise<any> ? never : T
 
-class AutoRun {
-  kind = MetaKind.reaction as const
+class AutoRun<T> {
+  readonly kind = MetaKind.reaction as const
 
-  __ref: RefObject<AutoRun> = {current: this}
+  readonly __ref = new WeakRef(this)
 
-  // TODO: Could we use a WeakRef here to hold onto the function instead?
-  //  What about anonymous functions?
-  constructor(private fn: () => void) {}
+  constructor(private fn: () => ForbidPromise<T>) {}
 
-  run() {
+  run(): void {
     GlobalStack.push(this.__ref)
 
     this.fn()
@@ -24,16 +21,20 @@ class AutoRun {
   }
 }
 
-export function autorun(fn: () => void) {
-  const autoRun = new AutoRun(fn)
+export function autorun<T>(owner: object, fn: () => ForbidPromise<T>) {
+  const autoRun = new AutoRun<T>(fn)
+
+  // We do this so that the autorun isn't garbage collected.
+  // @ts-ignore
+  owner[Symbol()] = autoRun
 
   autoRun.run()
 }
 
-class Reactor<T = any> {
-  kind = MetaKind.reaction as const
+export class Reactor<T = any> {
+  readonly kind = MetaKind.reaction as const
 
-  __ref: RefObject<Reactor> = {current: this}
+  readonly __ref = new WeakRef(this)
 
   constructor(
     private calc: () => T,

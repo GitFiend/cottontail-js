@@ -5,9 +5,8 @@ import {AnyComponent, ParentComponent, Props} from './types'
 import {Order} from '../render/order'
 import {equalValues} from '../render/util'
 import {Render} from '../render/render'
-import {RefObject} from './ref'
 import {GlobalStack} from '../model/global-stack'
-import {charge$Runes} from '../model/model'
+import {charge$Runes} from '../model/runes'
 
 export abstract class $Component<P extends Props = {}> {
   readonly kind = MetaKind.custom as const
@@ -17,9 +16,11 @@ export abstract class $Component<P extends Props = {}> {
   order: string
   key: string
 
-  readonly __ref: RefObject<$Component> = {
-    current: this,
-  }
+  // readonly __ref: RefObject<$Component> = {
+  //   current: this,
+  // }
+
+  readonly __ref = new WeakRef(this)
 
   constructor(
     public props: P,
