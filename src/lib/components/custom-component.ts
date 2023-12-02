@@ -61,6 +61,7 @@ export abstract class $Component<P extends Props = {}> {
     this.subComponents = Render.subComponents(
       this.directParent,
       this.domParent,
+      // TODO: We don't need an array here.
       [res],
       this.subComponents,
     )
