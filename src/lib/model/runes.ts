@@ -2,7 +2,7 @@ import {GlobalStack} from './global-stack'
 import {$Component} from '../components/custom-component'
 import {Reaction} from './reactions'
 
-export function charge$Runes(object: Object) {
+export function init$(object: Object) {
   for (const key in object) {
     if (key.startsWith('$')) {
       const value: unknown = object[key as keyof object]

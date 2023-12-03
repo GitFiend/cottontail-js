@@ -14,7 +14,7 @@ Non-features:
 
 
 ```tsx
-import {createElement, charge$Runes, $Component, renderRoot} from './index'
+import {createElement, init$, $Component, renderRoot} from './index'
 
 class Store {
   // '$' as first the character creates a reactive value.
@@ -24,7 +24,7 @@ class Store {
 
   constructor() {
     // Converts any fields starting with '$' into reactive values.
-    charge$Runes(this)
+    init$(this)
   }
 
   get square() {

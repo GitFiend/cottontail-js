@@ -6,7 +6,7 @@ import {Order} from '../render/order'
 import {equalValues} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
-import {charge$Runes} from '../model/runes'
+import {init$} from '../model/runes'
 
 export abstract class $Component<P extends Props = {}> {
   readonly kind = MetaKind.custom as const
@@ -40,7 +40,7 @@ export abstract class $Component<P extends Props = {}> {
   }
 
   mount() {
-    charge$Runes(this)
+    init$(this)
     this.update()
     this.componentDidMount()
   }

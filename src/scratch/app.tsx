@@ -1,6 +1,6 @@
 import {renderRoot} from '../lib/cottontail'
 import {$Component} from '../lib/components/custom-component'
-import {charge$Runes} from '../lib/model/runes'
+import {init$} from '../lib/model/runes'
 import {createElement} from '../lib/create-element'
 import {autorun, reaction} from '../lib/model/reactions'
 
@@ -8,7 +8,7 @@ class Store {
   $num = 0
 
   constructor() {
-    charge$Runes(this)
+    init$(this)
 
     autorun(this, () => {
       console.log('num: ', this.$num)
