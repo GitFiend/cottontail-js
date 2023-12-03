@@ -1,32 +1,42 @@
-import {$Component} from './components/custom-component'
 import {Props} from './components/types'
 
-export type Meta = DomMeta | CustomMeta | string | null
+export type Meta = DomMeta | CustomMeta | FragmentMeta | string | null
 
 export enum MetaKind {
   text,
   dom,
   custom,
+  fragment,
   reaction,
 }
 
 export class DomMeta {
-  kind = MetaKind.dom as const
+  readonly kind = MetaKind.dom as const
 
   constructor(
-    public name: string,
-    public props: Props | null,
-    public children: Meta[],
+    public readonly name: string,
+    public readonly props: Props | null,
+    public readonly children: Meta[],
   ) {}
 }
 
 export class CustomMeta {
-  kind = MetaKind.custom as const
+  readonly kind = MetaKind.custom as const
 
   constructor(
-    public name: Function,
-    public props: Props,
-    public children: Meta[],
+    public readonly name: Function,
+    public readonly props: Props,
+    public readonly children: Meta[],
+  ) {}
+}
+
+export class FragmentMeta {
+  readonly kind = MetaKind.fragment as const
+
+  constructor(
+    public readonly name: Function,
+    public readonly props: Props,
+    public readonly children: Meta[],
   ) {}
 }
 
@@ -42,6 +52,8 @@ export function createElement(
 
   if (typeof name === 'string') {
     return new DomMeta(name, props, sanitisedChildren)
+  } else if (name.name === 'Fragment') {
+    return new FragmentMeta(name, props ?? {}, sanitisedChildren)
   } else {
     return new CustomMeta(name, props ?? {}, sanitisedChildren)
   }
@@ -67,11 +79,4 @@ function sanitiseChildren(children: ElementChildren): Meta[] {
   }
 
   return result
-}
-
-export class Fragment extends $Component {
-  render() {
-    throw new Error('TODO Fragments!')
-    return null
-  }
 }

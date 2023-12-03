@@ -1,4 +1,4 @@
-import {CustomMeta, DomMeta, Meta, MetaKind} from '../create-element'
+import {CustomMeta, DomMeta, FragmentMeta, Meta, MetaKind} from '../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
@@ -7,6 +7,7 @@ import {TextComponent} from '../components/text-component'
 import {Remove} from './remove'
 import {Order} from './order'
 import {$Component, makeCustomComponent} from '../components/custom-component'
+import {Fragment} from '../components/fragment'
 
 export class Render {
   static component(
@@ -20,8 +21,64 @@ export class Render {
       return Render.text(meta, prev, parent, domParent, index)
     } else if (meta.kind === MetaKind.dom) {
       return Render.dom(meta, prev, parent, domParent, index)
+    } else if (meta.kind === MetaKind.fragment) {
+      return Render.fragment(meta, prev, parent, domParent, index)
     }
     return Render.custom(meta, prev, parent, domParent, index)
+  }
+
+  static fragment(
+    meta: FragmentMeta,
+    prev: AnyComponent | null,
+    directParent: ParentComponent,
+    domParent: DomComponent | RootComponent,
+    index: number,
+  ): Fragment {
+    if (prev === null) {
+      return new Fragment(meta, meta.children, directParent, domParent, index)
+    }
+
+    if (prev.kind === MetaKind.fragment) {
+      const prevOrder = prev.order
+      const newOrder = Order.key(directParent.order, index)
+
+      if (prevOrder !== newOrder) {
+        prev.index = index
+        prev.order = newOrder
+
+        const {subComponents} = prev
+
+        for (const c of subComponents.values()) {
+          const no = Order.key(prev.order, c.index)
+
+          if (c.order !== no) {
+            c.order = no
+
+            switch (c.kind) {
+              case MetaKind.dom:
+              case MetaKind.text:
+                Order.move(domParent, c)
+                break
+              case MetaKind.custom:
+                c.update()
+                break
+            }
+          }
+        }
+      }
+
+      prev.children = meta.children
+      prev.subComponents = Render.subComponents(
+        prev,
+        domParent,
+        meta.children,
+        prev.subComponents,
+      )
+
+      return prev
+    }
+    Remove.component(prev)
+    return new Fragment(meta, meta.children, directParent, domParent, index)
   }
 
   static dom(
@@ -121,19 +178,21 @@ export class Render {
         prev.index = index
         prev.order = newOrder
 
-        for (const c of prev.subComponents.values()) {
-          const no = Order.key(prev.order, c.index)
+        const {subComponent} = prev
 
-          if (c.order !== no) {
-            c.order = no
+        if (subComponent !== null) {
+          const no = Order.key(prev.order, subComponent.index)
 
-            switch (c.kind) {
+          if (subComponent.order !== no) {
+            subComponent.order = no
+
+            switch (subComponent.kind) {
               case MetaKind.dom:
               case MetaKind.text:
-                Order.move(domParent, c)
+                Order.move(domParent, subComponent)
                 break
               case MetaKind.custom:
-                c.update()
+                subComponent.update()
                 break
             }
           }

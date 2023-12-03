@@ -10,15 +10,11 @@ import {charge$Runes} from '../model/runes'
 
 export abstract class $Component<P extends Props = {}> {
   readonly kind = MetaKind.custom as const
-  subComponents = new Map<string, AnyComponent>()
-  // TODO: Consider/test a previous and new subComponents map and swap them (Performance)
+
+  subComponent: AnyComponent | null = null
 
   order: string
   key: string
-
-  // readonly __ref: RefObject<$Component> = {
-  //   current: this,
-  // }
 
   readonly __ref = new WeakRef(this)
 
@@ -55,16 +51,18 @@ export abstract class $Component<P extends Props = {}> {
     // Get the elements to render. We detect observable calls here?
     // This goes an on a global stack, so we can track it?
     GlobalStack.push(this.__ref)
-    const res = this.render()
+    const newMeta = this.render()
     GlobalStack.pop()
 
-    this.subComponents = Render.subComponents(
-      this.directParent,
-      this.domParent,
-      // TODO: We don't need an array here.
-      [res],
-      this.subComponents,
-    )
+    if (newMeta !== null) {
+      this.subComponent = Render.component(
+        newMeta,
+        this.subComponent,
+        this.directParent,
+        this.domParent,
+        this.index,
+      )
+    }
   }
 
   abstract render(): Meta

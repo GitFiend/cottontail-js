@@ -38,11 +38,9 @@ export class Remove {
 
     component.componentWillUnmount()
 
-    for (const c of component.subComponents.values()) {
-      Remove.component(c)
+    if (component.subComponent !== null) {
+      Remove.component(component.subComponent)
+      component.subComponent = null
     }
-
-    // component.__ref.current = null
-    component.subComponents.clear()
   }
 }
