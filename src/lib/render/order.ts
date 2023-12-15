@@ -2,8 +2,8 @@ import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
 import {ElementComponent} from '../components/types'
 
-export function applyInserts(parent: RootComponent | DomComponent): void {
-  const {inserted, siblings, element} = parent
+function applyInserts(parent: RootComponent | DomComponent): void {
+  const {inserted, siblings, element: parentElement} = parent
 
   const len = inserted.length
 
@@ -14,14 +14,14 @@ export function applyInserts(parent: RootComponent | DomComponent): void {
 
     if (next === null) {
       if (!siblings.has(current.element)) {
-        element.insertBefore(current.element, null)
+        parentElement.insertBefore(current.element, null)
         siblings.set(current.element, null)
       }
     } else if (siblings.has(next.element)) {
       const prevElement = siblings.get(next.element)
 
       if (prevElement !== current.element) {
-        element.insertBefore(current.element, next.element)
+        parentElement.insertBefore(current.element, next.element)
         siblings.set(next.element, current.element)
         if (!siblings.has(current.element)) siblings.set(current.element, null)
       }
