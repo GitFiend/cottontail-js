@@ -10,14 +10,24 @@ export enum MetaKind {
   reaction,
 }
 
-export class DomMeta {
-  readonly kind = MetaKind.dom as const
+// export class DomMeta {
+//   readonly kind = MetaKind.dom as const
+//
+//   constructor(
+//     public readonly name: string,
+//     public readonly props: Props | null,
+//     public readonly children: Meta[],
+//   ) {}
+// }
 
-  constructor(
-    public readonly name: string,
-    public readonly props: Props | null,
-    public readonly children: Meta[],
-  ) {}
+export interface DomMeta {
+  readonly kind: MetaKind.dom
+  readonly name: string
+  readonly props: Props | null
+  readonly children: Meta[]
+}
+function makeDomMeta(name: string, props: Props | null, children: Meta[]): DomMeta {
+  return {kind: MetaKind.dom, name, props, children}
 }
 
 export class CustomMeta {
@@ -51,7 +61,7 @@ export function createElement(
   const sanitisedChildren = sanitiseChildren(children)
 
   if (typeof name === 'string') {
-    return new DomMeta(name, props, sanitisedChildren)
+    return makeDomMeta(name, props, sanitisedChildren)
   } else if (name.name === 'Fragment') {
     return new FragmentMeta(name, props ?? {}, sanitisedChildren)
   } else {

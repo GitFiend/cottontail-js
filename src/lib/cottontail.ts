@@ -4,7 +4,7 @@ import {Render} from './render/render'
 import {AnyComponent} from './components/types'
 
 // TODO: Support more than one instance at a time.
-export class Cottontail {
+class Cottontail {
   private readonly root: RootComponent
   private prev: AnyComponent | null = null
   private readonly meta: Exclude<Meta, null>
