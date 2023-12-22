@@ -1654,7 +1654,7 @@ declare namespace React {
     // MouseEvents
     onAuxClick?: MouseEventHandler<T> | undefined
     onAuxClickCapture?: MouseEventHandler<T> | undefined
-    onClick?: MouseEventHandler<T> | undefined
+    onClick?: (e: NativeMouseEvent) => void
     onClickCapture?: MouseEventHandler<T> | undefined
     onContextMenu?: MouseEventHandler<T> | undefined
     onContextMenuCapture?: MouseEventHandler<T> | undefined

@@ -99,7 +99,6 @@ export class Render {
       if (prevOrder !== newOrder) {
         prev.index = index
         prev.order = newOrder
-
         Order.move(domParent, prev)
       }
 
@@ -116,7 +115,6 @@ export class Render {
         meta.children,
         prev.subComponents,
       )
-
       return prev
     }
 
