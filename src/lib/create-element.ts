@@ -10,44 +10,48 @@ export enum MetaKind {
   reaction,
 }
 
-// export class DomMeta {
-//   readonly kind = MetaKind.dom as const
-//
-//   constructor(
-//     public readonly name: string,
-//     public readonly props: Props | null,
-//     public readonly children: Meta[],
-//   ) {}
-// }
-
 export interface DomMeta {
   readonly kind: MetaKind.dom
   readonly name: string
   readonly props: Props | null
   readonly children: Meta[]
 }
-function makeDomMeta(name: string, props: Props | null, children: Meta[]): DomMeta {
+export function makeDomMeta(
+  name: string,
+  props: Props | null,
+  children: Meta[],
+): DomMeta {
   return {kind: MetaKind.dom, name, props, children}
 }
 
-export class CustomMeta {
-  readonly kind = MetaKind.custom as const
-
-  constructor(
-    public readonly name: Function,
-    public readonly props: Props,
-    public readonly children: Meta[],
-  ) {}
+export interface CustomMeta {
+  readonly kind: MetaKind.custom
+  readonly name: Function
+  readonly props: Props
+  readonly children: Meta[]
+}
+function makeCustomMeta(name: Function, props: Props, children: Meta[]): CustomMeta {
+  return {
+    kind: MetaKind.custom,
+    name,
+    props,
+    children,
+  }
 }
 
-export class FragmentMeta {
-  readonly kind = MetaKind.fragment as const
-
-  constructor(
-    public readonly name: Function,
-    public readonly props: Props,
-    public readonly children: Meta[],
-  ) {}
+export interface FragmentMeta {
+  readonly kind: MetaKind.fragment
+  readonly name: Function
+  readonly props: Props
+  readonly children: Meta[]
+}
+function makeFragmentMeta(name: Function, props: Props, children: Meta[]): FragmentMeta {
+  return {
+    kind: MetaKind.fragment,
+    name,
+    props,
+    children,
+  }
 }
 
 type ElementChildren = (Meta | number | (Meta | number)[])[]
@@ -63,9 +67,9 @@ export function createElement(
   if (typeof name === 'string') {
     return makeDomMeta(name, props, sanitisedChildren)
   } else if (name.name === 'Fragment') {
-    return new FragmentMeta(name, props ?? {}, sanitisedChildren)
+    return makeFragmentMeta(name, props ?? {}, sanitisedChildren)
   } else {
-    return new CustomMeta(name, props ?? {}, sanitisedChildren)
+    return makeCustomMeta(name, props ?? {}, sanitisedChildren)
   }
 }
 

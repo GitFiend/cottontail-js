@@ -27,7 +27,7 @@ class Store {
     return this.$num ** 2
   }
 
-  onClick = () => {
+  onClick = (e: MouseEvent) => {
     this.$num++
   }
 }
