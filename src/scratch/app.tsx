@@ -10,16 +10,16 @@ class Store {
   constructor() {
     init$(this)
 
-    autorun(this, () => {
+    autorun(() => {
       console.log('num: ', this.$num)
-    })
+    }, this)
 
     reaction(
-      this,
       () => this.$num,
       value => {
         console.log('new value: ', value)
       },
+      this,
     )
   }
 

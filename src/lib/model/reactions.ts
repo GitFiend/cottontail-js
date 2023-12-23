@@ -5,7 +5,7 @@ export type Reaction = AutoRun<any> | Reactor<any>
 
 type ForbidPromise<T> = T extends Promise<any> ? never : T
 
-export function autorun<T>(owner: object, fn: () => ForbidPromise<T>) {
+export function autorun<T>(fn: () => ForbidPromise<T>, owner: object) {
   const autoRun = new AutoRun<T>(fn)
 
   // We do this so that the autorun isn't garbage collected.
@@ -29,9 +29,9 @@ class AutoRun<T> {
 }
 
 export function reaction<T>(
-  owner: object,
   calc: () => ForbidPromise<T>,
   result: (value: T) => void,
+  owner: object,
 ) {
   const reactor = new Reactor<T>(calc, result)
 

@@ -2,7 +2,7 @@ import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
 import {ElementComponent} from '../components/types'
 
-export function applyInserts(parent: RootComponent | DomComponent): void {
+function applyInserts(parent: RootComponent | DomComponent): void {
   const {inserted, siblings, element} = parent
 
   const len = inserted.length
