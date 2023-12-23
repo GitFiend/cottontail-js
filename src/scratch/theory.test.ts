@@ -1,4 +1,4 @@
-import {equalValues} from './render/util'
+import {equalValues} from '../lib/render/util'
 
 describe('benchmark to get a sense of how fast it will be to compare lots of objects per frame', () => {
   test('lots of object creations and comparisons', () => {

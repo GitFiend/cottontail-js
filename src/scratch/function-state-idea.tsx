@@ -24,12 +24,43 @@ function Test(props: {name: string}) {
   )
 }
 
+// Idea if classes get discontinued in JSX.
+function Test2(props: {name: string}) {
+  const {self, $num, square} = model2(
+    class {
+      $num = 34
+      square = () => {
+        return this.$num ** 2
+      }
+      onClick = () => {
+        this.$num++
+      }
+    },
+  )
+
+  return (
+    <div onClick={self.onClick}>
+      <h1>{props.name}</h1>
+      Num: {$num}, Square: {self.square()}
+      <button onClick={self.onClick}>Click Me</button>
+    </div>
+  )
+}
+
 function run() {
   return <Test name="MyApp" />
 }
 
 // This only runs on component mount. We return the previous result on update.
 function model<T>(init: () => T): T & {self: T} {
+  // Init the observables.
+
+  // @ts-ignore
+  return init()
+}
+
+// This only runs on component mount. We return the previous result on update.
+function model2<T>(init: new () => T): T & {self: T} {
   // Init the observables.
 
   // @ts-ignore
