@@ -1574,11 +1574,12 @@ declare namespace React {
     onBlurCapture?: FocusEventHandler<T> | undefined
 
     // Form Events
-    onChange?: FormEventHandler<T> | undefined
+    // onChange?: FormEventHandler<T> | undefined
     onChangeCapture?: FormEventHandler<T> | undefined
     onBeforeInput?: FormEventHandler<T> | undefined
     onBeforeInputCapture?: FormEventHandler<T> | undefined
-    onInput?: FormEventHandler<T> | undefined
+    // onInput?: FormEventHandler<T> | undefined
+    onInput?: NativeEventHandler<T> | undefined
     onInputCapture?: FormEventHandler<T> | undefined
     onReset?: FormEventHandler<T> | undefined
     onResetCapture?: FormEventHandler<T> | undefined
@@ -1656,7 +1657,7 @@ declare namespace React {
     onAuxClickCapture?: MouseEventHandler<T> | undefined
     onClick?: (e: NativeMouseEvent) => void
     onClickCapture?: MouseEventHandler<T> | undefined
-    onContextMenu?: MouseEventHandler<T> | undefined
+    onContextMenu?: (e: NativeMouseEvent) => void
     onContextMenuCapture?: MouseEventHandler<T> | undefined
     onDoubleClick?: MouseEventHandler<T> | undefined
     onDoubleClickCapture?: MouseEventHandler<T> | undefined
@@ -1676,7 +1677,8 @@ declare namespace React {
     onDragStartCapture?: DragEventHandler<T> | undefined
     onDrop?: DragEventHandler<T> | undefined
     onDropCapture?: DragEventHandler<T> | undefined
-    onMouseDown?: MouseEventHandler<T> | undefined
+    // onMouseDown?: MouseEventHandler<T> | undefined
+    onMouseDown?: NativeMouseEventHandler<T> | undefined
     onMouseDownCapture?: MouseEventHandler<T> | undefined
     onMouseEnter?: MouseEventHandler<T> | undefined
     onMouseLeave?: MouseEventHandler<T> | undefined
@@ -1730,7 +1732,8 @@ declare namespace React {
     onScrollCapture?: UIEventHandler<T> | undefined
 
     // Wheel Events
-    onWheel?: WheelEventHandler<T> | undefined
+    // onWheel?: WheelEventHandler<T> | undefined
+    onWheel?: NativeEventHandler<T> | undefined
     onWheelCapture?: WheelEventHandler<T> | undefined
 
     // Animation Events
@@ -2085,6 +2088,8 @@ declare namespace React {
     defaultValue?: string | number | ReadonlyArray<string> | undefined
     suppressContentEditableWarning?: boolean | undefined
     suppressHydrationWarning?: boolean | undefined
+
+    inert?: boolean | undefined
 
     // Standard HTML Attributes
     accessKey?: string | undefined
@@ -2519,7 +2524,8 @@ declare namespace React {
     value?: string | ReadonlyArray<string> | number | undefined
     width?: number | string | undefined
 
-    onChange?: ChangeEventHandler<T> | undefined
+    // onChange?: ChangeEventHandler<T> | undefined
+    onChange?: NativeEventHandler<T> | undefined
   }
 
   interface KeygenHTMLAttributes<T> extends HTMLAttributes<T> {

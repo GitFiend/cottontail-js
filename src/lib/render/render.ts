@@ -6,7 +6,7 @@ import {AnyComponent, ParentComponent} from '../components/types'
 import {TextComponent} from '../components/text-component'
 import {Remove} from './remove'
 import {Order} from './order'
-import {$Component, makeCustomComponent} from '../components/custom-component'
+import {Custom, makeCustomComponent} from '../components/custom-component'
 import {Fragment} from '../components/fragment'
 
 export class Render {
@@ -163,7 +163,7 @@ export class Render {
     directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
-  ): $Component {
+  ): Custom {
     if (!prev) {
       return makeCustomComponent(meta, directParent, domParent, index)
     }
@@ -197,7 +197,7 @@ export class Render {
         }
       }
 
-      ;(prev as $Component).updateWithNewProps(meta.props)
+      ;(prev as Custom).updateWithNewProps(meta.props)
       return prev
     }
 

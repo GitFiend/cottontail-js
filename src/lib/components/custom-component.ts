@@ -1,4 +1,3 @@
-import {CustomMeta, Meta, MetaKind} from '../create-element'
 import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
 import {AnyComponent, ParentComponent, Props} from './types'
@@ -7,8 +6,9 @@ import {equalValues} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
 import {init$} from '../model/runes'
+import {CustomMeta, Meta, MetaKind} from '../create-element'
 
-export abstract class $Component<P extends Props = {}> {
+export abstract class Custom<P extends Props = {}> {
   readonly kind = MetaKind.custom as const
 
   subComponent: AnyComponent | null = null
@@ -82,7 +82,7 @@ type CustomComponentConstructor = new (
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,
   index: number,
-) => $Component<any>
+) => Custom<any>
 
 export function makeCustomComponent(
   meta: CustomMeta,

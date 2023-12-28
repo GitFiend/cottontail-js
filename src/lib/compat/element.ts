@@ -1,4 +1,4 @@
-import {$Component} from '../components/custom-component'
+import {Custom} from '../components/custom-component'
 
 export interface StandardProps {
   children?: FiendNode[]
@@ -34,7 +34,7 @@ export interface SvgElement<P = StandardProps> {
 }
 export interface CustomElement<P extends StandardProps = StandardProps> {
   elementType: ElementType.custom
-  _type: $Component<P>
+  _type: Custom<P>
   props: P
 }
 

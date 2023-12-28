@@ -29,3 +29,13 @@ function checkChildrenKeys(children: Meta[]) {
     console.error(`Subtrees contain duplicate keys: `, children)
   }
 }
+
+export function c(names: TemplateStringsArray, ...flags: boolean[]): string {
+  if (names.length === 1) return names[0]
+
+  let classes = ''
+  for (let i = 0; i < names.length; i++) {
+    if (flags[i]) classes += names[i]
+  }
+  return classes.trim()
+}

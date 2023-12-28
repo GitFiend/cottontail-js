@@ -1,12 +1,12 @@
-import {$Component} from '../components/custom-component'
+import {Custom} from '../components/custom-component'
 import {Reaction} from './reactions'
 import {MetaKind} from '../create-element'
 
 export class GlobalStack {
-  private static componentRefs: WeakRef<$Component | Reaction>[] = []
-  private static dirtyComponents = new Set<WeakRef<$Component | Reaction>>()
+  private static componentRefs: WeakRef<Custom | Reaction>[] = []
+  private static dirtyComponents = new Set<WeakRef<Custom | Reaction>>()
 
-  static push(componentRef: WeakRef<$Component | Reaction>) {
+  static push(componentRef: WeakRef<Custom | Reaction>) {
     this.componentRefs.push(componentRef)
   }
 
@@ -14,11 +14,11 @@ export class GlobalStack {
     this.componentRefs.pop()
   }
 
-  static getCurrent(): WeakRef<$Component | Reaction> | null {
+  static getCurrent(): WeakRef<Custom | Reaction> | null {
     return this.componentRefs[this.componentRefs.length - 1] ?? null
   }
 
-  static markDirty(componentRef: WeakRef<$Component | Reaction>) {
+  static markDirty(componentRef: WeakRef<Custom | Reaction>) {
     this.dirtyComponents.add(componentRef)
 
     this.queueRender()
@@ -39,9 +39,9 @@ export class GlobalStack {
   // Components could update due to props changed, or runes.
   // We assume props updates will happen before rune updates.
   // If the component has updated due to props changed, we don't need to rerun
-  static renderedList = new Set<$Component>()
+  static renderedList = new Set<Custom>()
 
-  private static readonly renderList: $Component[] = []
+  private static readonly renderList: Custom[] = []
   private static readonly reactionList = new Set<Reaction>()
 
   private static reRender = () => {
