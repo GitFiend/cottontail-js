@@ -63,13 +63,15 @@ export function createElement(
   ...children: ElementChildren
 ): Meta {
   const sanitisedChildren = sanitiseChildren(children)
+  props ??= {}
+  props.children = sanitisedChildren
 
   if (typeof name === 'string') {
     return makeDomMeta(name, props, sanitisedChildren)
   } else if (name.name === 'Fragment') {
-    return makeFragmentMeta(name, props ?? {}, sanitisedChildren)
+    return makeFragmentMeta(name, props, sanitisedChildren)
   } else {
-    return makeCustomMeta(name, props ?? {}, sanitisedChildren)
+    return makeCustomMeta(name, props, sanitisedChildren)
   }
 }
 

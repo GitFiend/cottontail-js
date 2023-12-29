@@ -46,6 +46,7 @@ export abstract class Custom<P extends Props = {}> {
   }
 
   update() {
+    // TODO: Should this be after the render call?
     GlobalStack.renderedList.add(this)
 
     // Get the elements to render. We detect observable calls here?
@@ -54,6 +55,7 @@ export abstract class Custom<P extends Props = {}> {
     const newMeta = this.render()
     GlobalStack.pop()
 
+    // TODO: How to handle null?
     if (newMeta !== null) {
       this.subComponent = Render.component(
         newMeta,
