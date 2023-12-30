@@ -1,6 +1,14 @@
 import {Props} from './components/types'
 
-export type Meta = DomMeta | CustomMeta | FragmentMeta | string | null
+export type Meta =
+  | DomMeta
+  | CustomMeta
+  | FragmentMeta
+  | boolean
+  | number
+  | string
+  | null
+  | undefined
 
 export enum MetaKind {
   text,
@@ -30,7 +38,11 @@ export interface CustomMeta {
   readonly props: Props
   readonly children: Meta[]
 }
-function makeCustomMeta(name: Function, props: Props, children: Meta[]): CustomMeta {
+function makeCustomMeta(
+  name: Function,
+  props: Props,
+  children: Meta[],
+): CustomMeta {
   return {
     kind: MetaKind.custom,
     name,
@@ -45,7 +57,11 @@ export interface FragmentMeta {
   readonly props: Props
   readonly children: Meta[]
 }
-function makeFragmentMeta(name: Function, props: Props, children: Meta[]): FragmentMeta {
+function makeFragmentMeta(
+  name: Function,
+  props: Props,
+  children: Meta[],
+): FragmentMeta {
   return {
     kind: MetaKind.fragment,
     name,
