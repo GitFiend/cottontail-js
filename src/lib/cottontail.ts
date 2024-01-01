@@ -1,5 +1,5 @@
 import {RootComponent} from './components/root-component'
-import {Meta} from './create-element'
+import {Meta, MetaInternal} from './create-element'
 import {Render} from './render/render'
 import {AnyComponent} from './components/types'
 
@@ -7,14 +7,17 @@ import {AnyComponent} from './components/types'
 class Cottontail {
   private readonly root: RootComponent
   private prev: AnyComponent | null = null
-  private readonly meta: Exclude<Meta, null>
+  private readonly meta: Exclude<MetaInternal, null>
 
   constructor(meta: Meta, element: HTMLElement | null) {
     if (element === null) {
       throw new Error('Cottontail render: Root element is null')
     }
-    if (meta === null) {
+    if (meta == null) {
       throw new Error('Cottontail render: Meta is null')
+    }
+    if (typeof meta === 'boolean' || typeof meta === 'number') {
+      meta = meta.toString()
     }
 
     this.meta = meta

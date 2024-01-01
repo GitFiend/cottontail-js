@@ -6,7 +6,7 @@ import {equalValues} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
 import {init$} from '../model/runes'
-import {CustomMeta, Meta, MetaKind} from '../create-element'
+import {CustomMeta, Meta, MetaInternal, MetaKind} from '../create-element'
 
 export abstract class Custom<P extends Props = {}> {
   readonly kind = MetaKind.custom as const
@@ -67,7 +67,7 @@ export abstract class Custom<P extends Props = {}> {
     }
   }
 
-  abstract render(): Meta
+  abstract render(): MetaInternal
 
   // See remove.ts for clean up code.
 

@@ -10,6 +10,8 @@ export type Meta =
   | null
   | undefined
 
+export type MetaInternal = Exclude<Meta, boolean | number | undefined>
+
 export enum MetaKind {
   text,
   dom,
@@ -22,12 +24,12 @@ export interface DomMeta {
   readonly kind: MetaKind.dom
   readonly name: string
   readonly props: Props | null
-  readonly children: Meta[]
+  readonly children: MetaInternal[]
 }
 export function makeDomMeta(
   name: string,
   props: Props | null,
-  children: Meta[],
+  children: MetaInternal[],
 ): DomMeta {
   return {kind: MetaKind.dom, name, props, children}
 }
@@ -36,12 +38,12 @@ export interface CustomMeta {
   readonly kind: MetaKind.custom
   readonly name: Function
   readonly props: Props
-  readonly children: Meta[]
+  readonly children: MetaInternal[]
 }
 function makeCustomMeta(
   name: Function,
   props: Props,
-  children: Meta[],
+  children: MetaInternal[],
 ): CustomMeta {
   return {
     kind: MetaKind.custom,
@@ -55,12 +57,12 @@ export interface FragmentMeta {
   readonly kind: MetaKind.fragment
   readonly name: Function
   readonly props: Props
-  readonly children: Meta[]
+  readonly children: MetaInternal[]
 }
 function makeFragmentMeta(
   name: Function,
   props: Props,
-  children: Meta[],
+  children: MetaInternal[],
 ): FragmentMeta {
   return {
     kind: MetaKind.fragment,
@@ -70,7 +72,7 @@ function makeFragmentMeta(
   }
 }
 
-type ElementChildren = (Meta | number | (Meta | number)[])[]
+type ElementChildren = (Meta | Meta[])[]
 
 // Could we look up the current tree instead of constructing again?
 export function createElement(
@@ -91,19 +93,25 @@ export function createElement(
   }
 }
 
-function sanitiseChildren(children: ElementChildren): Meta[] {
-  const result: Meta[] = []
+function sanitiseChildren(children: ElementChildren): MetaInternal[] {
+  if (children.length === 0) return children as MetaInternal[]
+
+  const result: MetaInternal[] = []
 
   for (const child of children) {
     if (Array.isArray(child)) {
       for (const c of child) {
-        if (typeof c === 'number') {
+        if (c == null) {
+          result.push(null)
+        } else if (typeof c !== 'object') {
           result.push(c.toString())
         } else {
           result.push(c)
         }
       }
-    } else if (typeof child === 'number') {
+    } else if (child == null) {
+      result.push(null)
+    } else if (typeof child !== 'object') {
       result.push(child.toString())
     } else {
       result.push(child)

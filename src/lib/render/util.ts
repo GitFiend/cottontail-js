@@ -17,7 +17,7 @@ function checkChildrenKeys(children: Meta[]) {
   const set = new Set<string>()
 
   for (const child of children) {
-    if (child !== null && typeof child !== 'string') {
+    if (child != null && typeof child === 'object') {
       if (typeof child.props?.key === 'string') {
         numKeys++
         set.add(child.props.key)

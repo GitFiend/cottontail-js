@@ -1659,7 +1659,8 @@ declare namespace React {
     onInputCapture?: FormEventHandler<T> | undefined
     onReset?: FormEventHandler<T> | undefined
     onResetCapture?: FormEventHandler<T> | undefined
-    onSubmit?: FormEventHandler<T> | undefined
+    // onSubmit?: FormEventHandler<T> | undefined
+    onSubmit?: (e: SubmitEvent) => void
     onSubmitCapture?: FormEventHandler<T> | undefined
     onInvalid?: FormEventHandler<T> | undefined
     onInvalidCapture?: FormEventHandler<T> | undefined
@@ -1671,13 +1672,15 @@ declare namespace React {
     onErrorCapture?: ReactEventHandler<T> | undefined // also a Media Event
 
     // Keyboard Events
-    onKeyDown?: KeyboardEventHandler<T> | undefined
+    // onKeyDown?: KeyboardEventHandler<T> | undefined
+    onKeyDown?: (e: NativeKeyboardEvent) => void
     onKeyDownCapture?: KeyboardEventHandler<T> | undefined
     /** @deprecated */
     onKeyPress?: KeyboardEventHandler<T> | undefined
     /** @deprecated */
     onKeyPressCapture?: KeyboardEventHandler<T> | undefined
-    onKeyUp?: KeyboardEventHandler<T> | undefined
+    // onKeyUp?: KeyboardEventHandler<T> | undefined
+    onKeyUp?: (e: NativeKeyboardEvent) => void
     onKeyUpCapture?: KeyboardEventHandler<T> | undefined
 
     // Media Events
@@ -1732,11 +1735,14 @@ declare namespace React {
     onAuxClick?: MouseEventHandler<T> | undefined
     onAuxClickCapture?: MouseEventHandler<T> | undefined
     onClick?: (e: NativeMouseEvent) => void
-    onClickCapture?: MouseEventHandler<T> | undefined
+    // onClickCapture?: MouseEventHandler<T> | undefined
+    onClickCapture?: (e: NativeMouseEvent) => void
     onContextMenu?: (e: NativeMouseEvent) => void
     onContextMenuCapture?: MouseEventHandler<T> | undefined
-    onDoubleClick?: MouseEventHandler<T> | undefined
-    onDoubleClickCapture?: MouseEventHandler<T> | undefined
+    // onDoubleClick?: MouseEventHandler<T> | undefined
+    onDoubleClick?: (e: NativeMouseEvent) => void
+    // onDoubleClickCapture?: MouseEventHandler<T> | undefined
+    onDoubleClickCapture?: (e: NativeMouseEvent) => void
     onDrag?: DragEventHandler<T> | undefined
     onDragCapture?: DragEventHandler<T> | undefined
     onDragEnd?: DragEventHandler<T> | undefined
