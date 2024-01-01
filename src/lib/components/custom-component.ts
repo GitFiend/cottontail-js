@@ -67,6 +67,10 @@ export abstract class Custom<P extends Props = {}> {
     }
   }
 
+  forceUpdate() {
+    GlobalStack.markDirty(this.__ref)
+  }
+
   abstract render(): MetaInternal
 
   // See remove.ts for clean up code.

@@ -4,6 +4,14 @@ class Thing extends $Component {
   render() {
     const {$num} = this.props
 
+    div$(
+      {
+        style: {width: 100, height: 100, background: 'red'},
+      },
+      div$(),
+      div$(),
+    )
+
     return div$({
       style: {width: 100, height: 100, background: 'red'},
       in: [
