@@ -1816,8 +1816,9 @@ declare namespace React {
 
     // Wheel Events
     // onWheel?: WheelEventHandler<T> | undefined
-    onWheel?: NativeEventHandler<T> | undefined
-    onWheelCapture?: WheelEventHandler<T> | undefined
+    onWheel?: (e: NativeWheelEvent) => void
+    onWheelCapture?: (e: NativeWheelEvent) => void
+    // onWheelCapture?: WheelEventHandler<T> | undefined
 
     // Animation Events
     onAnimationStart?: AnimationEventHandler<T> | undefined
