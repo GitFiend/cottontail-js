@@ -4,10 +4,11 @@ import {Render} from './render/render'
 import {AnyComponent} from './components/types'
 
 // TODO: Support more than one instance at a time.
-class Cottontail {
+export class Cottontail {
   private readonly root: RootComponent
   private prev: AnyComponent | null = null
-  private readonly meta: Exclude<MetaInternal, null>
+  private meta: Exclude<MetaInternal, null>
+  element: HTMLElement
 
   constructor(meta: Meta, element: HTMLElement | null) {
     if (element === null) {
@@ -20,6 +21,7 @@ class Cottontail {
       meta = meta.toString()
     }
 
+    this.element = element
     this.meta = meta
     this.root = new RootComponent(element)
 
@@ -28,6 +30,11 @@ class Cottontail {
 
   private render = () => {
     this.prev = Render.component(this.meta, this.prev, this.root, this.root, 0)
+  }
+
+  rerender(meta: Meta) {
+    this.meta = meta
+    this.render()
   }
 }
 

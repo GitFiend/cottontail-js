@@ -44,7 +44,7 @@ export class GlobalStack {
   private static readonly renderList: Custom[] = []
   private static readonly reactionList = new Set<Reaction>()
 
-  private static reRender = () => {
+  static reRender = () => {
     console.time('reRender')
     const {renderList, renderedList, reactionList} = this
 

@@ -17,6 +17,7 @@ import {Fragment} from '../components/fragment'
 
 export class Render {
   static component(
+    // TODO: Why not allow null? Don't we need to render nothing sometimes?
     meta: Exclude<MetaInternal, null>,
     prev: AnyComponent | null,
     parent: ParentComponent,

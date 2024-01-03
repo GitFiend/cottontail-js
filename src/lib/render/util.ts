@@ -1,4 +1,5 @@
 import {Meta} from '../create-element'
+import {Cottontail} from '../cottontail'
 
 // Assumes keys are the same in both objects
 export function equalValues(
@@ -38,4 +39,8 @@ export function c(names: TemplateStringsArray, ...flags: boolean[]): string {
     if (flags[i]) classes += names[i]
   }
   return classes.trim()
+}
+
+export function mkRoot(meta: Meta) {
+  return new Cottontail(meta, document.createElement('div'))
 }

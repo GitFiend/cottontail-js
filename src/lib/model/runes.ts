@@ -2,6 +2,8 @@ import {GlobalStack} from './global-stack'
 import {Custom} from '../components/custom-component'
 import {Reaction} from './reactions'
 
+const debug = true
+
 export function init$(object: Object) {
   for (const key in object) {
     if (key.startsWith('$')) {
@@ -29,6 +31,10 @@ export function init$(object: Object) {
               return this[valueName]
             },
             set(value) {
+              if (debug) {
+                console.log(`${valueName} <-`, value)
+              }
+
               for (const componentRef of componentRefs.values()) {
                 const component = componentRef.deref()
                 if (!component) {
