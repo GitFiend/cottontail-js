@@ -36,7 +36,10 @@ export class Order {
     return parentOrder + String.fromCharCode(index + 48)
   }
 
-  static insert(parent: RootComponent | DomComponent, child: ElementComponent): void {
+  static insert(
+    parent: RootComponent | DomComponent,
+    child: ElementComponent,
+  ): void {
     const {inserted} = parent
     const {order, key} = child
 
@@ -57,8 +60,8 @@ export class Order {
 
             applyInserts(parent)
           } else {
-            applyInserts(parent)
             inserted.push(child)
+            applyInserts(parent)
           }
         }
 
@@ -83,7 +86,10 @@ export class Order {
     this.insert(parent, child)
   }
 
-  static remove(parent: RootComponent | DomComponent, child: ElementComponent): void {
+  static remove(
+    parent: RootComponent | DomComponent,
+    child: ElementComponent,
+  ): void {
     const {inserted, siblings} = parent
     const {key} = child
 

@@ -17,18 +17,25 @@ import {Fragment} from '../components/fragment'
 
 export class Render {
   static component(
-    // TODO: Why not allow null? Don't we need to render nothing sometimes?
-    meta: Exclude<MetaInternal, null>,
+    meta: MetaInternal,
     prev: AnyComponent | null,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
-  ): AnyComponent {
+  ): AnyComponent | null {
+    if (meta === null) {
+      if (prev !== null) {
+        Remove.component(prev)
+      }
+      return null
+    }
     if (typeof meta === 'string') {
       return Render.text(meta, prev, parent, domParent, index)
-    } else if (meta.kind === MetaKind.dom) {
+    }
+    if (meta.kind === MetaKind.dom) {
       return Render.dom(meta, prev, parent, domParent, index)
-    } else if (meta.kind === MetaKind.fragment) {
+    }
+    if (meta.kind === MetaKind.fragment) {
       return Render.fragment(meta, prev, parent, domParent, index)
     }
     return Render.custom(meta, prev, parent, domParent, index)
@@ -268,7 +275,9 @@ export class Render {
         index,
       )
       prevChildren.delete(key)
-      newChildren.set(key, s)
+      if (s) {
+        newChildren.set(key, s)
+      }
       return s
     }
 
@@ -281,7 +290,9 @@ export class Render {
       index,
     )
     prevChildren.delete(key)
-    newChildren.set(key, s)
+    if (s) {
+      newChildren.set(key, s)
+    }
     return s
   }
 }

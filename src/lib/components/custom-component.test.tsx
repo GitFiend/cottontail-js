@@ -59,12 +59,9 @@ describe('Custom', () => {
     )
 
     const root = mkRoot(a)
-    // const root = new Cottontail(a, document.createElement('div'))
-    // root.render(a)
 
     expect(root.element.innerHTML).toEqual('<div><div>a</div></div>')
 
-    // const b = Div({children: [Div('b'), Div('a')]})
     const b = (
       <div>
         <div>b</div>

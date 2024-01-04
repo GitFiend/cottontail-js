@@ -7,7 +7,7 @@ import {AnyComponent} from './components/types'
 export class Cottontail {
   private readonly root: RootComponent
   private prev: AnyComponent | null = null
-  private meta: Exclude<MetaInternal, null>
+  private meta: MetaInternal
   element: HTMLElement
 
   constructor(meta: Meta, element: HTMLElement | null) {
@@ -33,7 +33,13 @@ export class Cottontail {
   }
 
   rerender(meta: Meta) {
-    this.meta = meta
+    if (typeof meta === 'boolean' || typeof meta === 'number') {
+      this.meta = meta.toString()
+    } else if (meta === undefined) {
+      this.meta = null
+    } else {
+      this.meta = meta
+    }
     this.render()
   }
 }
