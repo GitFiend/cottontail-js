@@ -4,6 +4,7 @@ import {createElement} from '../create-element'
 import {Cottontail} from '../cottontail'
 import {GlobalStack} from '../model/global-stack'
 import {mkRoot} from '../render/util'
+import {Props} from './types'
 
 describe('Custom', () => {
   test('order 1', () => {
@@ -73,6 +74,98 @@ describe('Custom', () => {
 
     expect(root.element.innerHTML).toEqual(
       '<div><div>b</div><div>a</div></div>',
+    )
+  })
+
+  test('order, no keys, custom component', () => {
+    class DivC extends Custom<Props> {
+      render() {
+        return <div>{this.props.children}</div>
+      }
+    }
+
+    const a = (
+      <DivC>
+        <DivC>a</DivC>
+      </DivC>
+    )
+
+    const root = mkRoot(a)
+
+    expect(root.element.innerHTML).toEqual('<div><div>a</div></div>')
+
+    const b = (
+      <DivC>
+        <DivC>b</DivC>
+        <DivC>a</DivC>
+      </DivC>
+    )
+
+    root.rerender(b)
+
+    expect(root.element.innerHTML).toEqual(
+      '<div><div>b</div><div>a</div></div>',
+    )
+  })
+
+  test('order 2, without keys', () => {
+    const a = (
+      <div>
+        <div>a</div>
+        <div>b</div>
+        <div>c</div>
+      </div>
+    )
+    const root = mkRoot(a)
+
+    expect(root.element.innerHTML).toEqual(
+      '<div><div>a</div><div>b</div><div>c</div></div>',
+    )
+
+    const b = (
+      <div>
+        <div>d</div>
+        <div>a</div>
+        <div>b</div>
+        <div>c</div>
+      </div>
+    )
+
+    root.rerender(b)
+
+    expect(root.element.innerHTML).toEqual(
+      '<div><div>d</div><div>a</div><div>b</div><div>c</div></div>',
+    )
+  })
+
+  test('order 3, with keys', () => {
+    const a = (
+      <div>
+        <div key="a">a</div>
+        <div key="b">b</div>
+        <div key="c">c</div>
+      </div>
+    )
+
+    const root = mkRoot(a)
+
+    expect(root.element.innerHTML).toEqual(
+      '<div><div>a</div><div>b</div><div>c</div></div>',
+    )
+
+    const b = (
+      <div>
+        <div key="d">d</div>
+        <div key="a">a</div>
+        <div key="b">b</div>
+        <div key="c">c</div>
+      </div>
+    )
+
+    root.rerender(b)
+
+    expect(root.element.innerHTML).toEqual(
+      '<div><div>d</div><div>a</div><div>b</div><div>c</div></div>',
     )
   })
 })
