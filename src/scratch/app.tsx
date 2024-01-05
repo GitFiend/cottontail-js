@@ -1,5 +1,5 @@
 import {renderRoot} from '../lib/cottontail'
-import {$Component} from '../lib/components/custom-component'
+import {Custom} from '../lib/components/custom-component'
 import {init$} from '../lib/model/runes'
 import {createElement} from '../lib/create-element'
 import {autorun, reaction} from '../lib/model/reactions'
@@ -10,16 +10,16 @@ class Store {
   constructor() {
     init$(this)
 
-    autorun(this, () => {
+    autorun(() => {
       console.log('num: ', this.$num)
-    })
+    }, this)
 
     reaction(
-      this,
       () => this.$num,
       value => {
         console.log('new value: ', value)
       },
+      this,
     )
   }
 
@@ -27,12 +27,12 @@ class Store {
     return this.$num ** 2
   }
 
-  onClick = () => {
+  onClick = (e: MouseEvent) => {
     this.$num++
   }
 }
 
-class Thing extends $Component<{store: Store}> {
+class Thing extends Custom<{store: Store}> {
   render() {
     const {store} = this.props
 

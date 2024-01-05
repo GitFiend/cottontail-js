@@ -1,4 +1,5 @@
 import {Meta} from '../create-element'
+import {Cottontail} from '../cottontail'
 
 // Assumes keys are the same in both objects
 export function equalValues(
@@ -17,7 +18,7 @@ function checkChildrenKeys(children: Meta[]) {
   const set = new Set<string>()
 
   for (const child of children) {
-    if (child !== null && typeof child !== 'string') {
+    if (child != null && typeof child === 'object') {
       if (typeof child.props?.key === 'string') {
         numKeys++
         set.add(child.props.key)
@@ -28,4 +29,18 @@ function checkChildrenKeys(children: Meta[]) {
   if (numKeys !== set.size) {
     console.error(`Subtrees contain duplicate keys: `, children)
   }
+}
+
+export function c(names: TemplateStringsArray, ...flags: boolean[]): string {
+  if (names.length === 1) return names[0]
+
+  let classes = ''
+  for (let i = 0; i < names.length; i++) {
+    if (flags[i]) classes += names[i]
+  }
+  return classes.trim()
+}
+
+export function mkRoot(meta: Meta) {
+  return new Cottontail(meta, document.createElement('div'))
 }

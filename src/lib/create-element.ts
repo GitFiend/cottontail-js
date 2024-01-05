@@ -1,6 +1,16 @@
 import {Props} from './components/types'
 
-export type Meta = DomMeta | CustomMeta | FragmentMeta | string | null
+export type Meta =
+  | DomMeta
+  | CustomMeta
+  | FragmentMeta
+  | boolean
+  | number
+  | string
+  | null
+  | undefined
+
+export type MetaInternal = Exclude<Meta, boolean | number | undefined>
 
 export enum MetaKind {
   text,
@@ -10,37 +20,59 @@ export enum MetaKind {
   reaction,
 }
 
-export class DomMeta {
-  readonly kind = MetaKind.dom as const
-
-  constructor(
-    public readonly name: string,
-    public readonly props: Props | null,
-    public readonly children: Meta[],
-  ) {}
+export interface DomMeta {
+  readonly kind: MetaKind.dom
+  readonly name: string
+  readonly props: Props | null
+  readonly children: MetaInternal[]
+}
+export function makeDomMeta(
+  name: string,
+  props: Props | null,
+  children: MetaInternal[],
+): DomMeta {
+  return {kind: MetaKind.dom, name, props, children}
 }
 
-export class CustomMeta {
-  readonly kind = MetaKind.custom as const
-
-  constructor(
-    public readonly name: Function,
-    public readonly props: Props,
-    public readonly children: Meta[],
-  ) {}
+export interface CustomMeta {
+  readonly kind: MetaKind.custom
+  readonly name: Function
+  readonly props: Props
+  readonly children: MetaInternal[]
+}
+function makeCustomMeta(
+  name: Function,
+  props: Props,
+  children: MetaInternal[],
+): CustomMeta {
+  return {
+    kind: MetaKind.custom,
+    name,
+    props,
+    children,
+  }
 }
 
-export class FragmentMeta {
-  readonly kind = MetaKind.fragment as const
-
-  constructor(
-    public readonly name: Function,
-    public readonly props: Props,
-    public readonly children: Meta[],
-  ) {}
+export interface FragmentMeta {
+  readonly kind: MetaKind.fragment
+  readonly name: Function
+  readonly props: Props
+  readonly children: MetaInternal[]
+}
+function makeFragmentMeta(
+  name: Function,
+  props: Props,
+  children: MetaInternal[],
+): FragmentMeta {
+  return {
+    kind: MetaKind.fragment,
+    name,
+    props,
+    children,
+  }
 }
 
-type ElementChildren = (Meta | number | (Meta | number)[])[]
+type ElementChildren = (Meta | Meta[])[]
 
 // Could we look up the current tree instead of constructing again?
 export function createElement(
@@ -49,29 +81,37 @@ export function createElement(
   ...children: ElementChildren
 ): Meta {
   const sanitisedChildren = sanitiseChildren(children)
+  props ??= {}
+  props.children = sanitisedChildren
 
   if (typeof name === 'string') {
-    return new DomMeta(name, props, sanitisedChildren)
+    return makeDomMeta(name, props, sanitisedChildren)
   } else if (name.name === 'Fragment') {
-    return new FragmentMeta(name, props ?? {}, sanitisedChildren)
+    return makeFragmentMeta(name, props, sanitisedChildren)
   } else {
-    return new CustomMeta(name, props ?? {}, sanitisedChildren)
+    return makeCustomMeta(name, props, sanitisedChildren)
   }
 }
 
-function sanitiseChildren(children: ElementChildren): Meta[] {
-  const result: Meta[] = []
+function sanitiseChildren(children: ElementChildren): MetaInternal[] {
+  if (children.length === 0) return children as MetaInternal[]
+
+  const result: MetaInternal[] = []
 
   for (const child of children) {
     if (Array.isArray(child)) {
       for (const c of child) {
-        if (typeof c === 'number') {
+        if (c == null) {
+          result.push(null)
+        } else if (typeof c !== 'object') {
           result.push(c.toString())
         } else {
           result.push(c)
         }
       }
-    } else if (typeof child === 'number') {
+    } else if (child == null) {
+      result.push(null)
+    } else if (typeof child !== 'object') {
       result.push(child.toString())
     } else {
       result.push(child)

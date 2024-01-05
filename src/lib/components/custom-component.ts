@@ -1,4 +1,3 @@
-import {CustomMeta, Meta, MetaKind} from '../create-element'
 import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
 import {AnyComponent, ParentComponent, Props} from './types'
@@ -7,8 +6,9 @@ import {equalValues} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
 import {init$} from '../model/runes'
+import {CustomMeta, MetaInternal, MetaKind} from '../create-element'
 
-export abstract class $Component<P extends Props = {}> {
+export abstract class Custom<P extends Props = {}> {
   readonly kind = MetaKind.custom as const
 
   subComponent: AnyComponent | null = null
@@ -46,6 +46,7 @@ export abstract class $Component<P extends Props = {}> {
   }
 
   update() {
+    // TODO: Should this be after the render call?
     GlobalStack.renderedList.add(this)
 
     // Get the elements to render. We detect observable calls here?
@@ -54,6 +55,7 @@ export abstract class $Component<P extends Props = {}> {
     const newMeta = this.render()
     GlobalStack.pop()
 
+    // TODO: How to handle null?
     if (newMeta !== null) {
       this.subComponent = Render.component(
         newMeta,
@@ -65,7 +67,11 @@ export abstract class $Component<P extends Props = {}> {
     }
   }
 
-  abstract render(): Meta
+  forceUpdate() {
+    GlobalStack.markDirty(this.__ref)
+  }
+
+  abstract render(): MetaInternal
 
   // See remove.ts for clean up code.
 
@@ -82,7 +88,7 @@ type CustomComponentConstructor = new (
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,
   index: number,
-) => $Component<any>
+) => Custom<any>
 
 export function makeCustomComponent(
   meta: CustomMeta,

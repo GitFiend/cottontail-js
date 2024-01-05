@@ -1,6 +1,8 @@
 import {GlobalStack} from './global-stack'
-import {$Component} from '../components/custom-component'
+import {Custom} from '../components/custom-component'
 import {Reaction} from './reactions'
+
+const debug = true
 
 export function init$(object: Object) {
   for (const key in object) {
@@ -11,7 +13,7 @@ export function init$(object: Object) {
         const valueName = `__${key}`
 
         // TODO: Investigate whether to make a Rune a class, or just use closed over state here.
-        const componentRefs = new Set<WeakRef<$Component | Reaction>>()
+        const componentRefs = new Set<WeakRef<Custom | Reaction>>()
 
         Object.defineProperties(object, {
           [valueName]: {
@@ -29,6 +31,10 @@ export function init$(object: Object) {
               return this[valueName]
             },
             set(value) {
+              if (debug) {
+                console.log(`${valueName} <-`, value)
+              }
+
               for (const componentRef of componentRefs.values()) {
                 const component = componentRef.deref()
                 if (!component) {

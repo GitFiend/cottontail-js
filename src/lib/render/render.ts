@@ -1,4 +1,10 @@
-import {CustomMeta, DomMeta, FragmentMeta, Meta, MetaKind} from '../create-element'
+import {
+  CustomMeta,
+  DomMeta,
+  FragmentMeta,
+  MetaInternal,
+  MetaKind,
+} from '../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
@@ -6,22 +12,30 @@ import {AnyComponent, ParentComponent} from '../components/types'
 import {TextComponent} from '../components/text-component'
 import {Remove} from './remove'
 import {Order} from './order'
-import {$Component, makeCustomComponent} from '../components/custom-component'
+import {Custom, makeCustomComponent} from '../components/custom-component'
 import {Fragment} from '../components/fragment'
 
 export class Render {
   static component(
-    meta: Exclude<Meta, null>,
+    meta: MetaInternal,
     prev: AnyComponent | null,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
-  ): AnyComponent {
+  ): AnyComponent | null {
+    if (meta === null) {
+      if (prev !== null) {
+        Remove.component(prev)
+      }
+      return null
+    }
     if (typeof meta === 'string') {
       return Render.text(meta, prev, parent, domParent, index)
-    } else if (meta.kind === MetaKind.dom) {
+    }
+    if (meta.kind === MetaKind.dom) {
       return Render.dom(meta, prev, parent, domParent, index)
-    } else if (meta.kind === MetaKind.fragment) {
+    }
+    if (meta.kind === MetaKind.fragment) {
       return Render.fragment(meta, prev, parent, domParent, index)
     }
     return Render.custom(meta, prev, parent, domParent, index)
@@ -99,7 +113,6 @@ export class Render {
       if (prevOrder !== newOrder) {
         prev.index = index
         prev.order = newOrder
-
         Order.move(domParent, prev)
       }
 
@@ -116,7 +129,6 @@ export class Render {
         meta.children,
         prev.subComponents,
       )
-
       return prev
     }
 
@@ -165,12 +177,15 @@ export class Render {
     directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
     index: number,
-  ): $Component {
+  ): Custom {
     if (!prev) {
       return makeCustomComponent(meta, directParent, domParent, index)
     }
 
-    if (prev.kind === MetaKind.custom && prev.meta.name.name === meta.name.name) {
+    if (
+      prev.kind === MetaKind.custom &&
+      prev.meta.name.name === meta.name.name
+    ) {
       const prevOrder = prev.order
       const newOrder = Order.key(directParent.order, index)
 
@@ -199,7 +214,7 @@ export class Render {
         }
       }
 
-      ;(prev as $Component).updateWithNewProps(meta.props)
+      ;(prev as Custom).updateWithNewProps(meta.props)
       return prev
     }
 
@@ -209,7 +224,7 @@ export class Render {
   static subComponents(
     directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
-    children: Meta[],
+    children: MetaInternal[],
     prevComponents: Map<string, AnyComponent>,
   ) {
     // if (__DEV__) {
@@ -242,7 +257,7 @@ export class Render {
   }
 
   static subComponent(
-    meta: Exclude<Meta, null>,
+    meta: Exclude<MetaInternal, null>,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
     prevChildren: Map<string, AnyComponent>,
@@ -252,9 +267,17 @@ export class Render {
     if (typeof meta === 'string') {
       const key = index.toString()
 
-      const s = Render.text(meta, prevChildren.get(key) ?? null, parent, domParent, index)
+      const s = Render.text(
+        meta,
+        prevChildren.get(key) ?? null,
+        parent,
+        domParent,
+        index,
+      )
       prevChildren.delete(key)
-      newChildren.set(key, s)
+      if (s) {
+        newChildren.set(key, s)
+      }
       return s
     }
 
@@ -267,25 +290,28 @@ export class Render {
       index,
     )
     prevChildren.delete(key)
-    newChildren.set(key, s)
+    if (s) {
+      newChildren.set(key, s)
+    }
     return s
   }
 }
 
-function checkChildrenKeys(children: Meta[]): void {
-  let numKeys = 0
-  const set = new Set<string>()
-
-  for (const child of children) {
-    if (typeof child !== 'string' && child?.props) {
-      if (typeof child.props.key === 'string') {
-        numKeys++
-        set.add(child.props.key)
-      }
-    }
-  }
-
-  if (numKeys !== set.size) {
-    console.error(`Subtrees contain duplicate keys: `, children)
-  }
-}
+// TODO
+// function checkChildrenKeys(children: Meta[]): void {
+//   let numKeys = 0
+//   const set = new Set<string>()
+//
+//   for (const child of children) {
+//     if (typeof child !== 'string' && child?.props) {
+//       if (typeof child.props.key === 'string') {
+//         numKeys++
+//         set.add(child.props.key)
+//       }
+//     }
+//   }
+//
+//   if (numKeys !== set.size) {
+//     console.error(`Subtrees contain duplicate keys: `, children)
+//   }
+// }

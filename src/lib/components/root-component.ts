@@ -1,8 +1,6 @@
-import {AnyComponent, ElementComponent} from './types'
+import {ElementComponent} from './types'
 
 export class RootComponent {
-  component: AnyComponent | null = null
-
   order = '1'
   key = 'root'
 
