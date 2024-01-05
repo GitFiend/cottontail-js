@@ -1,7 +1,6 @@
 /// <reference path="./globals.d.ts" />
 /// <reference path="./src/jsx-types/index.d.ts" />
 export {c} from './src/lib/render/util'
-export {MetaKind} from './src/lib/create-element'
 export {init$} from './src/lib/model/runes'
 export * from './src/lib/create-element'
 export {createRef} from './src/lib/components/ref'

@@ -1,6 +1,5 @@
 import {Custom} from '../components/custom-component'
 import {Reaction} from './reactions'
-import {MetaKind} from '../create-element'
 
 export class GlobalStack {
   private static componentRefs: WeakRef<Custom | Reaction>[] = []
@@ -52,7 +51,7 @@ export class GlobalStack {
       const c = cRef.deref()
 
       if (c) {
-        if (c.kind === MetaKind.custom) {
+        if (c.kind === 'custom') {
           renderList.push(c)
         } else {
           reactionList.add(c)

@@ -1,6 +1,5 @@
 import {DomComponent} from '../components/dom-component'
 import {AnyComponent} from '../components/types'
-import {MetaKind} from '../create-element'
 import {Custom} from '../components/custom-component'
 import {TextComponent} from '../components/text-component'
 import {Order} from './order'
@@ -8,11 +7,11 @@ import {Order} from './order'
 export class Remove {
   static component(component: AnyComponent) {
     switch (component.kind) {
-      case MetaKind.text:
+      case 'text':
         return Remove.textComponent(component)
-      case MetaKind.dom:
+      case 'dom':
         return Remove.domComponent(component)
-      case MetaKind.custom:
+      case 'custom':
         return Remove.customComponent(component)
     }
   }

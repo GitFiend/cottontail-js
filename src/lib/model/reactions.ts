@@ -1,4 +1,3 @@
-import {MetaKind} from '../create-element'
 import {GlobalStack} from './global-stack'
 
 export type Reaction = AutoRun<any> | Reactor<any>
@@ -16,7 +15,7 @@ export function autorun<T>(fn: () => ForbidPromise<T>, owner: object) {
 }
 
 class AutoRun<T> {
-  readonly kind = MetaKind.reaction as const
+  readonly kind = 'reaction' as const
   readonly __ref = new WeakRef(this)
 
   constructor(private fn: () => ForbidPromise<T>) {}
@@ -43,7 +42,7 @@ export function reaction<T>(
 }
 
 export class Reactor<T> {
-  readonly kind = MetaKind.reaction as const
+  readonly kind = 'reaction' as const
 
   readonly __ref = new WeakRef(this)
 

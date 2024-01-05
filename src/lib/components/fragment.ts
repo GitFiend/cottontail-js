@@ -1,4 +1,4 @@
-import {FragmentMeta, Meta, MetaKind} from '../create-element'
+import {FragmentMeta, Meta} from '../create-element'
 import {AnyComponent, ParentComponent} from './types'
 import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
@@ -6,7 +6,7 @@ import {Order} from '../render/order'
 import {Render} from '../render/render'
 
 export class Fragment {
-  readonly kind = MetaKind.fragment as const
+  readonly kind = 'fragment' as const
 
   order: string
   key: string

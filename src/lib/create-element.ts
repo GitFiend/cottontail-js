@@ -12,16 +12,8 @@ export type Meta =
 
 export type MetaInternal = Exclude<Meta, boolean | number | undefined>
 
-export enum MetaKind {
-  text,
-  dom,
-  custom,
-  fragment,
-  reaction,
-}
-
 export interface DomMeta {
-  readonly kind: MetaKind.dom
+  readonly kind: 'dom'
   readonly name: string
   readonly props: Props | null
   readonly children: MetaInternal[]
@@ -31,11 +23,11 @@ export function makeDomMeta(
   props: Props | null,
   children: MetaInternal[],
 ): DomMeta {
-  return {kind: MetaKind.dom, name, props, children}
+  return {kind: 'dom', name, props, children}
 }
 
 export interface CustomMeta {
-  readonly kind: MetaKind.custom
+  readonly kind: 'custom'
   readonly name: Function
   readonly props: Props
   readonly children: MetaInternal[]
@@ -46,7 +38,7 @@ function makeCustomMeta(
   children: MetaInternal[],
 ): CustomMeta {
   return {
-    kind: MetaKind.custom,
+    kind: 'custom',
     name,
     props,
     children,
@@ -54,7 +46,7 @@ function makeCustomMeta(
 }
 
 export interface FragmentMeta {
-  readonly kind: MetaKind.fragment
+  readonly kind: 'fragment'
   readonly name: Function
   readonly props: Props
   readonly children: MetaInternal[]
@@ -65,7 +57,7 @@ function makeFragmentMeta(
   children: MetaInternal[],
 ): FragmentMeta {
   return {
-    kind: MetaKind.fragment,
+    kind: 'fragment',
     name,
     props,
     children,
