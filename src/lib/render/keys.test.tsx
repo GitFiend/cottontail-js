@@ -86,7 +86,6 @@ describe('test re-rendering keyed lists', () => {
     class DivC extends Custom<{text: string}> {
       render() {
         return <div>{this.props.text}</div>
-        // return Div({children: [this.props.text]})
       }
     }
 
