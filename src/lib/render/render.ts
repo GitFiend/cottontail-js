@@ -214,6 +214,7 @@ export class Render {
       return prev
     }
 
+    Remove.component(prev)
     return makeCustomComponent(meta, directParent, domParent, index)
   }
 
