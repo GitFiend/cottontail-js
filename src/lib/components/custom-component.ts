@@ -60,7 +60,7 @@ export abstract class Custom<P extends Props = {}> {
       this.subComponent = Render.component(
         newMeta,
         this.subComponent,
-        this.directParent,
+        this,
         this.domParent,
         this.index,
       )

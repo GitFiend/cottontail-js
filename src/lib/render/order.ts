@@ -40,27 +40,24 @@ export class Order {
     parent: RootComponent | DomComponent,
     child: ElementComponent,
   ): void {
-    const {inserted} = parent
-    const {order, key} = child
+    const {inserted: insertedInParent} = parent
+    const {order: newOrder, key: newKey} = child
 
-    const len = inserted.length
+    const len = insertedInParent.length
 
     for (let i = len - 1; i >= 0; i--) {
-      const current = inserted[i]
-      const next: ElementComponent | undefined = inserted[i + 1]
+      const current = insertedInParent[i]
+      const next: ElementComponent | undefined = insertedInParent[i + 1]
 
-      /*
-      If order is the same we expect the keys to be different. This
-      is expected for a virtual list.
-       */
-      if (order >= current.order) {
-        if (key !== current.key) {
-          if (next != null) {
-            inserted.splice(i + 1, 0, child)
-
+      // If order is the same, we expect the keys to be different.
+      // This is expected for a virtual list.
+      if (newOrder >= current.order) {
+        if (newKey !== current.key) {
+          if (next) {
+            insertedInParent.splice(i + 1, 0, child)
             applyInserts(parent)
           } else {
-            inserted.push(child)
+            insertedInParent.push(child)
             applyInserts(parent)
           }
         }
@@ -69,7 +66,7 @@ export class Order {
       }
     }
 
-    inserted.unshift(child)
+    insertedInParent.unshift(child)
     applyInserts(parent)
   }
 

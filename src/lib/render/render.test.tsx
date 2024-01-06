@@ -1,33 +1,32 @@
 import {createElement} from '../create-element'
-import {renderRoot} from '../cottontail'
 import {Custom} from '../components/custom-component'
+import {mkRoot} from './util'
 
 describe('render', () => {
   test('simple', () => {
-    renderRoot(<div className="Omg" />, document.body)
+    const root = mkRoot(<div className="Omg" />)
 
-    expect(document.body.children.length).toEqual(1)
+    expect(root.element.children.length).toEqual(1)
   })
 
   test('children in component', () => {
-    renderRoot(
+    const root = mkRoot(
       <div className="Omg">
         <div className="Omg2" />
       </div>,
-      document.body,
     )
 
-    expect(document.body.children.length).toEqual(1)
-    expect(document.body.children[0].children.length).toEqual(1)
+    expect(root.element.children.length).toEqual(1)
+    expect(root.element.children[0].children.length).toEqual(1)
   })
 
   test('multiple children in component', () => {
     const children = [<div className="Omg2" />, <div className="Omg3" />]
 
-    renderRoot(<div className="Omg">{children}</div>, document.body)
+    const root = mkRoot(<div className="Omg">{children}</div>)
 
-    expect(document.body.children.length).toEqual(1)
-    expect(document.body.children[0].children.length).toEqual(2)
+    expect(root.element.children.length).toEqual(1)
+    expect(root.element.children[0].children.length).toEqual(2)
   })
 
   test('multiple children in custom component', () => {
@@ -37,15 +36,14 @@ describe('render', () => {
       }
     }
 
-    renderRoot(
+    const root = mkRoot(
       <Comp>
         <div className="Omg2" />
         <div className="Omg3" />
       </Comp>,
-      document.body,
     )
 
-    expect(document.body.children.length).toEqual(1)
-    expect(document.body.children[0].children.length).toEqual(2)
+    expect(root.element.children.length).toEqual(1)
+    expect(root.element.children[0].children.length).toEqual(2)
   })
 })
