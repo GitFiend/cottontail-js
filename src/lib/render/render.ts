@@ -3,7 +3,6 @@ import {
   DomMeta,
   FragmentMeta,
   MetaInternal,
-  MetaKind,
 } from '../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
@@ -32,10 +31,10 @@ export class Render {
     if (typeof meta === 'string') {
       return Render.text(meta, prev, parent, domParent, index)
     }
-    if (meta.kind === MetaKind.dom) {
+    if (meta.kind === 'dom') {
       return Render.dom(meta, prev, parent, domParent, index)
     }
-    if (meta.kind === MetaKind.fragment) {
+    if (meta.kind === 'fragment') {
       return Render.fragment(meta, prev, parent, domParent, index)
     }
     return Render.custom(meta, prev, parent, domParent, index)
@@ -52,7 +51,7 @@ export class Render {
       return new Fragment(meta, meta.children, directParent, domParent, index)
     }
 
-    if (prev.kind === MetaKind.fragment) {
+    if (prev.kind === 'fragment') {
       const prevOrder = prev.order
       const newOrder = Order.key(directParent.order, index)
 
@@ -69,11 +68,11 @@ export class Render {
             c.order = no
 
             switch (c.kind) {
-              case MetaKind.dom:
-              case MetaKind.text:
+              case 'dom':
+              case 'text':
                 Order.move(domParent, c)
                 break
-              case MetaKind.custom:
+              case 'custom':
                 c.update()
                 break
             }
@@ -147,7 +146,7 @@ export class Render {
       return new TextComponent(meta, directParent, domParent, index)
     }
 
-    if (prev?.kind === MetaKind.text) {
+    if (prev?.kind === 'text') {
       const prevOrder = prev.order
       const newOrder = Order.key(directParent.order, index)
 
@@ -182,10 +181,7 @@ export class Render {
       return makeCustomComponent(meta, directParent, domParent, index)
     }
 
-    if (
-      prev.kind === MetaKind.custom &&
-      prev.meta.name.name === meta.name.name
-    ) {
+    if (prev.kind === 'custom' && prev.meta.name.name === meta.name.name) {
       const prevOrder = prev.order
       const newOrder = Order.key(directParent.order, index)
 
@@ -202,11 +198,11 @@ export class Render {
             subComponent.order = no
 
             switch (subComponent.kind) {
-              case MetaKind.dom:
-              case MetaKind.text:
+              case 'dom':
+              case 'text':
                 Order.move(domParent, subComponent)
                 break
-              case MetaKind.custom:
+              case 'custom':
                 subComponent.update()
                 break
             }
@@ -218,6 +214,7 @@ export class Render {
       return prev
     }
 
+    Remove.component(prev)
     return makeCustomComponent(meta, directParent, domParent, index)
   }
 

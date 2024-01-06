@@ -168,4 +168,86 @@ describe('Custom', () => {
       '<div><div>d</div><div>a</div><div>b</div><div>c</div></div>',
     )
   })
+
+  test('render and then null', () => {
+    class A extends Custom<Props> {
+      render() {
+        return <div>{this.props.children}</div>
+      }
+    }
+
+    const root = mkRoot(
+      <A>
+        <A>a</A>
+      </A>,
+    )
+
+    expect(root.element.innerHTML).toEqual('<div><div>a</div></div>')
+
+    root.rerender(<A>{null}</A>)
+
+    expect(root.element.innerHTML).toEqual('<div></div>')
+  })
+
+  test('view manager like switching simple', () => {
+    class Store {
+      $showA = true
+      constructor() {
+        init$(this)
+      }
+    }
+
+    class View extends Custom<{store: Store}> {
+      render() {
+        return this.props.store.$showA ? <div>a</div> : <div>b</div>
+      }
+    }
+
+    const store = new Store()
+    const root = mkRoot(<View store={store} />)
+
+    expect(root.element.innerHTML).toEqual('<div>a</div>')
+
+    store.$showA = false
+    GlobalStack.reRender()
+
+    expect(root.element.innerHTML).toEqual('<div>b</div>')
+  })
+
+  test('view manager like switching', () => {
+    class Store {
+      $showA = true
+      constructor() {
+        init$(this)
+      }
+    }
+
+    class View extends Custom<{store: Store}> {
+      render() {
+        return this.props.store.$showA ? <A /> : <B />
+      }
+    }
+
+    class A extends Custom {
+      render() {
+        return <div>a</div>
+      }
+    }
+
+    class B extends Custom {
+      render() {
+        return <div>b</div>
+      }
+    }
+
+    const store = new Store()
+    const root = mkRoot(<View store={store} />)
+
+    expect(root.element.innerHTML).toEqual('<div>a</div>')
+
+    store.$showA = false
+    GlobalStack.reRender()
+
+    expect(root.element.innerHTML).toEqual('<div>b</div>')
+  })
 })

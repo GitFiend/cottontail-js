@@ -6,10 +6,10 @@ import {equalValues} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
 import {init$} from '../model/runes'
-import {CustomMeta, MetaInternal, MetaKind} from '../create-element'
+import {CustomMeta, MetaInternal} from '../create-element'
 
 export abstract class Custom<P extends Props = {}> {
-  readonly kind = MetaKind.custom as const
+  readonly kind = 'custom' as const
 
   subComponent: AnyComponent | null = null
 
@@ -17,6 +17,9 @@ export abstract class Custom<P extends Props = {}> {
   key: string
 
   readonly __ref = new WeakRef(this)
+
+  // Since renders can be queued, we need to be sure we don't render after we've been removed.
+  __removed = false
 
   constructor(
     public props: P,
@@ -46,6 +49,8 @@ export abstract class Custom<P extends Props = {}> {
   }
 
   update() {
+    if (this.__removed) return
+
     // TODO: Should this be after the render call?
     GlobalStack.renderedList.add(this)
 
@@ -60,7 +65,7 @@ export abstract class Custom<P extends Props = {}> {
       this.subComponent = Render.component(
         newMeta,
         this.subComponent,
-        this.directParent,
+        this,
         this.domParent,
         this.index,
       )

@@ -5,7 +5,7 @@ import {AnyComponent} from './components/types'
 
 // TODO: Support more than one instance at a time.
 export class Cottontail {
-  private readonly root: RootComponent
+  readonly root: RootComponent
   private prev: AnyComponent | null = null
   private meta: MetaInternal
   element: HTMLElement

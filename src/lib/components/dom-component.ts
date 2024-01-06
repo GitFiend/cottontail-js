@@ -1,12 +1,15 @@
-import {DomMeta, MetaKind} from '../create-element'
+import {DomMeta} from '../create-element'
 import {RootComponent} from './root-component'
-import {ElementNamespace, setAttributesFromProps} from '../render/set-attributes'
+import {
+  ElementNamespace,
+  setAttributesFromProps,
+} from '../render/set-attributes'
 import {Render} from '../render/render'
 import {AnyComponent, ElementComponent, ParentComponent} from './types'
 import {Order} from '../render/order'
 
 export class DomComponent {
-  kind = MetaKind.dom as const
+  readonly kind = 'dom' as const
   element: HTMLElement
   order: string
   key: string

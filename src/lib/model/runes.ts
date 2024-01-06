@@ -2,7 +2,7 @@ import {GlobalStack} from './global-stack'
 import {Custom} from '../components/custom-component'
 import {Reaction} from './reactions'
 
-const debug = true
+const debug = false
 
 export function init$(object: Object) {
   for (const key in object) {
