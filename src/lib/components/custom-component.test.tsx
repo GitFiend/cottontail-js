@@ -189,6 +189,28 @@ describe('Custom', () => {
     expect(root.element.innerHTML).toEqual('<div></div>')
   })
 
+  test('render and then null 2', () => {
+    class A extends Custom<{show: boolean}> {
+      render() {
+        const {show} = this.props
+
+        if (show) {
+          return <div>a</div>
+        }
+
+        return null
+      }
+    }
+
+    const root = mkRoot(<A show />)
+
+    expect(root.element.innerHTML).toEqual('<div>a</div>')
+
+    root.rerender(<A show={false} />)
+
+    expect(root.element.innerHTML).toEqual('')
+  })
+
   test('view manager like switching simple', () => {
     class Store {
       $showA = true

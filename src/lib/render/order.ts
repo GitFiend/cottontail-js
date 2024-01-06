@@ -94,9 +94,7 @@ export class Order {
 
     if (i >= 0) {
       const [child] = inserted.splice(i, 1)
-
       siblings.delete(child.element)
-
       child.element.remove()
     }
   }

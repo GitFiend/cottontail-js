@@ -7,6 +7,7 @@ import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
 import {init$} from '../model/runes'
 import {CustomMeta, MetaInternal} from '../create-element'
+import {Remove} from '../render/remove'
 
 export abstract class Custom<P extends Props = {}> {
   readonly kind = 'custom' as const
@@ -60,7 +61,6 @@ export abstract class Custom<P extends Props = {}> {
     const newMeta = this.render()
     GlobalStack.pop()
 
-    // TODO: How to handle null?
     if (newMeta !== null) {
       this.subComponent = Render.component(
         newMeta,
@@ -69,7 +69,11 @@ export abstract class Custom<P extends Props = {}> {
         this.domParent,
         this.index,
       )
+    } else if (this.subComponent !== null) {
+      Remove.component(this.subComponent)
+      this.subComponent = null
     }
+    // TODO: Other cases? 0 and false?
   }
 
   forceUpdate() {
