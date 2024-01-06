@@ -97,4 +97,38 @@ describe('fragment', () => {
     GlobalStack.reRender()
     expect(root.element.innerHTML).toEqual('<div>text3</div>')
   })
+
+  test('fragment with array becoming empty', () => {
+    class Store {
+      $haveStuff = true
+      constructor() {
+        init$(this)
+      }
+    }
+    class A extends Custom<{store: Store}> {
+      render() {
+        return (
+          <div>
+            <>{this.drawStuff()}</>
+          </div>
+        )
+      }
+
+      drawStuff() {
+        return this.props.store.$haveStuff ? [<div>a</div>, <div>b</div>] : []
+      }
+    }
+
+    const store = new Store()
+    const root = mkRoot(<A store={store} />)
+
+    expect(root.element.innerHTML).toEqual(
+      '<div><div>a</div><div>b</div></div>',
+    )
+
+    store.$haveStuff = false
+    GlobalStack.reRender()
+
+    expect(root.element.innerHTML).toEqual('<div></div>')
+  })
 })

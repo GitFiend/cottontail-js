@@ -35,6 +35,7 @@ export class Remove {
     //   console.error('already removed')
     // }
 
+    component.__removed = true
     component.componentWillUnmount()
 
     if (component.subComponent !== null) {

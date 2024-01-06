@@ -18,6 +18,9 @@ export abstract class Custom<P extends Props = {}> {
 
   readonly __ref = new WeakRef(this)
 
+  // Since renders can be queued, we need to be sure we don't render after we've been removed.
+  __removed = false
+
   constructor(
     public props: P,
     public meta: CustomMeta,
@@ -46,6 +49,8 @@ export abstract class Custom<P extends Props = {}> {
   }
 
   update() {
+    if (this.__removed) return
+
     // TODO: Should this be after the render call?
     GlobalStack.renderedList.add(this)
 
