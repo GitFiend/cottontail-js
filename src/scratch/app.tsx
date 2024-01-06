@@ -3,6 +3,7 @@ import {Custom} from '../lib/components/custom-component'
 import {init$} from '../lib/model/runes'
 import {createElement} from '../lib/create-element'
 import {autorun, reaction} from '../lib/model/reactions'
+import {Fragment} from '../lib/components/fragment'
 
 class Store {
   $num = 0
@@ -27,7 +28,7 @@ class Store {
     return this.$num ** 2
   }
 
-  onClick = (e: MouseEvent) => {
+  onClick = () => {
     this.$num++
   }
 }
@@ -58,13 +59,15 @@ const store = new Store()
 renderRoot(
   <div style={{display: 'flex', flexDirection: 'column'}}>
     <h1>Hi</h1>
-    {Array.from({length: 1000}).map((_, i) => {
-      return (
-        <div style={{height: 150}} key={i}>
-          <Thing store={store} />
-        </div>
-      )
-    })}
+    <>
+      {Array.from({length: 1000}).map((_, i) => {
+        return (
+          <div style={{height: 150}} key={i}>
+            <Thing store={store} />
+          </div>
+        )
+      })}
+    </>
   </div>,
   document.getElementById('root'),
 )
