@@ -75,6 +75,9 @@ export class Render {
               case 'custom':
                 c.update()
                 break
+              case 'fragment':
+                console.error('Not handled!')
+                break
             }
           }
         }
@@ -205,6 +208,8 @@ export class Render {
               case 'custom':
                 subComponent.update()
                 break
+              case 'fragment':
+                throw new Error('Forgot to implement')
             }
           }
         }

@@ -1,4 +1,4 @@
-import {createElement} from '../create-element'
+import {createElement, Meta} from '../create-element'
 import {Custom} from '../components/custom-component'
 import {mkRoot} from './util'
 
@@ -25,12 +25,16 @@ describe('render', () => {
 
     const root = mkRoot(<div className="Omg">{children}</div>)
 
+    expect(root.element.innerHTML).toEqual(
+      '<div class="Omg"><div class="Omg2"></div><div class="Omg3"></div></div>',
+    )
+
     expect(root.element.children.length).toEqual(1)
     expect(root.element.children[0].children.length).toEqual(2)
   })
 
   test('multiple children in custom component', () => {
-    class Comp extends Custom<{children: JSX.Element[]}> {
+    class Comp extends Custom<{children: Meta[]}> {
       render() {
         return <div className="Omg">{this.props.children}</div>
       }

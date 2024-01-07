@@ -45,7 +45,7 @@ describe('Custom', () => {
     )
 
     store.$num = 6
-    GlobalStack.reRender()
+    GlobalStack.drawFrame()
 
     expect(root.element.innerHTML).toEqual(
       '<div>6 - 3<div>6 - 2<div>6 - 1</div></div></div>',
@@ -231,7 +231,7 @@ describe('Custom', () => {
     expect(root.element.innerHTML).toEqual('<div>a</div>')
 
     store.$showA = false
-    GlobalStack.reRender()
+    GlobalStack.drawFrame()
 
     expect(root.element.innerHTML).toEqual('<div>b</div>')
   })
@@ -268,7 +268,7 @@ describe('Custom', () => {
     expect(root.element.innerHTML).toEqual('<div>a</div>')
 
     store.$showA = false
-    GlobalStack.reRender()
+    GlobalStack.drawFrame()
 
     expect(root.element.innerHTML).toEqual('<div>b</div>')
   })

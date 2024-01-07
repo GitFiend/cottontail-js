@@ -39,17 +39,18 @@ export abstract class Custom<P extends Props = {}> {
       this.props = props
 
       this.update()
-      this.componentDidUpdate()
+      // this.componentDidUpdate()
     }
   }
 
   mount() {
     init$(this)
-    this.update()
-    this.componentDidMount()
+    this.runRender()
+    GlobalStack.didMountStack.add(this.__ref)
+    // this.componentDidMount()
   }
 
-  update() {
+  runRender() {
     if (this.__removed) return
 
     // TODO: Should this be after the render call?
@@ -76,6 +77,36 @@ export abstract class Custom<P extends Props = {}> {
     // TODO: Other cases? 0 and false?
   }
 
+  update() {
+    this.runRender()
+    // if (this.__removed) return
+    //
+    // // TODO: Should this be after the render call?
+    // GlobalStack.renderedList.add(this)
+    //
+    // // Get the elements to render. We detect observable calls here?
+    // // This goes an on a global stack, so we can track it?
+    // GlobalStack.push(this.__ref)
+    // const newMeta = this.render()
+    // GlobalStack.pop()
+    //
+    // if (newMeta !== null) {
+    //   this.subComponent = Render.component(
+    //     newMeta,
+    //     this.subComponent,
+    //     this,
+    //     this.domParent,
+    //     0, // Don't currently support an array render result.
+    //   )
+    // } else if (this.subComponent !== null) {
+    //   Remove.component(this.subComponent)
+    //   this.subComponent = null
+    // }
+    // // TODO: Other cases? 0 and false?
+
+    GlobalStack.didUpdateStack.add(this.__ref)
+  }
+
   forceUpdate() {
     GlobalStack.markDirty(this.__ref)
   }
@@ -84,6 +115,8 @@ export abstract class Custom<P extends Props = {}> {
 
   // See remove.ts for clean up code.
 
+  // TODO: Is it worth making these nullable instead of having an empty
+  //  implementation that needs to always be put in the queue?
   componentDidMount(): void {}
 
   componentDidUpdate(): void {}

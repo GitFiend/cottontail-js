@@ -90,11 +90,11 @@ describe('fragment', () => {
     expect(root.element.innerHTML).toEqual('<div>text1</div>')
 
     s.$text = 'text2'
-    GlobalStack.reRender()
+    GlobalStack.drawFrame()
     expect(root.element.innerHTML).toEqual('<div>text2</div>')
 
     s.$text = 'text3'
-    GlobalStack.reRender()
+    GlobalStack.drawFrame()
     expect(root.element.innerHTML).toEqual('<div>text3</div>')
   })
 
@@ -127,7 +127,7 @@ describe('fragment', () => {
     )
 
     store.$haveStuff = false
-    GlobalStack.reRender()
+    GlobalStack.drawFrame()
 
     expect(root.element.innerHTML).toEqual('<div></div>')
   })

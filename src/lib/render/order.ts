@@ -1,8 +1,9 @@
 import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
 import {ElementComponent} from '../components/types'
+import {GlobalStack} from '../model/global-stack'
 
-function applyInserts(parent: RootComponent | DomComponent): void {
+export function applyInserts(parent: RootComponent | DomComponent): void {
   const {inserted, siblings, element} = parent
 
   const len = inserted.length
@@ -17,13 +18,16 @@ function applyInserts(parent: RootComponent | DomComponent): void {
         element.insertBefore(current.element, null)
         siblings.set(current.element, null)
       }
-    } else if (siblings.has(next.element)) {
+    } else {
       const prevElement = siblings.get(next.element)
 
-      if (prevElement !== current.element) {
+      if (prevElement !== undefined && prevElement !== current.element) {
         element.insertBefore(current.element, next.element)
         siblings.set(next.element, current.element)
-        if (!siblings.has(current.element)) siblings.set(current.element, null)
+
+        if (!siblings.has(current.element)) {
+          siblings.set(current.element, null)
+        }
       }
     }
 
@@ -55,10 +59,12 @@ export class Order {
         if (newKey !== current.key) {
           if (next) {
             insertedInParent.splice(i + 1, 0, child)
-            applyInserts(parent)
+            GlobalStack.insertsStack.add(parent)
+            // applyInserts(parent)
           } else {
             insertedInParent.push(child)
-            applyInserts(parent)
+            GlobalStack.insertsStack.add(parent)
+            // applyInserts(parent)
           }
         }
 
@@ -67,7 +73,8 @@ export class Order {
     }
 
     insertedInParent.unshift(child)
-    applyInserts(parent)
+    GlobalStack.insertsStack.add(parent)
+    // applyInserts(parent)
   }
 
   static move(parent: RootComponent | DomComponent, child: ElementComponent) {

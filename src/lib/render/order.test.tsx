@@ -23,22 +23,22 @@ describe('insert', () => {
 
   test('try different insert indices', () => {
     new DomComponent(<div />, parent, parent, 3)
-    GlobalStack.reRender()
+    GlobalStack.drawFrame()
     expect(inserted.map(i => i.order)).toEqual(['103'])
     checkOrder(inserted)
 
     new DomComponent(<div />, parent, parent, 4)
-    GlobalStack.reRender()
+    GlobalStack.drawFrame()
     expect(inserted.map(i => i.order)).toEqual(['103', '104'])
     checkOrder(inserted)
 
     new DomComponent(<div />, parent, parent, 1)
-    GlobalStack.reRender()
+    GlobalStack.drawFrame()
     expect(inserted.map(i => i.order)).toEqual(['101', '103', '104'])
     checkOrder(inserted)
 
     new DomComponent(<div />, parent, parent, 2)
-    GlobalStack.reRender()
+    GlobalStack.drawFrame()
     expect(inserted.map(i => i.order)).toEqual(['101', '102', '103', '104'])
     checkOrder(inserted)
   })

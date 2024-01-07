@@ -1,6 +1,6 @@
 import {equalValues} from '../lib/render/util'
 
-describe('benchmark to get a sense of how fast it will be to compare lots of objects per frame', () => {
+xdescribe('benchmark to get a sense of how fast it will be to compare lots of objects per frame', () => {
   test('lots of object creations and comparisons', () => {
     const numComparisons = 2000
     const objects1 = []
@@ -102,7 +102,10 @@ function makeTestObject(): Record<string, unknown> {
 }
 
 // Assumes keys are the same in both objects
-function equalValues2(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
+function equalValues2(
+  a: Record<string, unknown>,
+  b: Record<string, unknown>,
+): boolean {
   for (const key of Object.keys(a)) {
     if (a[key] !== b[key]) return false
   }
@@ -121,11 +124,14 @@ function shuffleArray(array: unknown[]): void {
     currentIndex--
 
     // And swap it with the current element.
-    ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+    ;[array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ]
   }
 }
 
-describe('construct objects', () => {
+xdescribe('construct objects', () => {
   const num = 1000_000
 
   function testArray() {
@@ -203,7 +209,7 @@ describe('construct objects', () => {
   testObject()
 })
 
-describe('weak refs perf', () => {
+xdescribe('weak refs perf', () => {
   test('make lots and deref', () => {
     console.time('make lots and deref')
 

@@ -2,6 +2,7 @@ import {RootComponent} from './components/root-component'
 import {Meta, MetaInternal} from './create-element'
 import {Render} from './render/render'
 import {AnyComponent} from './components/types'
+import {GlobalStack} from './model/global-stack'
 
 // TODO: Support more than one instance at a time.
 export class Cottontail {
@@ -30,6 +31,7 @@ export class Cottontail {
 
   private render = () => {
     this.prev = Render.component(this.meta, this.prev, this.root, this.root, 0)
+    GlobalStack.drawFrame()
   }
 
   rerender(meta: Meta) {
