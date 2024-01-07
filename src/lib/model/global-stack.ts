@@ -53,7 +53,8 @@ export class GlobalStack {
   private static readonly reactionList = new Set<Reaction>()
 
   static drawFrame = () => {
-    console.time('reRender')
+    if (!__JEST__) console.time('reRender')
+
     const {renderList, renderedList, reactionList} = this
 
     for (const cRef of this.dirtyComponents.values()) {
@@ -101,6 +102,7 @@ export class GlobalStack {
     this.didUpdateStack.clear()
 
     this.queued = false
-    console.timeEnd('reRender')
+
+    if (!__JEST__) console.timeEnd('reRender')
   }
 }
