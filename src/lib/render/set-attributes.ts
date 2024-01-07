@@ -28,6 +28,7 @@ export function setAttributesFromProps(
   }
 }
 
+// TODO: Is going to null props handled?
 export function updateAttributes(
   element: Element,
   namespace: ElementNamespace,
@@ -105,7 +106,10 @@ function setAttribute(
       ;(value as RefObject<unknown>).current = element
       break
     default:
-      if (namespace === ElementNamespace.svg && setSvgAttribute(element, attr, value))
+      if (
+        namespace === ElementNamespace.svg &&
+        setSvgAttribute(element, attr, value)
+      )
         break
 
       if (attr.startsWith('on')) {
@@ -133,7 +137,11 @@ function setSvgAttribute(element: Element, attr: string, value: any) {
   return false
 }
 
-function deleteAttribute(element: Element, attr: string, oldValue: unknown): void {
+function deleteAttribute(
+  element: Element,
+  attr: string,
+  oldValue: unknown,
+): void {
   if (attr.startsWith('on')) {
     element.removeEventListener(attr.slice(2).toLowerCase(), oldValue as any)
   } else if (attr === 'className') {

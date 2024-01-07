@@ -229,12 +229,11 @@ export class Render {
     // }
 
     const newComponents = new Map<string, AnyComponent>()
-    const len = children.length - 1
 
-    for (let i = len; i >= 0; i--) {
+    for (let i = children.length - 1; i >= 0; i--) {
       const child = children[i]
 
-      if (child !== null && child !== undefined) {
+      if (child != null) {
         Render.subComponent(
           child,
           directParent,
@@ -261,25 +260,12 @@ export class Render {
     newChildren: Map<string, AnyComponent>,
     index: number,
   ) {
-    if (typeof meta === 'string') {
-      const key = index.toString()
+    const key =
+      typeof meta === 'string'
+        ? index.toString()
+        : meta.props?.key ?? index.toString()
 
-      const s = Render.text(
-        meta,
-        prevChildren.get(key) ?? null,
-        parent,
-        domParent,
-        index,
-      )
-      prevChildren.delete(key)
-      if (s) {
-        newChildren.set(key, s)
-      }
-      return s
-    }
-
-    const key: string = meta.props?.key ?? index.toString()
-    const s = Render.component(
+    const c = Render.component(
       meta,
       prevChildren.get(key) ?? null,
       parent,
@@ -287,10 +273,10 @@ export class Render {
       index,
     )
     prevChildren.delete(key)
-    if (s) {
-      newChildren.set(key, s)
+    if (c) {
+      newChildren.set(key, c)
     }
-    return s
+    return c
   }
 }
 

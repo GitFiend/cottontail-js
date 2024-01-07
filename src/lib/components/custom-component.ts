@@ -67,7 +67,7 @@ export abstract class Custom<P extends Props = {}> {
         this.subComponent,
         this,
         this.domParent,
-        this.index,
+        0, // Don't currently support an array render result.
       )
     } else if (this.subComponent !== null) {
       Remove.component(this.subComponent)
