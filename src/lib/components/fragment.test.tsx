@@ -2,7 +2,7 @@ import {mkRoot} from '../render/util'
 import {Fragment} from './fragment'
 import {createElement} from '../create-element'
 import {Custom} from './custom-component'
-import {init$} from '../model/runes'
+import {init$} from '../model/init-observables'
 import {GlobalStack} from '../model/global-stack'
 
 describe('fragment', () => {

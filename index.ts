@@ -1,7 +1,7 @@
 /// <reference path="./globals.d.ts" />
 /// <reference path="./src/jsx-types/index.d.ts" />
 export {c} from './src/lib/render/util'
-export {init$} from './src/lib/model/runes'
+export {init$} from './src/lib/model/init-observables'
 export * from './src/lib/create-element'
 export {createRef} from './src/lib/components/ref'
 export type {RefObject} from './src/lib/components/ref'

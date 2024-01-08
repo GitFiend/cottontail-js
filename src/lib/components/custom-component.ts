@@ -5,7 +5,7 @@ import {Order} from '../render/order'
 import {equalValues} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
-import {init$} from '../model/runes'
+import {init$} from '../model/init-observables'
 import {CustomMeta, MetaInternal} from '../create-element'
 import {Remove} from '../render/remove'
 

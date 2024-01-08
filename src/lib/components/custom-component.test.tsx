@@ -1,4 +1,4 @@
-import {init$} from '../model/runes'
+import {init$} from '../model/init-observables'
 import {Custom} from './custom-component'
 import {createElement} from '../create-element'
 import {Cottontail} from '../cottontail'

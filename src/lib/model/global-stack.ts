@@ -6,7 +6,8 @@ import {applyInserts} from '../render/order'
 
 export class GlobalStack {
   private static componentRefs: WeakRef<Custom | Reaction>[] = []
-  private static dirtyComponents = new Set<WeakRef<Custom | Reaction>>()
+  private static dirtyReactions = new Set<WeakRef<Reaction>>()
+  private static dirtyComponents = new Set<WeakRef<Custom>>()
 
   static insertsStack = new Set<RootComponent | DomComponent>()
 
@@ -26,7 +27,15 @@ export class GlobalStack {
   }
 
   static markDirty(componentRef: WeakRef<Custom | Reaction>) {
-    this.dirtyComponents.add(componentRef)
+    const value = componentRef.deref()
+
+    if (value) {
+      if (value.kind === 'custom') {
+        this.dirtyComponents.add(componentRef as WeakRef<Custom>)
+      } else {
+        this.dirtyReactions.add(componentRef as WeakRef<Reaction>)
+      }
+    }
 
     this.queueRender()
   }
@@ -34,10 +43,7 @@ export class GlobalStack {
   private static queued = false
   private static queueRender(): void {
     if (this.queued) return
-
     this.queued = true
-    this.renderList.length = 0
-    this.renderedList.clear()
 
     requestAnimationFrame(this.drawFrame)
   }
@@ -50,31 +56,42 @@ export class GlobalStack {
 
   // Only used while rendering. We don't want to create a new array every time.
   private static readonly renderList: Custom[] = []
-  private static readonly reactionList = new Set<Reaction>()
 
   static drawFrame = () => {
     if (!__JEST__) console.time('reRender')
 
-    const {renderList, renderedList, reactionList} = this
+    const {renderList, renderedList} = this
+
+    while (this.dirtyReactions.size > 0) {
+      console.log('reactions: ', this.dirtyReactions.size)
+      const i = this.dirtyReactions.values().next()
+
+      if (!i.done) {
+        const v = i.value
+        this.dirtyReactions.delete(v)
+        v.deref()?.run()
+
+        if (__DEV__) {
+          if (this.dirtyReactions.has(v)) {
+            console.warn(
+              'This reaction causes a cycle. Running it causes itself to rerun the next frame',
+              v,
+            )
+            this.dirtyReactions.delete(v)
+          }
+        }
+      }
+    }
 
     for (const cRef of this.dirtyComponents.values()) {
       const c = cRef.deref()
 
       if (c) {
-        if (c.kind === 'custom') {
-          renderList.push(c)
-        } else {
-          reactionList.add(c)
-        }
+        renderList.push(c)
       }
     }
 
-    while (reactionList.size > 0) {
-      const reaction: Reaction = reactionList.values().next().value
-      reactionList.delete(reaction)
-
-      reaction.run()
-    }
+    this.dirtyComponents.clear()
 
     // TODO: Check this
     renderList.sort((a, b) => a.order.localeCompare(b.order))
@@ -84,6 +101,8 @@ export class GlobalStack {
         c.update()
       }
     }
+    renderList.length = 0
+    renderedList.clear()
 
     for (const inserted of this.insertsStack) {
       applyInserts(inserted)

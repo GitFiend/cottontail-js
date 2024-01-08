@@ -2,6 +2,7 @@ import {GlobalStack} from './global-stack'
 import {Custom} from '../components/custom-component'
 import {Reaction} from './reactions'
 
+// const debug = true
 const debug = false
 
 export function init$(object: Object) {
@@ -31,6 +32,8 @@ export function init$(object: Object) {
               return this[valueName]
             },
             set(value) {
+              if (this[valueName] === value) return
+
               if (debug) {
                 console.log(`${valueName} <-`, value)
               }
@@ -43,6 +46,7 @@ export function init$(object: Object) {
                   GlobalStack.markDirty(componentRef)
                 }
               }
+              componentRefs.clear()
 
               this[valueName] = value
             },
