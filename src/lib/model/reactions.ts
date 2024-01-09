@@ -19,7 +19,10 @@ class AutoRun<T> {
   readonly kind = 'reaction' as const
   readonly __ref = new WeakRef(this)
 
-  constructor(private fn: () => ForbidPromise<T>) {}
+  constructor(
+    public fn: () => ForbidPromise<T>,
+    public name?: string,
+  ) {}
 
   run(): void {
     GlobalStack.push(this.__ref)
@@ -29,8 +32,12 @@ class AutoRun<T> {
 }
 
 export namespace Reaction {
-  export function auto<T>(fn: () => ForbidPromise<T>, owner: object) {
-    const autoRun = new AutoRun<T>(fn)
+  export function auto<T>(
+    fn: () => ForbidPromise<T>,
+    owner: object,
+    name?: string,
+  ) {
+    const autoRun = new AutoRun<T>(fn, name)
 
     // We do this so that the autorun isn't garbage collected.
     // @ts-ignore
@@ -43,8 +50,9 @@ export namespace Reaction {
     calc: () => ForbidPromise<T>,
     result: (value: T) => void,
     owner: object,
+    name?: string,
   ) {
-    const reactor = new ValueReactor<T>(calc, result)
+    const reactor = new ValueReactor<T>(calc, result, name)
 
     // We do this so the reaction isn't garbage collected.
     // @ts-ignore
@@ -58,8 +66,9 @@ export namespace Reaction {
     calc: () => ForbidPromise<T>,
     result: (value: T) => void,
     owner: object,
+    name?: string,
   ) {
-    const reactor = new ObjectReactor<T>(calc, result)
+    const reactor = new ObjectReactor<T>(calc, result, name)
 
     // We do this so the reaction isn't garbage collected.
     // @ts-ignore
@@ -91,8 +100,9 @@ class ObjectReactor<T extends Record<string, unknown>> {
   value: T
 
   constructor(
-    private calc: () => ForbidPromise<T>,
-    private result: (value: T) => void,
+    public calc: () => ForbidPromise<T>,
+    public result: (value: T) => void,
+    public name?: string,
   ) {
     GlobalStack.push(this.__ref)
     this.value = this.calc()
@@ -119,8 +129,9 @@ class ValueReactor<T> {
   value: T
 
   constructor(
-    private calc: () => ForbidPromise<T>,
-    private result: (value: T) => void,
+    public calc: () => ForbidPromise<T>,
+    public result: (value: T) => void,
+    public name?: string,
   ) {
     GlobalStack.push(this.__ref)
     this.value = this.calc()

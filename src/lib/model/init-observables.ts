@@ -38,6 +38,16 @@ export function init$(object: Object) {
                 console.log(`${valueName} <-`, value)
               }
 
+              this[valueName] = value
+
+              const current = GlobalStack.getCurrent()
+
+              if (current) {
+                // Don't allow both setting and getting of an observable inside a reaction.
+                // This prevents cycles.
+                componentRefs.delete(current)
+              }
+
               for (const componentRef of componentRefs.values()) {
                 const component = componentRef.deref()
                 if (!component) {
@@ -47,8 +57,6 @@ export function init$(object: Object) {
                 }
               }
               componentRefs.clear()
-
-              this[valueName] = value
             },
           },
         })

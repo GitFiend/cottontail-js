@@ -5,7 +5,7 @@ import {RootComponent} from '../components/root-component'
 import {applyInserts} from '../render/order'
 
 export class GlobalStack {
-  private static componentRefs: WeakRef<Custom | Reaction>[] = []
+  private static currentComponentOrReaction: WeakRef<Custom | Reaction>[] = []
   private static dirtyReactions = new Set<WeakRef<Reaction>>()
   private static dirtyComponents = new Set<WeakRef<Custom>>()
 
@@ -15,15 +15,19 @@ export class GlobalStack {
   static didUpdateStack = new Set<WeakRef<Custom>>()
 
   static push(componentRef: WeakRef<Custom | Reaction>) {
-    this.componentRefs.push(componentRef)
+    this.currentComponentOrReaction.push(componentRef)
   }
 
   static pop() {
-    this.componentRefs.pop()
+    this.currentComponentOrReaction.pop()
   }
 
   static getCurrent(): WeakRef<Custom | Reaction> | null {
-    return this.componentRefs[this.componentRefs.length - 1] ?? null
+    return (
+      this.currentComponentOrReaction[
+        this.currentComponentOrReaction.length - 1
+      ] ?? null
+    )
   }
 
   static markDirty(componentRef: WeakRef<Custom | Reaction>) {
@@ -63,7 +67,6 @@ export class GlobalStack {
     const {renderList, renderedList} = this
 
     while (this.dirtyReactions.size > 0) {
-      console.log('reactions: ', this.dirtyReactions.size)
       const i = this.dirtyReactions.values().next()
 
       if (!i.done) {
@@ -75,6 +78,7 @@ export class GlobalStack {
           if (this.dirtyReactions.has(v)) {
             console.warn(
               'This reaction causes a cycle. Running it causes itself to rerun the next frame',
+              v.deref()?.name,
               v,
             )
             this.dirtyReactions.delete(v)
@@ -107,6 +111,7 @@ export class GlobalStack {
     for (const inserted of this.insertsStack) {
       applyInserts(inserted)
     }
+    this.insertsStack.clear()
 
     for (const cRef of this.didMountStack.values()) {
       const c = cRef.deref()
