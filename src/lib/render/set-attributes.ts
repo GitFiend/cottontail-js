@@ -54,8 +54,10 @@ function updateAttrInner(
     // @ts-ignore
     const newValue = newProps[attr]
 
-    // TODO: Does this remove styles? Bug?
-    if (newValue === undefined) continue
+    if (newValue === undefined) {
+      deleteAttribute(element, attr, oldValue)
+      continue
+    }
 
     if (oldValue === undefined) {
       setAttribute(element, namespace, attr, newValue)

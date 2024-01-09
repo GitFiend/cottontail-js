@@ -31,7 +31,8 @@ export function updateStyles(
     const newValue = (newStyles as any)[style]
 
     if (newValue === undefined && oldValue !== undefined) {
-      setStyle(element, style, '')
+      // setStyle(element, style, '')
+      element.style[style as any] = ''
     }
   }
 }
