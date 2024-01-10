@@ -1,4 +1,4 @@
-import {FragmentMeta, Meta} from '../create-element'
+import {FragmentMeta} from '../create-element'
 import {AnyComponent, ParentComponent} from './types'
 import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'

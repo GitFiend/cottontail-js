@@ -1,8 +1,9 @@
 import {DomComponent} from '../components/dom-component'
 import {AnyComponent} from '../components/types'
 import {Custom} from '../components/custom-component'
-import {TextComponent} from '../components/text-component'
+import {TextComponent, TextComponentPool} from '../components/text-component'
 import {Order} from './order'
+import {DomMetaPool} from '../create-element'
 
 export class Remove {
   static component(component: AnyComponent) {
@@ -18,6 +19,8 @@ export class Remove {
 
   private static textComponent(component: TextComponent) {
     Order.remove(component.domParent, component)
+
+    TextComponentPool.add(component)
   }
 
   private static domComponent(component: DomComponent) {
@@ -25,13 +28,16 @@ export class Remove {
 
     // TODO: Do custom component subcomponents still react to observables?
 
-    // for (const c of component.subComponents.values()) {
-    //   Remove.component(c)
-    // }
+    for (const c of component.subComponents.values()) {
+      Remove.component(c)
+    }
 
     component.subComponents.clear()
 
     if (component.inserted.length > 0) component.inserted = []
+
+    // TODO
+    DomMetaPool.add(component.meta)
   }
 
   private static customComponent(component: Custom) {

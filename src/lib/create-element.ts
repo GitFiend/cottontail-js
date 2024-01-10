@@ -4,11 +4,31 @@ export type Meta = DomMeta | CustomMeta | FragmentMeta | number | string | null
 
 export interface DomMeta {
   readonly kind: 'dom'
-  readonly name: string
-  readonly props: PropsInternal
+  name: string
+  props: PropsInternal
 }
-export function makeDomMeta(name: string, props: PropsInternal): DomMeta {
-  return {kind: 'dom', name, props}
+
+export class DomMetaPool {
+  private static objects: DomMeta[] = []
+
+  private static readonly emptyProps = Object.freeze({})
+
+  static make(name: string, props: PropsInternal): DomMeta {
+    const o = this.objects.pop()
+
+    if (o) {
+      o.name = name
+      o.props = props
+      return o
+    }
+
+    return {kind: 'dom', name, props}
+  }
+
+  static add(o: DomMeta) {
+    o.props = this.emptyProps
+    this.objects.push(o)
+  }
 }
 
 export interface CustomMeta {
@@ -16,25 +36,11 @@ export interface CustomMeta {
   readonly name: Function
   readonly props: PropsInternal
 }
-function makeCustomMeta(name: Function, props: PropsInternal): CustomMeta {
-  return {
-    kind: 'custom',
-    name,
-    props,
-  }
-}
 
 export interface FragmentMeta {
   readonly kind: 'fragment'
   readonly name: Function
   readonly props: PropsInternal
-}
-function makeFragmentMeta(name: Function, props: PropsInternal): FragmentMeta {
-  return {
-    kind: 'fragment',
-    name,
-    props,
-  }
 }
 
 // Could we look up the current tree instead of constructing again?
@@ -63,10 +69,19 @@ export function createElement(
   }
 
   if (typeof name === 'string') {
-    return makeDomMeta(name, propsInternal)
+    // return DomMetaPool.make(name, propsInternal)
+    return {kind: 'dom', name, props: propsInternal}
   } else if (name.name === 'Fragment') {
-    return makeFragmentMeta(name, propsInternal)
+    return {
+      kind: 'fragment',
+      name,
+      props: propsInternal,
+    }
   } else {
-    return makeCustomMeta(name, propsInternal)
+    return {
+      kind: 'custom',
+      name,
+      props: propsInternal,
+    }
   }
 }

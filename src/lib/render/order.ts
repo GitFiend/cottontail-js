@@ -95,7 +95,6 @@ export class Order {
     const {key} = child
 
     // We can't rely on the child index for this.
-    // Is it possible to keep it updated?
     const i = inserted.findIndex(i => i.key === key)
 
     if (i >= 0) {

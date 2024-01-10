@@ -3,7 +3,7 @@ import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
 import {AnyComponent, ParentComponent} from '../components/types'
-import {TextComponent} from '../components/text-component'
+import {TextComponent, TextComponentPool} from '../components/text-component'
 import {Remove} from './remove'
 import {Order} from './order'
 import {Custom, makeCustomComponent} from '../components/custom-component'
@@ -147,7 +147,13 @@ export class Render {
     index: number,
   ) {
     if (!prev) {
-      return new TextComponent(meta, directParent, domParent, index)
+      return TextComponentPool.makeTextComponent(
+        meta,
+        directParent,
+        domParent,
+        index,
+      )
+      // return new TextComponent(meta, directParent, domParent, index)
     }
 
     if (prev?.kind === 'text') {
@@ -171,7 +177,12 @@ export class Render {
     }
 
     Remove.component(prev)
-    return new TextComponent(meta, directParent, domParent, index)
+    return TextComponentPool.makeTextComponent(
+      meta,
+      directParent,
+      domParent,
+      index,
+    )
   }
 
   static custom(
@@ -196,10 +207,10 @@ export class Render {
         const {subComponent} = prev
 
         if (subComponent !== null) {
-          const no = Order.key(prev.order, subComponent.index)
+          const newOrder = Order.key(prev.order, subComponent.index)
 
-          if (subComponent.order !== no) {
-            subComponent.order = no
+          if (subComponent.order !== newOrder) {
+            subComponent.order = newOrder
 
             switch (subComponent.kind) {
               case 'dom':
