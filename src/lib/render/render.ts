@@ -76,7 +76,7 @@ export class Render {
                 c.update()
                 break
               case 'fragment':
-                console.error('Not handled!')
+                // console.error('Not handled!')
                 break
             }
           }
@@ -184,7 +184,7 @@ export class Render {
       return makeCustomComponent(meta, directParent, domParent, index)
     }
 
-    if (prev.kind === 'custom' && prev.meta.name.name === meta.name.name) {
+    if (prev.kind === 'custom' && prev.meta.name === meta.name) {
       const prevOrder = prev.order
       const newOrder = Order.key(directParent.order, index)
 

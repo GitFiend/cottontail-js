@@ -60,11 +60,9 @@ export class Order {
           if (next) {
             insertedInParent.splice(i + 1, 0, child)
             GlobalStack.insertsStack.add(parent)
-            // applyInserts(parent)
           } else {
             insertedInParent.push(child)
             GlobalStack.insertsStack.add(parent)
-            // applyInserts(parent)
           }
         }
 
@@ -74,7 +72,6 @@ export class Order {
 
     insertedInParent.unshift(child)
     GlobalStack.insertsStack.add(parent)
-    // applyInserts(parent)
   }
 
   static move(parent: RootComponent | DomComponent, child: ElementComponent) {
@@ -97,12 +94,21 @@ export class Order {
     const {inserted, siblings} = parent
     const {key} = child
 
+    // We can't rely on the child index for this.
+    // Is it possible to keep it updated?
     const i = inserted.findIndex(i => i.key === key)
 
     if (i >= 0) {
-      const [child] = inserted.splice(i, 1)
-      siblings.delete(child.element)
-      child.element.remove()
+      const [c] = inserted.splice(i, 1)
+
+      if (__DEV__) {
+        if (c !== child) {
+          console.error('Got the wrong child element!')
+        }
+      }
+
+      siblings.delete(c.element)
+      c.element.remove()
     }
   }
 }

@@ -39,7 +39,6 @@ export abstract class Custom<P extends Props = {}> {
       this.props = props
 
       this.update()
-      // this.componentDidUpdate()
     }
   }
 
@@ -47,7 +46,6 @@ export abstract class Custom<P extends Props = {}> {
     init$(this)
     this.runRender()
     GlobalStack.didMountStack.add(this.__ref)
-    // this.componentDidMount()
   }
 
   runRender() {
@@ -79,30 +77,6 @@ export abstract class Custom<P extends Props = {}> {
 
   update() {
     this.runRender()
-    // if (this.__removed) return
-    //
-    // // TODO: Should this be after the render call?
-    // GlobalStack.renderedList.add(this)
-    //
-    // // Get the elements to render. We detect observable calls here?
-    // // This goes an on a global stack, so we can track it?
-    // GlobalStack.push(this.__ref)
-    // const newMeta = this.render()
-    // GlobalStack.pop()
-    //
-    // if (newMeta !== null) {
-    //   this.subComponent = Render.component(
-    //     newMeta,
-    //     this.subComponent,
-    //     this,
-    //     this.domParent,
-    //     0, // Don't currently support an array render result.
-    //   )
-    // } else if (this.subComponent !== null) {
-    //   Remove.component(this.subComponent)
-    //   this.subComponent = null
-    // }
-    // // TODO: Other cases? 0 and false?
 
     GlobalStack.didUpdateStack.add(this.__ref)
   }

@@ -16,21 +16,25 @@ export class Remove {
     }
   }
 
-  static textComponent(component: TextComponent) {
+  private static textComponent(component: TextComponent) {
     Order.remove(component.domParent, component)
   }
 
-  static domComponent(component: DomComponent) {
+  private static domComponent(component: DomComponent) {
     Order.remove(component.domParent, component)
 
-    for (const c of component.subComponents.values()) {
-      Remove.component(c)
-    }
+    // TODO: Do custom component subcomponents still react to observables?
+
+    // for (const c of component.subComponents.values()) {
+    //   Remove.component(c)
+    // }
 
     component.subComponents.clear()
+
+    if (component.inserted.length > 0) component.inserted = []
   }
 
-  static customComponent(component: Custom) {
+  private static customComponent(component: Custom) {
     // if (__DEV__ && component.removed) {
     //   console.error('already removed')
     // }
