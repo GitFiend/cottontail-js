@@ -1,9 +1,4 @@
-import {
-  CustomMeta,
-  DomMeta,
-  FragmentMeta,
-  MetaInternal,
-} from '../create-element'
+import {CustomMeta, DomMeta, FragmentMeta, Meta} from '../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
@@ -16,7 +11,7 @@ import {Fragment} from '../components/fragment'
 
 export class Render {
   static component(
-    meta: MetaInternal,
+    meta: Meta,
     prev: AnyComponent | null,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
@@ -27,6 +22,9 @@ export class Render {
         Remove.component(prev)
       }
       return null
+    }
+    if (typeof meta === 'number') {
+      return Render.text(meta.toString(), prev, parent, domParent, index)
     }
     if (typeof meta === 'string') {
       return Render.text(meta, prev, parent, domParent, index)
@@ -48,7 +46,7 @@ export class Render {
     index: number,
   ): Fragment {
     if (prev === null) {
-      return new Fragment(meta, meta.children, directParent, domParent, index)
+      return new Fragment(meta, directParent, domParent, index)
     }
 
     if (prev.kind === 'fragment') {
@@ -83,18 +81,19 @@ export class Render {
         }
       }
 
-      prev.children = meta.children
+      prev.meta.props.children = meta.props.children
+
       prev.subComponents = Render.subComponents(
         prev,
         domParent,
-        meta.children,
+        meta.props.children,
         prev.subComponents,
       )
 
       return prev
     }
     Remove.component(prev)
-    return new Fragment(meta, meta.children, directParent, domParent, index)
+    return new Fragment(meta, directParent, domParent, index)
   }
 
   static dom(
@@ -121,16 +120,18 @@ export class Render {
       updateAttributes(
         prev.element,
         ElementNamespace.html,
-        meta.props ?? {},
+        meta.props,
         prev.meta.props,
       )
       prev.meta = meta
+
       prev.subComponents = Render.subComponents(
         prev,
         prev,
-        meta.children,
+        meta.props.children,
         prev.subComponents,
       )
+
       return prev
     }
 
@@ -226,12 +227,20 @@ export class Render {
   static subComponents(
     directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
-    children: MetaInternal[],
+    children: Meta[] | undefined,
     prevComponents: Map<string, AnyComponent>,
   ) {
     // if (__DEV__) {
     //   checkChildrenKeys(children)
     // }
+    if (!children) {
+      for (const c of prevComponents.values()) {
+        Remove.component(c)
+      }
+      prevComponents.clear()
+
+      return prevComponents
+    }
 
     const newComponents = new Map<string, AnyComponent>()
 
@@ -258,7 +267,7 @@ export class Render {
   }
 
   static subComponent(
-    meta: Exclude<MetaInternal, null>,
+    meta: Exclude<Meta, null>,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
     prevChildren: Map<string, AnyComponent>,
@@ -266,7 +275,7 @@ export class Render {
     index: number,
   ) {
     const key =
-      typeof meta === 'string'
+      typeof meta === 'string' || typeof meta === 'number'
         ? index.toString()
         : meta.props?.key ?? index.toString()
 

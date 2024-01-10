@@ -2,11 +2,11 @@ import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
 import {AnyComponent, ParentComponent, Props} from './types'
 import {Order} from '../render/order'
-import {equalValues} from '../render/util'
+import {equalValues, time, timeEnd} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
 import {init$} from '../model/init-observables'
-import {CustomMeta, MetaInternal} from '../create-element'
+import {CustomMeta, Meta} from '../create-element'
 import {Remove} from '../render/remove'
 
 export abstract class Custom<P extends Props = {}> {
@@ -34,7 +34,6 @@ export abstract class Custom<P extends Props = {}> {
   }
 
   updateWithNewProps(props: P): void {
-    // Do we check both props and state? 1 component type? Or do we have a pure props type?
     if (!equalValues(this.props as any, props as any)) {
       this.props = props
 
@@ -50,6 +49,10 @@ export abstract class Custom<P extends Props = {}> {
 
   runRender() {
     if (this.__removed) return
+
+    if (__DEV__) {
+      time(this.constructor.name)
+    }
 
     // TODO: Should this be after the render call?
     GlobalStack.renderedList.add(this)
@@ -73,6 +76,10 @@ export abstract class Custom<P extends Props = {}> {
       this.subComponent = null
     }
     // TODO: Other cases? 0 and false?
+
+    if (__DEV__) {
+      timeEnd(this.constructor.name)
+    }
   }
 
   update() {
@@ -85,7 +92,7 @@ export abstract class Custom<P extends Props = {}> {
     GlobalStack.markDirty(this.__ref)
   }
 
-  abstract render(): MetaInternal
+  abstract render(): Meta
 
   // See remove.ts for clean up code.
 

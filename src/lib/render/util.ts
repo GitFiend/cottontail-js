@@ -13,6 +13,19 @@ export function equalValues(
   return true
 }
 
+export function changedValues(
+  a: Record<string, unknown>,
+  b: Record<string, unknown>,
+): boolean {
+  for (const key in a) {
+    if (a[key] !== b[key]) {
+      console.log(`${key} changed`, a[key], b[key])
+    }
+  }
+
+  return true
+}
+
 function checkChildrenKeys(children: Meta[]) {
   let numKeys = 0
   const set = new Set<string>()
@@ -43,4 +56,17 @@ export function c(names: TemplateStringsArray, ...flags: boolean[]): string {
 
 export function mkRoot(meta: Meta) {
   return new Cottontail(meta, document.createElement('div'))
+}
+
+export function time(name: string): void {
+  if (__DEV__ && typeof window !== 'undefined') {
+    performance.mark(`${name} start`)
+  }
+}
+
+export function timeEnd(name: string): void {
+  if (__DEV__ && typeof window !== 'undefined') {
+    performance.mark(`${name} end`)
+    performance.measure(name, `${name} start`, `${name} end`)
+  }
 }

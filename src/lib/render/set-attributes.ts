@@ -28,21 +28,7 @@ export function setAttributesFromProps(
   }
 }
 
-// TODO: Is going to null props handled?
 export function updateAttributes(
-  element: Element,
-  namespace: ElementNamespace,
-  newProps: Props,
-  oldProps: Props | null,
-): void {
-  if (oldProps === null) {
-    setAttributesFromProps(element, namespace, newProps)
-  } else {
-    updateAttrInner(element, namespace, newProps, oldProps)
-  }
-}
-
-function updateAttrInner(
   element: Element,
   namespace: ElementNamespace,
   newProps: object,

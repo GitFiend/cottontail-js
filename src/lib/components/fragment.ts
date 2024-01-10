@@ -16,7 +16,6 @@ export class Fragment {
 
   constructor(
     public meta: FragmentMeta,
-    public children: Meta[],
     public directParent: ParentComponent,
     public domParent: DomComponent | RootComponent,
     public index: number,
@@ -27,7 +26,7 @@ export class Fragment {
     this.subComponents = Render.subComponents(
       this,
       domParent,
-      meta.children,
+      meta.props.children,
       this.subComponents,
     )
   }

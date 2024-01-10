@@ -36,7 +36,7 @@ export class DomComponent {
     this.subComponents = Render.subComponents(
       this,
       this,
-      meta.children,
+      meta.props.children,
       this.subComponents,
     )
 

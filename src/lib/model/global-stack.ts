@@ -3,6 +3,7 @@ import {Reaction} from './reactions'
 import {DomComponent} from '../components/dom-component'
 import {RootComponent} from '../components/root-component'
 import {applyInserts} from '../render/order'
+import {time, timeEnd} from '../render/util'
 
 export class GlobalStack {
   private static currentComponentOrReaction: WeakRef<Custom | Reaction>[] = []
@@ -62,10 +63,9 @@ export class GlobalStack {
   private static readonly renderList: Custom[] = []
 
   static drawFrame = () => {
-    if (!__JEST__) console.time('reRender')
-
     const {renderList, renderedList} = this
 
+    time('🐇Reactions')
     while (this.dirtyReactions.size > 0) {
       const i = this.dirtyReactions.values().next()
 
@@ -86,6 +86,7 @@ export class GlobalStack {
         }
       }
     }
+    timeEnd('🐇Reactions')
 
     for (const cRef of this.dirtyComponents.values()) {
       const c = cRef.deref()
@@ -108,11 +109,14 @@ export class GlobalStack {
     renderList.length = 0
     renderedList.clear()
 
+    time('🐇Inserts')
     for (const inserted of this.insertsStack) {
       applyInserts(inserted)
     }
     this.insertsStack.clear()
+    timeEnd('🐇Inserts')
 
+    time('🐇Mount/Update')
     for (const cRef of this.didMountStack.values()) {
       const c = cRef.deref()
       if (c) c.componentDidMount()
@@ -124,9 +128,8 @@ export class GlobalStack {
       if (c) c.componentDidUpdate()
     }
     this.didUpdateStack.clear()
+    timeEnd('🐇Mount/Update')
 
     this.queued = false
-
-    if (!__JEST__) console.timeEnd('reRender')
   }
 }

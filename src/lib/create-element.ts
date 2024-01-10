@@ -1,114 +1,72 @@
-import {Props} from './components/types'
+import {PropsInternal} from './components/types'
 
-export type Meta =
-  | DomMeta
-  | CustomMeta
-  | FragmentMeta
-  | boolean
-  | number
-  | string
-  | null
-  | undefined
-
-export type MetaInternal = Exclude<Meta, boolean | number | undefined>
+export type Meta = DomMeta | CustomMeta | FragmentMeta | number | string | null
 
 export interface DomMeta {
   readonly kind: 'dom'
   readonly name: string
-  readonly props: Props | null
-  readonly children: MetaInternal[]
+  readonly props: PropsInternal
 }
-export function makeDomMeta(
-  name: string,
-  props: Props | null,
-  children: MetaInternal[],
-): DomMeta {
-  return {kind: 'dom', name, props, children}
+export function makeDomMeta(name: string, props: PropsInternal): DomMeta {
+  return {kind: 'dom', name, props}
 }
 
 export interface CustomMeta {
   readonly kind: 'custom'
   readonly name: Function
-  readonly props: Props
-  readonly children: MetaInternal[]
+  readonly props: PropsInternal
 }
-function makeCustomMeta(
-  name: Function,
-  props: Props,
-  children: MetaInternal[],
-): CustomMeta {
+function makeCustomMeta(name: Function, props: PropsInternal): CustomMeta {
   return {
     kind: 'custom',
     name,
     props,
-    children,
   }
 }
 
 export interface FragmentMeta {
   readonly kind: 'fragment'
   readonly name: Function
-  readonly props: Props
-  readonly children: MetaInternal[]
+  readonly props: PropsInternal
 }
-function makeFragmentMeta(
-  name: Function,
-  props: Props,
-  children: MetaInternal[],
-): FragmentMeta {
+function makeFragmentMeta(name: Function, props: PropsInternal): FragmentMeta {
   return {
     kind: 'fragment',
     name,
     props,
-    children,
   }
 }
-
-type ElementChildren = (Meta | Meta[])[]
 
 // Could we look up the current tree instead of constructing again?
 export function createElement(
   name: string | Function,
-  props: Props | null,
-  ...children: ElementChildren
+  props: ({key?: string} & Record<string, unknown>) | null,
+  ...children: unknown[]
+): Meta
+export function createElement(
+  name: string | Function,
+  props: ({key?: string} & Record<string, unknown>) | null,
 ): Meta {
-  const sanitisedChildren = sanitiseChildren(children)
-  props ??= {}
-  props.children = sanitisedChildren
+  const propsInternal: PropsInternal = props ?? {}
 
-  if (typeof name === 'string') {
-    return makeDomMeta(name, props, sanitisedChildren)
-  } else if (name.name === 'Fragment') {
-    return makeFragmentMeta(name, props, sanitisedChildren)
-  } else {
-    return makeCustomMeta(name, props, sanitisedChildren)
-  }
-}
-
-function sanitiseChildren(children: ElementChildren): MetaInternal[] {
-  if (children.length === 0) return children as MetaInternal[]
-
-  const result: MetaInternal[] = []
-
-  for (const child of children) {
-    if (Array.isArray(child)) {
-      for (const c of child) {
-        if (c == null) {
-          result.push(null)
-        } else if (typeof c !== 'object') {
-          result.push(c.toString())
-        } else {
-          result.push(c)
-        }
-      }
-    } else if (child == null) {
-      result.push(null)
-    } else if (typeof child !== 'object') {
-      result.push(child.toString())
+  if (arguments.length > 2) {
+    if (Array.isArray(arguments[2])) {
+      propsInternal.children = arguments[2]
     } else {
-      result.push(child)
+      const children = []
+
+      for (let i = 2; i < arguments.length; i++) {
+        children.push(arguments[i])
+      }
+      propsInternal.children = children
     }
   }
 
-  return result
+  if (typeof name === 'string') {
+    return makeDomMeta(name, propsInternal)
+  } else if (name.name === 'Fragment') {
+    return makeFragmentMeta(name, propsInternal)
+  } else {
+    return makeCustomMeta(name, propsInternal)
+  }
 }
