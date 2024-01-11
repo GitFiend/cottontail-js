@@ -34,10 +34,12 @@ export class Remove {
 
     component.subComponents.clear()
 
-    if (component.inserted.length > 0) component.inserted = []
+    if (component.inserted.length > 0) {
+      component.inserted.length = 0
+    }
 
-    // TODO
     DomMetaPool.add(component.meta)
+    // TODO
   }
 
   private static customComponent(component: Custom) {

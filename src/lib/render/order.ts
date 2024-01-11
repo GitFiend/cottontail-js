@@ -40,10 +40,15 @@ export class Order {
     return parentOrder + String.fromCharCode(index + 48)
   }
 
+  static inserted = 0
+  static removed = 0
+
   static insert(
     parent: RootComponent | DomComponent,
     child: ElementComponent,
   ): void {
+    this.inserted++
+
     const {inserted: insertedInParent} = parent
     const {order: newOrder, key: newKey} = child
 
@@ -91,6 +96,8 @@ export class Order {
     parent: RootComponent | DomComponent,
     child: ElementComponent,
   ): void {
+    this.removed++
+
     const {inserted, siblings} = parent
     const {key} = child
 

@@ -6,6 +6,21 @@ export interface DomMeta {
   readonly kind: 'dom'
   name: string
   props: PropsInternal
+  n: number
+}
+
+let n = 0
+let uses: Record<number, number> = {}
+export let filtered = new Map<string, number>()
+
+export function logUses() {
+  // console.log(uses)
+
+  filtered = new Map(
+    Array.from(Object.entries(uses)).filter(([, value]) => value > 1),
+  )
+
+  // console.log(filtered)
 }
 
 export class DomMetaPool {
@@ -19,13 +34,22 @@ export class DomMetaPool {
     if (o) {
       o.name = name
       o.props = props
+      // console.log(o)
+
+      uses[o.n] ??= 0
+      uses[o.n]++
+
       return o
     }
 
-    return {kind: 'dom', name, props}
+    n++
+    return {kind: 'dom', name, props, n}
   }
 
   static add(o: DomMeta) {
+    if (filtered.has(o.n.toString())) {
+      console.log('remove ', o)
+    }
     o.props = this.emptyProps
     this.objects.push(o)
   }
@@ -69,8 +93,8 @@ export function createElement(
   }
 
   if (typeof name === 'string') {
-    // return DomMetaPool.make(name, propsInternal)
-    return {kind: 'dom', name, props: propsInternal}
+    return DomMetaPool.make(name, propsInternal)
+    // return {kind: 'dom', name, props: propsInternal}
   } else if (name.name === 'Fragment') {
     return {
       kind: 'fragment',

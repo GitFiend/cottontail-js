@@ -1,4 +1,4 @@
-import {DomMeta} from '../create-element'
+import {DomMeta, filtered} from '../create-element'
 import {RootComponent} from './root-component'
 import {
   ElementNamespace,
@@ -25,6 +25,9 @@ export class DomComponent {
     public domParent: DomComponent | RootComponent,
     public index: number,
   ) {
+    if (filtered.has(meta.n.toString())) {
+      console.log('create ', meta)
+    }
     this.order = Order.key(directParent.order, index)
     this.key = meta.props?.key ?? directParent.key + index
     this.element = document.createElement(meta.name)

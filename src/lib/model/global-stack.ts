@@ -2,8 +2,9 @@ import {Custom} from '../components/custom-component'
 import {Reaction} from './reactions'
 import {DomComponent} from '../components/dom-component'
 import {RootComponent} from '../components/root-component'
-import {applyInserts} from '../render/order'
+import {applyInserts, Order} from '../render/order'
 import {time, timeEnd} from '../render/util'
+import {logUses} from '../create-element'
 
 export class GlobalStack {
   private static currentComponentOrReaction: WeakRef<Custom | Reaction>[] = []
@@ -129,6 +130,9 @@ export class GlobalStack {
     }
     this.didUpdateStack.clear()
     timeEnd('🐇Mount/Update')
+
+    // console.log(Order.inserted, Order.removed, Order.inserted / Order.removed)
+    logUses()
 
     this.queued = false
   }

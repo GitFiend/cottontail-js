@@ -1,9 +1,15 @@
-import {CustomMeta, DomMeta, FragmentMeta, Meta} from '../create-element'
+import {
+  CustomMeta,
+  DomMeta,
+  filtered,
+  FragmentMeta,
+  Meta,
+} from '../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {DomComponent} from '../components/dom-component'
 import {AnyComponent, ParentComponent} from '../components/types'
-import {TextComponent, TextComponentPool} from '../components/text-component'
+import {TextComponentPool} from '../components/text-component'
 import {Remove} from './remove'
 import {Order} from './order'
 import {Custom, makeCustomComponent} from '../components/custom-component'
@@ -108,6 +114,10 @@ export class Render {
     }
 
     if (meta.kind === prev.kind && meta.name === prev.meta.name) {
+      if (filtered.has(meta.n.toString())) {
+        console.log('update ', meta)
+      }
+
       const prevOrder = prev.order
       const newOrder = Order.key(directParent.order, index)
 
