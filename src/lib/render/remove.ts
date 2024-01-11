@@ -38,7 +38,7 @@ export class Remove {
       component.inserted.length = 0
     }
 
-    DomMetaPool.add(component.meta)
+    // DomMetaPool.add(component.meta)
     // TODO
   }
 

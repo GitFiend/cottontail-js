@@ -26,14 +26,11 @@ export class Cottontail {
     this.meta = meta
     this.root = new RootComponent(element)
 
-    this.render()
-  }
-
-  private render = () => {
     this.prev = Render.component(this.meta, this.prev, this.root, this.root, 0)
     GlobalStack.drawFrame()
   }
 
+  // Only used for tests. Move this?
   rerender(meta: Meta) {
     if (typeof meta === 'number') {
       this.meta = meta.toString()
@@ -42,7 +39,8 @@ export class Cottontail {
     } else {
       this.meta = meta
     }
-    this.render()
+    this.prev = Render.component(this.meta, this.prev, this.root, this.root, 0)
+    GlobalStack.drawFrame()
   }
 }
 

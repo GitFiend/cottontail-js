@@ -1,13 +1,7 @@
-import {
-  CustomMeta,
-  DomMeta,
-  filtered,
-  FragmentMeta,
-  Meta,
-} from '../create-element'
+import {CustomMeta, DomMeta, FragmentMeta, Meta} from '../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
-import {DomComponent} from '../components/dom-component'
+import {DomComponent, makeDomComponent} from '../components/dom-component'
 import {AnyComponent, ParentComponent} from '../components/types'
 import {TextComponentPool} from '../components/text-component'
 import {Remove} from './remove'
@@ -110,13 +104,13 @@ export class Render {
     index: number,
   ) {
     if (prev === null) {
-      return new DomComponent(meta, directParent, domParent, index)
+      return makeDomComponent(meta, directParent, domParent, index)
     }
 
-    if (meta.kind === prev.kind && meta.name === prev.meta.name) {
-      if (filtered.has(meta.n.toString())) {
-        console.log('update ', meta)
-      }
+    if (meta.kind === prev.kind && meta.name === prev.name) {
+      // if (filtered.has(meta.n.toString())) {
+      //   console.log('update ', meta)
+      // }
 
       const prevOrder = prev.order
       const newOrder = Order.key(directParent.order, index)
@@ -131,9 +125,10 @@ export class Render {
         prev.element,
         ElementNamespace.html,
         meta.props,
-        prev.meta.props,
+        prev.props,
       )
-      prev.meta = meta
+      prev.name = meta.name
+      prev.props = meta.props
 
       prev.subComponents = Render.subComponents(
         prev,
@@ -146,7 +141,7 @@ export class Render {
     }
 
     Remove.component(prev)
-    return new DomComponent(meta, directParent, domParent, index)
+    return makeDomComponent(meta, directParent, domParent, index)
   }
 
   static text(
@@ -287,7 +282,7 @@ export class Render {
     return newComponents
   }
 
-  static subComponent(
+  private static subComponent(
     meta: Exclude<Meta, null>,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,

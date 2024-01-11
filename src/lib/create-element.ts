@@ -6,7 +6,7 @@ export interface DomMeta {
   readonly kind: 'dom'
   name: string
   props: PropsInternal
-  n: number
+  // n: number
 }
 
 let n = 0
@@ -25,6 +25,7 @@ export function logUses() {
 
 export class DomMetaPool {
   private static objects: DomMeta[] = []
+  private static nextObjects: DomMeta[] = []
 
   private static readonly emptyProps = Object.freeze({})
 
@@ -36,22 +37,34 @@ export class DomMetaPool {
       o.props = props
       // console.log(o)
 
-      uses[o.n] ??= 0
-      uses[o.n]++
+      // uses[o.n] ??= 0
+      // uses[o.n]++
 
       return o
     }
 
     n++
-    return {kind: 'dom', name, props, n}
+    return {kind: 'dom', name, props}
   }
 
   static add(o: DomMeta) {
-    if (filtered.has(o.n.toString())) {
-      console.log('remove ', o)
-    }
+    // if (filtered.has(o.n.toString())) {
+    //   console.log('remove ', o)
+    // }
     o.props = this.emptyProps
-    this.objects.push(o)
+    this.nextObjects.push(o)
+  }
+
+  // We move in the objects at the end of the frame?
+  // when we are confident they are still being used (e.g. inside children props)
+  // TODO: Shouldn't need this.
+  static finishFrame() {
+    let o = this.nextObjects.pop()
+
+    while (o) {
+      this.objects.push(o)
+      o = this.nextObjects.pop()
+    }
   }
 }
 
