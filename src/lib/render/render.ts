@@ -2,8 +2,8 @@ import {CustomMeta, DomMeta, FragmentMeta, Meta} from '../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {
+  Dom,
   DomComponent,
-  makeDomComponent,
   subComponentMapPool,
 } from '../components/dom-component'
 import {AnyComponent, ParentComponent} from '../components/types'
@@ -108,7 +108,7 @@ export class Render {
     index: number,
   ) {
     if (prev === null) {
-      return makeDomComponent(meta, directParent, domParent, index)
+      return Dom.newComponent(meta, directParent, domParent, index)
     }
 
     if (meta.kind === prev.kind && meta.name === prev.name) {
@@ -145,7 +145,7 @@ export class Render {
     }
 
     Remove.component(prev)
-    return makeDomComponent(meta, directParent, domParent, index)
+    return Dom.newComponent(meta, directParent, domParent, index)
   }
 
   static text(

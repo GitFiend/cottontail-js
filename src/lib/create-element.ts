@@ -4,72 +4,8 @@ export type Meta = DomMeta | CustomMeta | FragmentMeta | number | string | null
 
 export interface DomMeta {
   readonly kind: 'dom'
-  name: string
-  props: PropsInternal
-  // n: number
-}
-
-// let n = 0
-// let uses: Record<number, number> = {}
-// export let filtered = new Map<string, number>()
-// export function logUses() {
-//   filtered = new Map(
-//     Array.from(Object.entries(uses)).filter(([, value]) => value > 1),
-//   )
-// }
-
-const reuseLogs = true
-
-export class DomMetaPool {
-  private static objects: DomMeta[] = []
-  // private static nextObjects: DomMeta[] = []
-
-  private static readonly emptyProps = Object.freeze({})
-
-  static make(name: string, props: PropsInternal): DomMeta {
-    const o = this.objects.pop()
-
-    if (o) {
-      o.name = name
-      o.props = props
-
-      if (reuseLogs)
-        // console.log(
-        //   `reuse ${o.n}, num: ${this.objects.length}`,
-        //   props.className ?? '',
-        // )
-
-        return o
-    }
-
-    // n++
-    // if (reuseLogs) console.log(`make ${n}`, props.className ?? '')
-    return {kind: 'dom', name, props}
-  }
-
-  static add(o: DomMeta) {
-    // return
-
-    // if (filtered.has(o.n.toString())) {
-    //   console.log('remove ', o)
-    // }
-    // if (reuseLogs) console.log(`return ${o.n}`, o.props.className ?? '')
-    o.props = this.emptyProps
-    this.objects.push(o)
-    // this.nextObjects.push(o)
-  }
-
-  // We move in the objects at the end of the frame?
-  // when we are confident they are still being used (e.g. inside children props)
-  // TODO: Shouldn't need this.
-  // static finishFrame() {
-  //   let o = this.nextObjects.pop()
-  //
-  //   while (o) {
-  //     this.objects.push(o)
-  //     o = this.nextObjects.pop()
-  //   }
-  // }
+  readonly name: string
+  readonly props: PropsInternal
 }
 
 export interface CustomMeta {
@@ -89,11 +25,11 @@ export function createElement(
   name: string | Function,
   props: ({key?: string} & Record<string, unknown>) | null,
   ...children: unknown[]
-): Meta
+): DomMeta | CustomMeta | FragmentMeta
 export function createElement(
   name: string | Function,
   props: ({key?: string} & Record<string, unknown>) | null,
-): Meta {
+): DomMeta | CustomMeta | FragmentMeta {
   const propsInternal: PropsInternal = props ?? {children: undefined}
 
   if (arguments.length > 2) {
@@ -110,7 +46,6 @@ export function createElement(
   }
 
   if (typeof name === 'string') {
-    // return DomMetaPool.make(name, propsInternal)
     return {kind: 'dom', name, props: propsInternal}
   } else if (name.name === 'Fragment') {
     return {

@@ -1,5 +1,5 @@
 import {Order} from './order'
-import {DomComponent, makeDomComponent} from '../components/dom-component'
+import {Dom, DomComponent} from '../components/dom-component'
 import {mkRoot} from './util'
 import {createElement} from '../create-element'
 import {GlobalStack} from '../model/global-stack'
@@ -22,22 +22,22 @@ describe('insert', () => {
   const {inserted} = parent
 
   test('try different insert indices', () => {
-    makeDomComponent(<div />, parent, parent, 3)
+    Dom.newComponent(<div />, parent, parent, 3)
     GlobalStack.drawFrame()
     expect(inserted.map(i => i.order)).toEqual(['103'])
     checkOrder(inserted)
 
-    makeDomComponent(<div />, parent, parent, 4)
+    Dom.newComponent(<div />, parent, parent, 4)
     GlobalStack.drawFrame()
     expect(inserted.map(i => i.order)).toEqual(['103', '104'])
     checkOrder(inserted)
 
-    makeDomComponent(<div />, parent, parent, 1)
+    Dom.newComponent(<div />, parent, parent, 1)
     GlobalStack.drawFrame()
     expect(inserted.map(i => i.order)).toEqual(['101', '103', '104'])
     checkOrder(inserted)
 
-    makeDomComponent(<div />, parent, parent, 2)
+    Dom.newComponent(<div />, parent, parent, 2)
     GlobalStack.drawFrame()
     expect(inserted.map(i => i.order)).toEqual(['101', '102', '103', '104'])
     checkOrder(inserted)

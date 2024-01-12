@@ -1,9 +1,8 @@
-import {DomComponent} from '../components/dom-component'
+import {Dom, DomComponent} from '../components/dom-component'
 import {AnyComponent} from '../components/types'
 import {Custom} from '../components/custom-component'
 import {TextComponent, TextComponentPool} from '../components/text-component'
 import {Order} from './order'
-import {DomMetaPool} from '../create-element'
 
 export class Remove {
   static component(component: AnyComponent) {
@@ -32,14 +31,7 @@ export class Remove {
       Remove.component(c)
     }
 
-    component.subComponents.clear()
-
-    if (component.inserted.length > 0) {
-      component.inserted.length = 0
-    }
-
-    // DomMetaPool.add(component.meta)
-    // TODO
+    Dom.returnComponent(component)
   }
 
   private static customComponent(component: Custom) {

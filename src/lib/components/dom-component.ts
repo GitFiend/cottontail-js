@@ -23,7 +23,7 @@ export interface DomComponent {
   key: string
   readonly inserted: ElementComponent[]
   subComponents: Map<string, AnyComponent>
-  readonly siblings: WeakMap<Element | Text, Element | Text | null>
+  siblings: WeakMap<Element | Text, Element | Text | null>
   directParent: ParentComponent
   domParent: DomComponent | RootComponent
   index: number
@@ -31,7 +31,7 @@ export interface DomComponent {
 
 export const subComponentMapPool = new MapPool<string, AnyComponent>()
 
-export function makeDomComponent(
+function makeDomComponent(
   meta: DomMeta,
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,
@@ -60,3 +60,58 @@ export function makeDomComponent(
 
   return c
 }
+
+class DomComponentPool {
+  pool: DomComponent[] = []
+
+  readonly emptyProps = {}
+
+  returnComponent(c: DomComponent) {
+    c.props = this.emptyProps
+    if (c.inserted.length > 0) {
+      c.inserted.length = 0
+    }
+    if (c.subComponents.size > 0) {
+      c.subComponents = subComponentMapPool.newMap()
+    }
+    c.siblings = new WeakMap()
+
+    this.pool.push(c)
+  }
+
+  newComponent(
+    meta: DomMeta,
+    directParent: ParentComponent,
+    domParent: DomComponent | RootComponent,
+    index: number,
+  ) {
+    const c = this.pool.pop()
+
+    if (c) {
+      const {name, props} = meta
+      c.name = name
+      c.props = props
+      c.element = document.createElement(name)
+      c.key = props?.key ?? directParent.key + index
+      c.order = Order.key(directParent.order, index)
+      c.directParent = directParent
+      c.domParent = domParent
+      c.index = index
+
+      setAttributesFromProps(c.element, ElementNamespace.html, props)
+      c.subComponents = Render.subComponents(
+        c,
+        c,
+        props.children,
+        c.subComponents,
+      )
+      Order.insert(domParent, c)
+
+      return c
+    }
+
+    return makeDomComponent(meta, directParent, domParent, index)
+  }
+}
+
+export const Dom = new DomComponentPool()
