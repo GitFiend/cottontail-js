@@ -12,6 +12,7 @@ import {
   PropsInternal,
 } from './types'
 import {Order} from '../render/order'
+import {MapPool} from '../render/map-pool'
 
 export interface DomComponent {
   readonly kind: 'dom'
@@ -28,21 +29,7 @@ export interface DomComponent {
   index: number
 }
 
-const subComponentMaps: Map<string, AnyComponent>[] = []
-
-export function newSubMap(): Map<string, AnyComponent> {
-  const m = subComponentMaps.pop()
-
-  if (m) {
-    return m
-  }
-  return new Map()
-}
-
-export function saveMap(map: Map<string, AnyComponent>) {
-  map.clear()
-  subComponentMaps.push(map)
-}
+export const subComponentMapPool = new MapPool<string, AnyComponent>()
 
 export function makeDomComponent(
   meta: DomMeta,
@@ -60,7 +47,7 @@ export function makeDomComponent(
     order: Order.key(directParent.order, index),
     key: props?.key ?? directParent.key + index,
     inserted: [],
-    subComponents: newSubMap(),
+    subComponents: subComponentMapPool.newMap(),
     siblings: new WeakMap(),
     directParent,
     domParent,

@@ -1,4 +1,5 @@
 import {equalValues} from '../lib/render/util'
+import {MapPool} from '../lib/render/map-pool'
 
 xdescribe('benchmark to get a sense of how fast it will be to compare lots of objects per frame', () => {
   test('lots of object creations and comparisons', () => {
@@ -225,5 +226,94 @@ xdescribe('weak refs perf', () => {
     console.timeEnd('make lots and deref')
 
     expect(num).toBe(100_000)
+  })
+})
+
+xdescribe('Try pool map objects to reduce garbage collection', () => {
+  const num = 100_000
+  const innerNum = 10
+
+  test('No map pool', () => {
+    console.time('no pool')
+
+    let values: (number | undefined)[] = []
+
+    for (let i = 0; i < num; i++) {
+      const m = new Map<number, number>()
+
+      for (let j = 0; j < innerNum; j++) {
+        m.set(j, j)
+      }
+
+      values.push(m.get(Math.floor(Math.random() * innerNum)))
+    }
+
+    console.timeEnd('no pool')
+    expect(values.length).toBe(num)
+  })
+
+  test('Map pooling', () => {
+    const mapPool = new MapPool<number, number>()
+
+    console.time('with pool')
+
+    let values: (number | undefined)[] = []
+
+    for (let i = 0; i < num; i++) {
+      const m = mapPool.newMap()
+
+      for (let j = 0; j < innerNum; j++) {
+        m.set(j, j)
+      }
+
+      values.push(m.get(Math.floor(Math.random() * innerNum)))
+
+      mapPool.returnMap(m)
+    }
+
+    console.timeEnd('with pool')
+    expect(values.length).toBe(num)
+  })
+
+  test('No map pool2', () => {
+    console.time('no pool')
+
+    let values: (number | undefined)[] = []
+
+    for (let i = 0; i < num; i++) {
+      const m = new Map<number, number>()
+
+      for (let j = 0; j < innerNum; j++) {
+        m.set(j, j)
+      }
+
+      values.push(m.get(Math.floor(Math.random() * innerNum)))
+    }
+
+    console.timeEnd('no pool')
+    expect(values.length).toBe(num)
+  })
+
+  test('Map pooling2', () => {
+    const mapPool = new MapPool<number, number>()
+
+    console.time('with pool')
+
+    let values: (number | undefined)[] = []
+
+    for (let i = 0; i < num; i++) {
+      const m = mapPool.newMap()
+
+      for (let j = 0; j < innerNum; j++) {
+        m.set(j, j)
+      }
+
+      values.push(m.get(Math.floor(Math.random() * innerNum)))
+
+      mapPool.returnMap(m)
+    }
+
+    console.timeEnd('with pool')
+    expect(values.length).toBe(num)
   })
 })

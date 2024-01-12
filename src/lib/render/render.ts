@@ -4,8 +4,7 @@ import {RootComponent} from '../components/root-component'
 import {
   DomComponent,
   makeDomComponent,
-  newSubMap,
-  saveMap,
+  subComponentMapPool,
 } from '../components/dom-component'
 import {AnyComponent, ParentComponent} from '../components/types'
 import {TextComponentPool} from '../components/text-component'
@@ -263,7 +262,7 @@ export class Render {
       return prevComponents
     }
 
-    const newComponents = newSubMap()
+    const newComponents = subComponentMapPool.newMap()
 
     for (let i = children.length - 1; i >= 0; i--) {
       const child = children[i]
@@ -284,7 +283,7 @@ export class Render {
       Remove.component(c)
     }
 
-    saveMap(prevComponents)
+    subComponentMapPool.returnMap(prevComponents)
 
     return newComponents
   }

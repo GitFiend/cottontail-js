@@ -4,7 +4,6 @@ import {DomComponent} from '../components/dom-component'
 import {RootComponent} from '../components/root-component'
 import {applyInserts} from '../render/order'
 import {time, timeEnd} from '../render/util'
-import {DomMetaPool} from '../create-element'
 
 export class GlobalStack {
   private static currentComponentOrReaction: WeakRef<Custom | Reaction>[] = []
