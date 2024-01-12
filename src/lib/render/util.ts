@@ -17,10 +17,6 @@ export function equalProps(
   oldProps: Record<string, unknown>,
   props: Record<string, unknown>,
 ): boolean {
-  // TODO: If we are including children props, we may as well check that first.
-  //  Or, when we detect a different prop, we could check if it's children?
-  //  And then run a different check on that
-
   if (props['children']) {
     return false
   }
