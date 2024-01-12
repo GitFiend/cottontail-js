@@ -5,6 +5,7 @@ import {TextComponent} from './text-component'
 import {Fragment} from './fragment'
 import {Meta} from '../create-element'
 
+// We extend Object instead of Record as the user provides a non-index-able type
 export interface Props extends Object {
   key?: string
   // Single Meta seems to be required for when there's only one child.
@@ -17,9 +18,11 @@ export interface PropsInternal extends Record<string, unknown> {
 }
 
 export type AnyComponent = DomComponent | Custom<any> | Fragment | TextComponent
+
 export type ParentComponent =
   | RootComponent
   | DomComponent
   | Custom<any>
   | Fragment
+
 export type ElementComponent = DomComponent | TextComponent

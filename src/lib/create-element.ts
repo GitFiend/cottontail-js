@@ -9,23 +9,20 @@ export interface DomMeta {
   // n: number
 }
 
-let n = 0
-let uses: Record<number, number> = {}
-export let filtered = new Map<string, number>()
+// let n = 0
+// let uses: Record<number, number> = {}
+// export let filtered = new Map<string, number>()
+// export function logUses() {
+//   filtered = new Map(
+//     Array.from(Object.entries(uses)).filter(([, value]) => value > 1),
+//   )
+// }
 
-export function logUses() {
-  // console.log(uses)
-
-  filtered = new Map(
-    Array.from(Object.entries(uses)).filter(([, value]) => value > 1),
-  )
-
-  // console.log(filtered)
-}
+const reuseLogs = true
 
 export class DomMetaPool {
   private static objects: DomMeta[] = []
-  private static nextObjects: DomMeta[] = []
+  // private static nextObjects: DomMeta[] = []
 
   private static readonly emptyProps = Object.freeze({})
 
@@ -35,39 +32,44 @@ export class DomMetaPool {
     if (o) {
       o.name = name
       o.props = props
-      // console.log(o)
 
-      // uses[o.n] ??= 0
-      // uses[o.n]++
+      if (reuseLogs)
+        // console.log(
+        //   `reuse ${o.n}, num: ${this.objects.length}`,
+        //   props.className ?? '',
+        // )
 
-      return o
+        return o
     }
 
-    n++
+    // n++
+    // if (reuseLogs) console.log(`make ${n}`, props.className ?? '')
     return {kind: 'dom', name, props}
   }
 
   static add(o: DomMeta) {
-    return
+    // return
 
     // if (filtered.has(o.n.toString())) {
     //   console.log('remove ', o)
     // }
+    // if (reuseLogs) console.log(`return ${o.n}`, o.props.className ?? '')
     o.props = this.emptyProps
-    this.nextObjects.push(o)
+    this.objects.push(o)
+    // this.nextObjects.push(o)
   }
 
   // We move in the objects at the end of the frame?
   // when we are confident they are still being used (e.g. inside children props)
   // TODO: Shouldn't need this.
-  static finishFrame() {
-    let o = this.nextObjects.pop()
-
-    while (o) {
-      this.objects.push(o)
-      o = this.nextObjects.pop()
-    }
-  }
+  // static finishFrame() {
+  //   let o = this.nextObjects.pop()
+  //
+  //   while (o) {
+  //     this.objects.push(o)
+  //     o = this.nextObjects.pop()
+  //   }
+  // }
 }
 
 export interface CustomMeta {
@@ -92,7 +94,7 @@ export function createElement(
   name: string | Function,
   props: ({key?: string} & Record<string, unknown>) | null,
 ): Meta {
-  const propsInternal: PropsInternal = props ?? {}
+  const propsInternal: PropsInternal = props ?? {children: undefined}
 
   if (arguments.length > 2) {
     if (Array.isArray(arguments[2])) {
@@ -108,8 +110,8 @@ export function createElement(
   }
 
   if (typeof name === 'string') {
-    return DomMetaPool.make(name, propsInternal)
-    // return {kind: 'dom', name, props: propsInternal}
+    // return DomMetaPool.make(name, propsInternal)
+    return {kind: 'dom', name, props: propsInternal}
   } else if (name.name === 'Fragment') {
     return {
       kind: 'fragment',

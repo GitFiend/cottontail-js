@@ -133,7 +133,7 @@ export class GlobalStack {
 
     // console.log(Order.inserted, Order.removed, Order.inserted / Order.removed)
     // logUses()
-    DomMetaPool.finishFrame()
+    // DomMetaPool.finishFrame()
 
     this.queued = false
   }

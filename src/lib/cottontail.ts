@@ -45,5 +45,18 @@ export class Cottontail {
 }
 
 export function renderRoot(meta: Meta, element: HTMLElement | null) {
-  new Cottontail(meta, element)
+  if (element === null) {
+    throw new Error('Cottontail render: Root element is null')
+  }
+  if (meta == null) {
+    throw new Error('Cottontail render: Meta is null')
+  }
+  if (typeof meta === 'number') {
+    meta = meta.toString()
+  }
+
+  const root = new RootComponent(element)
+
+  Render.component(meta, null, root, root, 0)
+  GlobalStack.drawFrame()
 }

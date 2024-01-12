@@ -77,6 +77,10 @@ export abstract class Custom<P extends Props = {}> {
     }
     // TODO: Other cases? 0 and false?
 
+    if (!this.props.children) {
+      // reclaimMetaObjects(newMeta)
+    }
+
     if (__DEV__) {
       timeEnd(this.constructor.name)
     }

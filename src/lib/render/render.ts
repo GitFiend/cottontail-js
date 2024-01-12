@@ -1,7 +1,12 @@
 import {CustomMeta, DomMeta, FragmentMeta, Meta} from '../create-element'
 import {ElementNamespace, updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
-import {DomComponent, makeDomComponent} from '../components/dom-component'
+import {
+  DomComponent,
+  makeDomComponent,
+  newSubMap,
+  saveMap,
+} from '../components/dom-component'
 import {AnyComponent, ParentComponent} from '../components/types'
 import {TextComponentPool} from '../components/text-component'
 import {Remove} from './remove'
@@ -258,7 +263,7 @@ export class Render {
       return prevComponents
     }
 
-    const newComponents = new Map<string, AnyComponent>()
+    const newComponents = newSubMap()
 
     for (let i = children.length - 1; i >= 0; i--) {
       const child = children[i]
@@ -278,6 +283,8 @@ export class Render {
     for (const c of prevComponents.values()) {
       Remove.component(c)
     }
+
+    saveMap(prevComponents)
 
     return newComponents
   }
