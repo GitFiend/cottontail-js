@@ -1,11 +1,10 @@
 # Cottontail 🐇
 
-DOM UI library inspired by React and 2D game engines.
-
-*This is a proof of concept. I may use this for GitFiend, but maybe a Rust or ScalaJs version.*
+DOM UI library inspired by React and 2D games. This is intended for those who want to make native quality UI apps but have chosen html/css as the rendering layer for whatever reason.
 
 Features:
-- Predictable cross-component reactive state. No need for prop drilling or complicated context hacks
+- Predictable cross-component reactive state. No need for prop drilling or complicated context hacks.
+- State management and rendering are designed as one, resulting in better performance.
 - Efficient re-rendering, supporting 120 fps. Cottontail only updates the components that need to be, and only once per frame
 - Just a few kilobytes of Javascript
 
@@ -34,7 +33,7 @@ class Store {
 
 // A $Component re-renders when any reactive values it uses are modified, 
 //  no more than once per frame.
-class App extends $Component<{
+class App extends Custom<{
   store: Store
 }> {
   render() {

@@ -48,6 +48,8 @@ export class DomMetaPool {
   }
 
   static add(o: DomMeta) {
+    return
+
     // if (filtered.has(o.n.toString())) {
     //   console.log('remove ', o)
     // }

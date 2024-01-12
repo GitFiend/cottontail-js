@@ -2,7 +2,7 @@ import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
 import {AnyComponent, ParentComponent, Props} from './types'
 import {Order} from '../render/order'
-import {equalValues, time, timeEnd} from '../render/util'
+import {equalProps, time, timeEnd} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
 import {init$} from '../model/init-observables'
@@ -34,7 +34,7 @@ export abstract class Custom<P extends Props = {}> {
   }
 
   updateWithNewProps(props: P): void {
-    if (!equalValues(this.props as any, props as any)) {
+    if (!equalProps(this.props as any, props as any)) {
       this.props = props
 
       this.update()

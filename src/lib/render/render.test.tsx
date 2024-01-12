@@ -50,4 +50,44 @@ describe('render', () => {
     expect(root.element.children.length).toEqual(1)
     expect(root.element.children[0].children.length).toEqual(2)
   })
+
+  xtest('render order assumptions', () => {
+    class A extends Custom {
+      render() {
+        console.log('make A meta')
+        const res = (
+          <div>
+            <B />
+          </div>
+        )
+        console.log('after A meta')
+
+        return res
+      }
+    }
+
+    class B extends Custom {
+      render(): Meta {
+        console.log('make B meta')
+        const res = <div></div>
+        console.log('after B meta')
+
+        return res
+      }
+    }
+
+    const root = mkRoot(<A />)
+
+    /*
+    Prints
+
+    make A meta
+    after A meta
+    make B meta
+    after B meta
+
+     */
+
+    expect(root.element.innerHTML).toEqual(`<div><div></div></div>`)
+  })
 })
