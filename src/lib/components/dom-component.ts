@@ -1,9 +1,6 @@
 import {DomMeta} from '../create-element'
 import {RootComponent} from './root-component'
-import {
-  ElementNamespace,
-  setAttributesFromProps,
-} from '../render/set-attributes'
+import {setAttributesFromProps} from '../render/set-attributes'
 import {Render} from '../render/render'
 import {
   AnyComponent,
@@ -18,7 +15,7 @@ export interface DomComponent {
   readonly kind: 'dom'
   name: string
   props: PropsInternal
-  element: HTMLElement
+  element: HTMLElement | SVGElement
   order: string
   key: string
   readonly inserted: ElementComponent[]
@@ -27,6 +24,7 @@ export interface DomComponent {
   directParent: ParentComponent
   domParent: DomComponent | RootComponent
   index: number
+  namespace: 'svg' | 'dom'
 }
 
 export const subComponentMapPool = new MapPool<string, AnyComponent>()
@@ -39,11 +37,16 @@ function makeDomComponent(
 ) {
   const {name, props} = meta
 
+  const namespace = name === 'svg' ? 'svg' : domParent.namespace
+
   const c: DomComponent = {
     kind: 'dom',
     name,
     props,
-    element: document.createElement(name),
+    element:
+      namespace === 'dom'
+        ? document.createElement(name)
+        : document.createElementNS('http://www.w3.org/2000/svg', name),
     order: Order.key(directParent.order, index),
     key: props?.key ?? directParent.key + index,
     inserted: [],
@@ -52,9 +55,10 @@ function makeDomComponent(
     directParent,
     domParent,
     index,
+    namespace,
   }
 
-  setAttributesFromProps(c.element, ElementNamespace.html, props)
+  setAttributesFromProps(c.element, c.namespace, props)
   c.subComponents = Render.subComponents(c, c, props.children, c.subComponents)
   Order.insert(domParent, c)
 
@@ -97,8 +101,9 @@ class DomComponentPool {
       c.directParent = directParent
       c.domParent = domParent
       c.index = index
+      c.namespace = name === 'svg' ? 'svg' : domParent.namespace
 
-      setAttributesFromProps(c.element, ElementNamespace.html, props)
+      setAttributesFromProps(c.element, c.namespace, props)
       c.subComponents = Render.subComponents(
         c,
         c,

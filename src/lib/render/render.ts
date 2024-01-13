@@ -1,5 +1,5 @@
 import {CustomMeta, DomMeta, FragmentMeta, Meta} from '../create-element'
-import {ElementNamespace, updateAttributes} from './set-attributes'
+import {updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {
   Dom,
@@ -125,12 +125,7 @@ export class Render {
         Order.move(domParent, prev)
       }
 
-      updateAttributes(
-        prev.element,
-        ElementNamespace.html,
-        meta.props,
-        prev.props,
-      )
+      updateAttributes(prev.element, prev.namespace, meta.props, prev.props)
       prev.name = meta.name
       prev.props = meta.props
 

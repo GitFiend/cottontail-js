@@ -10,13 +10,9 @@ export enum ElementNamespace {
 // This should only be called the first time or if previous props were null.
 export function setAttributesFromProps(
   element: Element,
-  namespace: ElementNamespace,
+  namespace: 'svg' | 'dom',
   props: Props,
 ): void {
-  if (namespace === ElementNamespace.svg) {
-    console.warn('Svg namespace not implemented.')
-  }
-
   for (const attr in props) {
     // @ts-ignore
     const value = props[attr]
@@ -30,7 +26,7 @@ export function setAttributesFromProps(
 
 export function updateAttributes(
   element: Element,
-  namespace: ElementNamespace,
+  namespace: 'svg' | 'dom',
   newProps: object,
   oldProps: object,
 ): void {
@@ -73,7 +69,7 @@ export function updateAttributes(
 
 function setAttribute(
   element: Element,
-  namespace: ElementNamespace,
+  namespace: 'svg' | 'dom',
   attr: string,
   value: any,
 ): void {
@@ -94,11 +90,7 @@ function setAttribute(
       ;(value as RefObject<unknown>).current = element
       break
     default:
-      if (
-        namespace === ElementNamespace.svg &&
-        setSvgAttribute(element, attr, value)
-      )
-        break
+      if (namespace === 'svg' && setSvgAttribute(element, attr, value)) break
 
       if (attr.startsWith('on')) {
         element.addEventListener(attr.slice(2).toLowerCase(), value)

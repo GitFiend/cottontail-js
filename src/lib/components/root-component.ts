@@ -10,5 +10,9 @@ export class RootComponent {
   // key is an element, value is the previous element
   siblings = new WeakMap<Element | Text, Element | Text | null>()
 
-  constructor(public element: HTMLElement) {}
+  namespace: 'svg' | 'dom'
+
+  constructor(public element: HTMLElement) {
+    this.namespace = element.nodeName === 'svg' ? 'svg' : 'dom'
+  }
 }

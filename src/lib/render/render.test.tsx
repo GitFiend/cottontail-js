@@ -51,6 +51,18 @@ describe('render', () => {
     expect(root.element.children[0].children.length).toEqual(2)
   })
 
+  test('svg elements', () => {
+    const root = mkRoot(
+      <svg>
+        <line x1={0} x2={10} y1={0} y2={10}></line>
+      </svg>,
+    )
+
+    expect(root.element.innerHTML).toEqual(
+      '<svg><line x1="0" x2="10" y1="0" y2="10"></line></svg>',
+    )
+  })
+
   xtest('render order assumptions', () => {
     class A extends Custom {
       render() {
