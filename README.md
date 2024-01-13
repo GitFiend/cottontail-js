@@ -1,6 +1,6 @@
 # Cottontail 🐇
 
-DOM UI library inspired by React and 2D games. This is intended for those who want to make native quality UI apps but have chosen html/css as the rendering layer for whatever reason.
+DOM UI library inspired by React and 2D games. This is intended for those who want to make highly interactive apps but have chosen html/css as the rendering layer for whatever reason.
 
 Features:
 - Predictable cross-component reactive state. No need for prop drilling or complicated context hacks.
@@ -31,7 +31,7 @@ class Store {
   }
 }
 
-// A $Component re-renders when any reactive values it uses are modified, 
+// A Custom component re-renders when any reactive values it uses are modified, 
 //  no more than once per frame.
 class App extends Custom<{
   store: Store
@@ -53,5 +53,81 @@ class App extends Custom<{
 }
 
 renderRoot(<App store={new Store()} />, document.getElementById('root'))
+```
 
+## Reactions
+
+### Reaction.auto
+
+```ts
+import {Reaction, init$} from "./index";
+
+class Store {
+  $num = 0
+
+  constructor() {
+    // Make any field starting with '$' and observable
+    init$(this)
+    
+    Reaction.auto(() => {
+      // Logs $num every time it changes
+      console.log(this.$num)
+
+      // 'this' is required for connecting the lifetime of this reaction to the store.
+      // When 'Store' is no longer used and garbage collected, the reaction will also stop and go away.
+      // The is more convenient than typical JS event handlers that need to be manually stopped.
+    }, this) 
+    
+  }
+
+  incrementNum() {
+    this.$num++
+  }
+}
+```
+
+### Reaction.value
+
+```ts
+import {Reaction, init$} from "./index";
+
+class Store {
+  $num = 0
+  
+  constructor() {
+    init$(this)
+    
+    Reaction.value(() => this.$num % 2 === 0, () => {
+      // Logs $num if it's an even whole number every time it changes.
+      console.log(this.$num)
+    }, this)
+  }
+
+  incrementNum() {
+    this.$num++
+  }
+}
+```
+
+### Reaction.object
+
+```ts
+import {Reaction, init$} from "./index";
+
+class Store {
+  $object = {a: 4, b: 'b'}
+  
+  constructor() {
+    init$(this)
+    
+    Reaction.object(() => this.$object, () => {
+      // Logs object only if any fields 1 level deep are changed.
+      console.log(this.$object)
+    }, this)
+  }
+
+  updateObject() {
+    this.$object = {a: 5, b: 'b'}
+  }
+}
 ```

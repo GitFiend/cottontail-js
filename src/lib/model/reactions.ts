@@ -5,22 +5,6 @@ export type Reaction = AutoRun<any> | ValueReactor<any> | ObjectReactor<any>
 
 type ForbidPromise<T> = T extends Promise<any> ? never : T
 
-class AutoRun<T> {
-  readonly kind = 'reaction' as const
-  readonly __ref = new WeakRef(this)
-
-  constructor(
-    public fn: () => ForbidPromise<T>,
-    public name?: string,
-  ) {}
-
-  run(): void {
-    GlobalStack.push(this.__ref)
-    this.fn()
-    GlobalStack.pop()
-  }
-}
-
 export namespace Reaction {
   export function auto<T>(
     fn: () => ForbidPromise<T>,
@@ -65,6 +49,22 @@ export namespace Reaction {
     owner[Symbol()] = reactor
 
     reactor.run()
+  }
+}
+
+class AutoRun<T> {
+  readonly kind = 'reaction' as const
+  readonly __ref = new WeakRef(this)
+
+  constructor(
+    public fn: () => ForbidPromise<T>,
+    public name?: string,
+  ) {}
+
+  run(): void {
+    GlobalStack.push(this.__ref)
+    this.fn()
+    GlobalStack.pop()
   }
 }
 
