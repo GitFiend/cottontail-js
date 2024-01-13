@@ -2,7 +2,7 @@ import {renderRoot} from '../lib/cottontail'
 import {Custom} from '../lib/components/custom-component'
 import {init$} from '../lib/model/init-observables'
 import {createElement} from '../lib/create-element'
-import {autorun, reaction} from '../lib/model/reactions'
+import {Reaction} from '../lib/model/reactions'
 import {Fragment} from '../lib/components/fragment'
 
 class Store {
@@ -11,11 +11,11 @@ class Store {
   constructor() {
     init$(this)
 
-    autorun(() => {
+    Reaction.auto(() => {
       console.log('num: ', this.$num)
     }, this)
 
-    reaction(
+    Reaction.value(
       () => this.$num,
       value => {
         console.log('new value: ', value)

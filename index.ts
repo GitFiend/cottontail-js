@@ -1,5 +1,6 @@
 /// <reference path="./globals.d.ts" />
 /// <reference path="./src/jsx-types/index.d.ts" />
+export {Reaction} from './src/lib/model/reactions'
 export {MapPool} from './src/lib/render/map-pool'
 export {c} from './src/lib/render/util'
 export {init$} from './src/lib/model/init-observables'

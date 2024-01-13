@@ -5,16 +5,6 @@ export type Reaction = AutoRun<any> | ValueReactor<any> | ObjectReactor<any>
 
 type ForbidPromise<T> = T extends Promise<any> ? never : T
 
-export function autorun<T>(fn: () => ForbidPromise<T>, owner: object) {
-  const autoRun = new AutoRun<T>(fn)
-
-  // We do this so that the autorun isn't garbage collected.
-  // @ts-ignore
-  owner[Symbol()] = autoRun
-
-  autoRun.run()
-}
-
 class AutoRun<T> {
   readonly kind = 'reaction' as const
   readonly __ref = new WeakRef(this)
@@ -76,20 +66,6 @@ export namespace Reaction {
 
     reactor.run()
   }
-}
-
-export function reaction<T>(
-  calc: () => ForbidPromise<T>,
-  result: (value: T) => void,
-  owner: object,
-) {
-  const reactor = new ValueReactor<T>(calc, result)
-
-  // We do this so the reaction isn't garbage collected.
-  // @ts-ignore
-  owner[Symbol()] = reactor
-
-  reactor.run()
 }
 
 class ObjectReactor<T extends Record<string, unknown>> {
