@@ -93,15 +93,20 @@ class DomComponentPool {
 
     if (c) {
       const {name, props} = meta
+
+      const namespace = name === 'svg' ? 'svg' : domParent.namespace
       c.name = name
       c.props = props
-      c.element = document.createElement(name)
+      c.element =
+        namespace === 'dom'
+          ? document.createElement(name)
+          : document.createElementNS('http://www.w3.org/2000/svg', name)
       c.key = props?.key ?? directParent.key + index
       c.order = Order.key(directParent.order, index)
       c.directParent = directParent
       c.domParent = domParent
       c.index = index
-      c.namespace = name === 'svg' ? 'svg' : domParent.namespace
+      c.namespace = namespace
 
       setAttributesFromProps(c.element, c.namespace, props)
       c.subComponents = Render.subComponents(
