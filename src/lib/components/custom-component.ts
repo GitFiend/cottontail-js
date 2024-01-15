@@ -6,7 +6,7 @@ import {equalProps, time, timeEnd} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
 import {init$} from '../model/init-observables'
-import {CustomMeta, FunctionMeta, Meta} from '../create-element'
+import {CustomMeta, Meta} from '../create-element'
 import {Remove} from '../render/remove'
 
 export abstract class Custom<P extends Props = {}> {
@@ -121,15 +121,15 @@ type CustomComponentConstructor = new (
   skipInit$: boolean,
 ) => Custom<any>
 
-const functionComponents = new Map<Function, CustomComponentConstructor>()
+const functionCompConstructors = new Map<Function, CustomComponentConstructor>()
 
 export function makeCustomComponent(
-  meta: CustomMeta | FunctionMeta,
+  meta: CustomMeta,
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,
   index: number,
 ) {
-  if (meta.kind === 'custom') {
+  if (Custom.isPrototypeOf(meta.name)) {
     const {name: Cons, props} = meta
 
     const c = new (Cons as CustomComponentConstructor)(
@@ -145,7 +145,7 @@ export function makeCustomComponent(
 
   const {name, props} = meta
 
-  const C = functionComponents.get(name)
+  const C = functionCompConstructors.get(name)
 
   if (C) {
     const c = new C(props, directParent, domParent, index, true)
@@ -159,7 +159,7 @@ export function makeCustomComponent(
       return name(this.props)
     }
   }
-  functionComponents.set(name, Cons)
+  functionCompConstructors.set(name, Cons)
 
   const c = new Cons(props, directParent, domParent, index, true)
   c.mount()

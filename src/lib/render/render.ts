@@ -1,10 +1,4 @@
-import {
-  CustomMeta,
-  DomMeta,
-  FragmentMeta,
-  FunctionMeta,
-  Meta,
-} from '../create-element'
+import {CustomMeta, DomMeta, FragmentMeta, Meta} from '../create-element'
 import {updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {
@@ -195,7 +189,7 @@ export class Render {
   }
 
   static custom(
-    meta: CustomMeta | FunctionMeta,
+    meta: CustomMeta,
     prev: AnyComponent | null,
     directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
