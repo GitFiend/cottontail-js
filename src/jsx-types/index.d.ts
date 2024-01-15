@@ -992,8 +992,8 @@ declare namespace React {
   > = T extends JSXElementConstructor<infer P>
     ? P
     : T extends keyof JSX.IntrinsicElements
-    ? JSX.IntrinsicElements[T]
-    : {}
+      ? JSX.IntrinsicElements[T]
+      : {}
   type ComponentPropsWithRef<T extends ElementType> = T extends new (
     props: infer P,
   ) => Component<any, any>
@@ -1008,8 +1008,8 @@ declare namespace React {
   >
     ? Method
     : ComponentPropsWithRef<T> extends RefAttributes<infer Method>
-    ? Method
-    : never
+      ? Method
+      : never
 
   // will show `Memo(${Component.displayName || Component.name})` in devtools by default,
   // but can be given its own specific name
@@ -1784,7 +1784,8 @@ declare namespace React {
     onTouchEndCapture?: TouchEventHandler<T> | undefined
     onTouchMove?: TouchEventHandler<T> | undefined
     onTouchMoveCapture?: TouchEventHandler<T> | undefined
-    onTouchStart?: TouchEventHandler<T> | undefined
+    // onTouchStart?: TouchEventHandler<T> | undefined
+    onTouchStart?: (e: NativeTouchEvent) => void
     onTouchStartCapture?: TouchEventHandler<T> | undefined
 
     // Pointer Events
@@ -3557,8 +3558,8 @@ declare namespace React {
     [K in keyof T]?: null extends T[K]
       ? Validator<T[K] | null | undefined>
       : undefined extends T[K]
-      ? Validator<T[K] | null | undefined>
-      : Validator<T[K]>
+        ? Validator<T[K] | null | undefined>
+        : Validator<T[K]>
   }
 
   interface ReactPropTypes {
@@ -3686,14 +3687,14 @@ type MergePropTypes<P, T> =
       IsExactlyAny<P> extends true
       ? T
       : // If declared props have indexed properties, ignore inferred props entirely as keyof gets widened
-      string extends keyof P
-      ? P
-      : // Prefer declared types which are not exactly any
-        Pick<P, NotExactlyAnyPropertyKeys<P>> &
-          // For props which are exactly any, use the type inferred from propTypes if present
-          Pick<T, Exclude<keyof T, NotExactlyAnyPropertyKeys<P>>> &
-          // Keep leftover props not specified in propTypes
-          Pick<P, Exclude<keyof P, keyof T>>
+        string extends keyof P
+        ? P
+        : // Prefer declared types which are not exactly any
+          Pick<P, NotExactlyAnyPropertyKeys<P>> &
+            // For props which are exactly any, use the type inferred from propTypes if present
+            Pick<T, Exclude<keyof T, NotExactlyAnyPropertyKeys<P>>> &
+            // Keep leftover props not specified in propTypes
+            Pick<P, Exclude<keyof P, keyof T>>
     : never
 
 type InexactPartial<T> = {[K in keyof T]?: T[K] | undefined}
@@ -3716,10 +3717,10 @@ type ReactManagedAttributes<C, P> = C extends {
 }
   ? Defaultize<MergePropTypes<P, PropTypes.InferProps<T>>, D>
   : C extends {propTypes: infer T}
-  ? MergePropTypes<P, PropTypes.InferProps<T>>
-  : C extends {defaultProps: infer D}
-  ? Defaultize<P, D>
-  : P
+    ? MergePropTypes<P, PropTypes.InferProps<T>>
+    : C extends {defaultProps: infer D}
+      ? Defaultize<P, D>
+      : P
 
 declare global {
   /**

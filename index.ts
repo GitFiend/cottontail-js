@@ -1,5 +1,5 @@
 /// <reference path="./globals.d.ts" />
-/// <reference path="./src/jsx-types/index.d.ts" />
+export type {CSSProperties} from './src/jsx-types/index'
 export {Reaction} from './src/lib/model/reactions'
 export {MapPool} from './src/lib/render/map-pool'
 export {c} from './src/lib/render/util'
