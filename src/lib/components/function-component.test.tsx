@@ -1,6 +1,8 @@
 import {createElement, Meta} from '../create-element'
 import {mkRoot} from '../render/util'
 import {Custom} from './custom-component'
+import {init$} from '../model/init-observables'
+import {GlobalStack} from '../model/global-stack'
 
 describe('function components', () => {
   xtest('detect component type', () => {
@@ -93,5 +95,33 @@ describe('function components', () => {
     const root = mkRoot(<Button onClick={(_: MouseEvent) => {}}>Hello</Button>)
 
     expect(root.element.innerHTML).toEqual('<button>Hello</button>')
+  })
+
+  test('Function component updates when observables update', () => {
+    class Store {
+      $num = 0
+
+      constructor() {
+        init$(this)
+      }
+
+      onClick = () => {
+        this.$num++
+      }
+    }
+
+    function Button({store}: {store: Store}) {
+      return <button onClick={store.onClick}>{store.$num}</button>
+    }
+
+    const store = new Store()
+    const root = mkRoot(<Button store={store} />)
+
+    expect(root.element.innerHTML).toEqual('<button>0</button>')
+
+    store.onClick()
+    GlobalStack.drawFrame()
+
+    expect(root.element.innerHTML).toEqual('<button>1</button>')
   })
 })

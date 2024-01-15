@@ -1,14 +1,10 @@
-import {FunctionMeta, Meta} from '../create-element'
+import {Meta} from '../create-element'
 import {AnyComponent, ParentComponent, Props} from './types'
 import {RootComponent} from './root-component'
 import {DomComponent} from './dom-component'
 import {Order} from '../render/order'
-import {time, timeEnd} from '../render/util'
-import {GlobalStack} from '../model/global-stack'
-import {Render} from '../render/render'
-import {Remove} from '../render/remove'
 
-export interface FunctionComponent {
+interface FunctionComponent {
   kind: 'function'
   renderFunction: (props: Props) => Meta
   props: Props
@@ -24,7 +20,8 @@ export interface FunctionComponent {
 
 const initialRef = new WeakRef<any>({})
 
-export function makeFunctionComponent(
+function makeFunctionComponent(
+  // @ts-ignore
   meta: FunctionMeta,
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,

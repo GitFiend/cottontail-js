@@ -62,6 +62,8 @@ export class GlobalStack {
   // Only used while rendering. We don't want to create a new array every time.
   private static readonly renderList: Custom[] = []
 
+  // Frames normally run later using requestAnimationFrame. Calling this will
+  // run the frame now. Useful for calling in tests.
   static drawFrame = () => {
     const {renderList, renderedList} = this
 
@@ -129,10 +131,6 @@ export class GlobalStack {
     }
     this.didUpdateStack.clear()
     timeEnd('🐇Mount/Update')
-
-    // console.log(Order.inserted, Order.removed, Order.inserted / Order.removed)
-    // logUses()
-    // DomMetaPool.finishFrame()
 
     this.queued = false
   }
