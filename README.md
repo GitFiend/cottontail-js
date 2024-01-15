@@ -3,14 +3,10 @@
 DOM UI library inspired by React and 2D games. This is intended for those who want to make highly interactive apps but have chosen html/css as the rendering layer for whatever reason.
 
 Features:
-- Predictable cross-component reactive state. No need for prop drilling or complicated context hacks.
+- Simple shareable reactive state. No need for prop drilling or complicated context tricks.
 - State management and rendering are designed as one, resulting in better performance.
 - Efficient re-rendering, supporting 120 fps. Cottontail only updates the components that need to be, and only once per frame
 - Just a few kilobytes of Javascript
-
-Non-features:
- - Server-side rendering
-
 
 ```tsx
 import {createElement, init$, Custom, renderRoot} from './index'
@@ -53,34 +49,6 @@ class App extends Custom<{
 }
 
 renderRoot(<App store={new Store()} />, document.getElementById('root'))
-```
-
-## Function Components
-
-```tsx
-import {createElement, init$, renderRoot} from './index'
-
-class Store {
-  $numClicks = 0
-
-  constructor() {
-    init$(this)
-  }
-
-  onClick = () => {
-    this.$numClicks++
-  }
-}
-
-function Button({store}: {store: Store}) {
-  return (
-    <button onClick={store.onClick}>
-      num clicks: {store.$numClicks}
-    </button>
-  )
-}
-
-renderRoot(<Button store={new Store()} />, document.getElementById('root'))
 ```
 
 ## Reactions
@@ -159,3 +127,33 @@ class Store {
   }
 }
 ```
+
+
+## Function Components
+
+```tsx
+import {createElement, init$, renderRoot} from './index'
+
+class Store {
+  $numClicks = -1
+
+  constructor() {
+    init$(this)
+  }
+
+  onClick = () => {
+    this.$numClicks++
+  }
+}
+
+function Button({store}: {store: Store}) {
+  return (
+    <button onClick={store.onClick}>
+      num clicks: {store.$numClicks}
+    </button>
+  )
+}
+
+renderRoot(<Button store={new Store()} />, document.getElementById('root'))
+```
+

@@ -1,4 +1,4 @@
-# Re-rendering
+# Re-rendering Details
 
 Cottontail will re-render a component only when it needs to, to display it's content correctly:
  - If the containing render function calls it with different props. Props are compared by individual prop value.
