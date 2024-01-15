@@ -1,4 +1,10 @@
-import {CustomMeta, DomMeta, FragmentMeta, Meta} from '../create-element'
+import {
+  CustomMeta,
+  DomMeta,
+  FragmentMeta,
+  FunctionMeta,
+  Meta,
+} from '../create-element'
 import {updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {
@@ -157,7 +163,6 @@ export class Render {
         domParent,
         index,
       )
-      // return new TextComponent(meta, directParent, domParent, index)
     }
 
     if (prev?.kind === 'text') {
@@ -190,7 +195,7 @@ export class Render {
   }
 
   static custom(
-    meta: CustomMeta,
+    meta: CustomMeta | FunctionMeta,
     prev: AnyComponent | null,
     directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
@@ -200,7 +205,7 @@ export class Render {
       return makeCustomComponent(meta, directParent, domParent, index)
     }
 
-    if (prev.kind === 'custom' && prev.meta.name === meta.name) {
+    if (prev.kind === 'custom' && prev.constructor === meta.name) {
       const prevOrder = prev.order
       const newOrder = Order.key(directParent.order, index)
 

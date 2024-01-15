@@ -13,11 +13,13 @@ export function equalValues(
   return true
 }
 
+// TODO: What about components that take some text as a child?
+//  Can we avoid making an array and also avoid re-rendering sometimes?
 export function equalProps(
   oldProps: Record<string, unknown>,
   props: Record<string, unknown>,
 ): boolean {
-  if (props['children']) {
+  if (props['children'] !== oldProps['children']) {
     return false
   }
 

@@ -6,7 +6,7 @@ import {equalProps, time, timeEnd} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
 import {init$} from '../model/init-observables'
-import {CustomMeta, Meta} from '../create-element'
+import {CustomMeta, FunctionMeta, Meta} from '../create-element'
 import {Remove} from '../render/remove'
 
 export abstract class Custom<P extends Props = {}> {
@@ -24,7 +24,6 @@ export abstract class Custom<P extends Props = {}> {
 
   constructor(
     public props: P,
-    public meta: CustomMeta,
     public directParent: ParentComponent,
     public domParent: DomComponent | RootComponent,
     public index: number,
@@ -47,7 +46,7 @@ export abstract class Custom<P extends Props = {}> {
     GlobalStack.didMountStack.add(this.__ref)
   }
 
-  runRender() {
+  private runRender() {
     if (this.__removed) return
 
     if (__DEV__) {
@@ -77,10 +76,6 @@ export abstract class Custom<P extends Props = {}> {
     }
     // TODO: Other cases? 0 and false?
 
-    if (!this.props.children) {
-      // reclaimMetaObjects(newMeta)
-    }
-
     if (__DEV__) {
       timeEnd(this.constructor.name)
     }
@@ -102,32 +97,55 @@ export abstract class Custom<P extends Props = {}> {
 
   // TODO: Is it worth making these nullable instead of having an empty
   //  implementation that needs to always be put in the queue?
-  componentDidMount(): void {}
+  componentDidMount(): void {
+    // console.log(`mount ${this.constructor.name}`)
+  }
 
-  componentDidUpdate(): void {}
+  componentDidUpdate(): void {
+    // console.log(`update ${this.constructor.name}`)
+  }
 
-  componentWillUnmount(): void {}
+  componentWillUnmount(): void {
+    // console.log(`will unmount ${this.constructor.name}`)
+  }
 }
 
 type CustomComponentConstructor = new (
   props: any,
-  meta: CustomMeta,
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,
   index: number,
 ) => Custom<any>
 
 export function makeCustomComponent(
-  meta: CustomMeta,
+  meta: CustomMeta | FunctionMeta,
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,
   index: number,
 ) {
-  const {name: Cons, props} = meta
+  if (meta.kind === 'custom') {
+    const {name: Cons, props} = meta
+
+    const c = new (Cons as CustomComponentConstructor)(
+      props,
+      directParent,
+      domParent,
+      index,
+    )
+    c.mount()
+    return c
+  }
+
+  const {name, props} = meta
+
+  const Cons = class extends Custom {
+    render(): Meta {
+      return name(this.props)
+    }
+  }
 
   const c = new (Cons as CustomComponentConstructor)(
     props,
-    meta,
     directParent,
     domParent,
     index,

@@ -1,6 +1,14 @@
 import {PropsInternal} from './components/types'
+import {Custom} from './components/custom-component'
 
-export type Meta = DomMeta | CustomMeta | FragmentMeta | number | string | null
+export type Meta =
+  | DomMeta
+  | CustomMeta
+  | FragmentMeta
+  | FunctionMeta
+  | number
+  | string
+  | null
 
 export interface DomMeta {
   readonly kind: 'dom'
@@ -10,6 +18,12 @@ export interface DomMeta {
 
 export interface CustomMeta {
   readonly kind: 'custom'
+  readonly name: Function
+  readonly props: PropsInternal
+}
+
+export interface FunctionMeta {
+  readonly kind: 'function'
   readonly name: Function
   readonly props: PropsInternal
 }
@@ -25,11 +39,11 @@ export function createElement(
   name: string | Function,
   props: ({key?: string} & Record<string, unknown>) | null,
   ...children: unknown[]
-): DomMeta | CustomMeta | FragmentMeta
+): DomMeta | CustomMeta | FragmentMeta | FunctionMeta
 export function createElement(
   name: string | Function,
   props: ({key?: string} & Record<string, unknown>) | null,
-): DomMeta | CustomMeta | FragmentMeta {
+): DomMeta | CustomMeta | FragmentMeta | FunctionMeta {
   const propsInternal: PropsInternal = props ?? {children: undefined}
 
   if (arguments.length > 2) {
@@ -54,10 +68,18 @@ export function createElement(
       props: propsInternal,
     }
   } else {
-    return {
-      kind: 'custom',
-      name,
-      props: propsInternal,
+    if (Custom.isPrototypeOf(name)) {
+      return {
+        kind: 'custom',
+        name,
+        props: propsInternal,
+      }
+    } else {
+      return {
+        kind: 'function',
+        name,
+        props: propsInternal,
+      }
     }
   }
 }
