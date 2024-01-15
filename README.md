@@ -13,7 +13,7 @@ Non-features:
 
 
 ```tsx
-import {createElement, init$, $Component, renderRoot} from './index'
+import {createElement, init$, Custom, renderRoot} from './index'
 
 class Store {
   // '$' as first the character creates a reactive value.
@@ -53,6 +53,34 @@ class App extends Custom<{
 }
 
 renderRoot(<App store={new Store()} />, document.getElementById('root'))
+```
+
+## Function Components
+
+```tsx
+import {createElement, init$, renderRoot} from './index'
+
+class Store {
+  $numClicks = 0
+
+  constructor() {
+    init$(this)
+  }
+
+  onClick = () => {
+    this.$numClicks++
+  }
+}
+
+function Button({store}: {store: Store}) {
+  return (
+    <button onClick={store.onClick}>
+      num clicks: {store.$numClicks}
+    </button>
+  )
+}
+
+renderRoot(<Button store={new Store()} />, document.getElementById('root'))
 ```
 
 ## Reactions
