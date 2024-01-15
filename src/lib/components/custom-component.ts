@@ -27,6 +27,7 @@ export abstract class Custom<P extends Props = {}> {
     public directParent: ParentComponent,
     public domParent: DomComponent | RootComponent,
     public index: number,
+    public skipInit$: boolean,
   ) {
     this.order = Order.key(directParent.order, index)
     this.key = this.props?.key ?? directParent.key + index
@@ -41,7 +42,9 @@ export abstract class Custom<P extends Props = {}> {
   }
 
   mount() {
-    init$(this)
+    if (!this.skipInit$) {
+      init$(this)
+    }
     this.runRender()
     GlobalStack.didMountStack.add(this.__ref)
   }
@@ -115,7 +118,10 @@ type CustomComponentConstructor = new (
   directParent: ParentComponent,
   domParent: DomComponent | RootComponent,
   index: number,
+  skipInit$: boolean,
 ) => Custom<any>
+
+const functionComponents = new Map<Function, CustomComponentConstructor>()
 
 export function makeCustomComponent(
   meta: CustomMeta | FunctionMeta,
@@ -131,6 +137,7 @@ export function makeCustomComponent(
       directParent,
       domParent,
       index,
+      false,
     )
     c.mount()
     return c
@@ -138,18 +145,23 @@ export function makeCustomComponent(
 
   const {name, props} = meta
 
+  const C = functionComponents.get(name)
+
+  if (C) {
+    const c = new C(props, directParent, domParent, index, true)
+    c.mount()
+    return c
+  }
+
+  // TODO: We may be able to pool these and reuse if we can make render overridable.
   const Cons = class extends Custom {
     render(): Meta {
       return name(this.props)
     }
   }
+  functionComponents.set(name, Cons)
 
-  const c = new (Cons as CustomComponentConstructor)(
-    props,
-    directParent,
-    domParent,
-    index,
-  )
+  const c = new Cons(props, directParent, domParent, index, true)
   c.mount()
   return c
 }
