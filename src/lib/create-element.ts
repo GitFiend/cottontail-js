@@ -1,4 +1,5 @@
 import {PropsInternal} from './components/types'
+import {Fragment} from './components/fragment'
 
 export type Meta = DomMeta | CustomMeta | FragmentMeta | number | string | null
 
@@ -48,7 +49,7 @@ export function createElement(
   if (typeof name === 'string') {
     return {kind: 'dom', name, props: propsInternal}
   }
-  if (name.name === 'Fragment') {
+  if (name === Fragment) {
     return {
       kind: 'fragment',
       name,
