@@ -1,6 +1,7 @@
 import {createElement} from '../lib/create-element'
 
-// Idea if classes get discontinued in JSX.
+// Some ideas if classes get discontinued in JSX.
+
 function Test(props: {name: string}) {
   const {self, $num, square} = model(() => ({
     $num: -1,
@@ -24,7 +25,26 @@ function Test(props: {name: string}) {
   )
 }
 
-// Idea if classes get discontinued in JSX.
+// We could use a closure to hold the component state.
+// This means we don't need to do memo stuff etc.
+// How do we handle changed props? We don't want to rerun the function.
+// Don't want to get into higher order components territory.
+function Test3(props: {name: string}) {
+  const {name} = props
+
+  const num = observable(34)
+
+  const onClick = () => {
+    num(num() + 1)
+  }
+  return () => <div onClick={onClick}>{name}</div>
+}
+
+// Mock observable. Ignore implementation.
+function observable<T>(value: T): any {
+  return value
+}
+
 function Test2(props: {name: string}) {
   const {self, $num, square} = model2(
     class {
