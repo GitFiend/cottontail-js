@@ -40,15 +40,10 @@ export class Order {
     return parentOrder + String.fromCharCode(index + 48)
   }
 
-  static inserted = 0
-  static removed = 0
-
   static insert(
     parent: RootComponent | DomComponent,
     child: ElementComponent,
   ): void {
-    this.inserted++
-
     const {inserted: insertedInParent} = parent
     const {order: newOrder, key: newKey} = child
 
@@ -60,7 +55,10 @@ export class Order {
 
       // If order is the same, we expect the keys to be different.
       // This is expected for a virtual list.
+
+      // Starting from the highest order, we work down to find a spot.
       if (newOrder >= current.order) {
+        // If the keys match, we are already done.
         if (newKey !== current.key) {
           if (next) {
             insertedInParent.splice(i + 1, 0, child)
@@ -96,8 +94,6 @@ export class Order {
     parent: RootComponent | DomComponent,
     child: ElementComponent,
   ): void {
-    this.removed++
-
     const {inserted, siblings} = parent
     const {key} = child
 
