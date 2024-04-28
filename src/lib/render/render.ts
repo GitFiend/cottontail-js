@@ -224,7 +224,7 @@ export class Render {
                 subComponent.update()
                 break
               case 'fragment':
-                throw new Error('Forgot to implement')
+              // throw new Error('Forgot to implement')
             }
           }
         }
