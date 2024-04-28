@@ -81,7 +81,8 @@ function setAttribute(
       element.setAttribute('class', value)
       break
     case 'value':
-      // What is this?
+      // @ts-ignore
+      element[attr] = value
       break
     case 'style':
       setStyles(element as HTMLElement, value)
