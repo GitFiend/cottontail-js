@@ -14,7 +14,9 @@ describe('fragment', () => {
     )
     const root = mkRoot(t)
 
-    expect(root.element.innerHTML).toEqual('<div>omg</div>')
+    expect(root.element.innerHTML).toEqual(
+      `<div style="display: contents;"><div>omg</div></div>`,
+    )
   })
 
   test('custom component child', () => {
@@ -39,7 +41,7 @@ describe('fragment', () => {
     )
 
     expect(root.element.innerHTML).toEqual(
-      '<div>a</div><div>b</div><div>c</div>',
+      '<div style="display: contents;"><div>a</div><div>b</div><div>c</div></div>',
     )
 
     root.rerender(
@@ -52,7 +54,7 @@ describe('fragment', () => {
     )
 
     expect(root.element.innerHTML).toEqual(
-      '<div>a</div><div>b</div><div>c</div><div>d</div>',
+      '<div style="display: contents;"><div>a</div><div>b</div><div>c</div><div>d</div></div>',
     )
 
     root.rerender(
@@ -65,7 +67,7 @@ describe('fragment', () => {
     )
 
     expect(root.element.innerHTML).toEqual(
-      '<div>d</div><div>a</div><div>b</div><div>c</div>',
+      '<div style="display: contents;"><div>d</div><div>a</div><div>b</div><div>c</div></div>',
     )
   })
 
@@ -123,12 +125,14 @@ describe('fragment', () => {
     const root = mkRoot(<A store={store} />)
 
     expect(root.element.innerHTML).toEqual(
-      '<div><div>a</div><div>b</div></div>',
+      '<div><div style="display: contents;"><div>a</div><div>b</div></div></div>',
     )
 
     store.$haveStuff = false
     GlobalStack.drawFrame()
 
-    expect(root.element.innerHTML).toEqual('<div></div>')
+    expect(root.element.innerHTML).toEqual(
+      '<div><div style="display: contents;"></div></div>',
+    )
   })
 })

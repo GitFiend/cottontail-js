@@ -28,13 +28,17 @@ describe('DomComponent', () => {
     const root = mkRoot(<A first={0} />)
 
     expect(root.element.innerHTML).toEqual(
-      '<div><span>a</span><span>b</span></div>'.repeat(rep),
+      '<div style="display: contents;">' +
+        '<div><span>a</span><span>b</span></div>'.repeat(rep) +
+        '</div>',
     )
 
     root.rerender(<A first={1} />)
 
     expect(root.element.innerHTML).toEqual(
-      '<div><span>a</span><span>b</span></div>'.repeat(rep),
+      '<div style="display: contents;">' +
+        '<div><span>a</span><span>b</span></div>'.repeat(rep) +
+        '</div>',
     )
   })
 })

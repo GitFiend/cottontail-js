@@ -17,12 +17,8 @@ export interface PropsInternal extends Record<string, unknown> {
   children?: Meta[]
 }
 
-export type AnyComponent = DomComponent | Custom<any> | Fragment | TextComponent
+export type AnyComponent = DomComponent | Custom<any> | TextComponent
 
-export type ParentComponent =
-  | RootComponent
-  | DomComponent
-  | Custom<any>
-  | Fragment
+export type ParentComponent = RootComponent | DomComponent | Custom<any>
 
 export type ElementComponent = DomComponent | TextComponent

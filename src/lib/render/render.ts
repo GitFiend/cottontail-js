@@ -1,4 +1,4 @@
-import {CustomMeta, DomMeta, FragmentMeta, Meta} from '../create-element'
+import {CustomMeta, DomMeta, Meta} from '../create-element'
 import {updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {
@@ -36,69 +36,69 @@ export class Render {
     if (meta.kind === 'dom') {
       return Render.dom(meta, prev, parent, domParent, index)
     }
-    if (meta.kind === 'fragment') {
-      return Render.fragment(meta, prev, parent, domParent, index)
-    }
+    // if (meta.kind === 'fragment') {
+    //   return Render.fragment(meta, prev, parent, domParent, index)
+    // }
     return Render.custom(meta, prev, parent, domParent, index)
   }
 
-  static fragment(
-    meta: FragmentMeta,
-    prev: AnyComponent | null,
-    directParent: ParentComponent,
-    domParent: DomComponent | RootComponent,
-    index: number,
-  ): Fragment {
-    if (prev === null) {
-      return new Fragment(meta, directParent, domParent, index)
-    }
-
-    if (prev.kind === 'fragment') {
-      const prevOrder = prev.order
-      const newOrder = Order.key(directParent.order, index)
-
-      if (prevOrder !== newOrder) {
-        prev.index = index
-        prev.order = newOrder
-
-        const {subComponents} = prev
-
-        for (const c of subComponents.values()) {
-          const no = Order.key(prev.order, c.index)
-
-          if (c.order !== no) {
-            c.order = no
-
-            switch (c.kind) {
-              case 'dom':
-              case 'text':
-                Order.move(domParent, c)
-                break
-              case 'custom':
-                c.update()
-                break
-              case 'fragment':
-                // console.error('Not handled!')
-                break
-            }
-          }
-        }
-      }
-
-      prev.meta.props.children = meta.props.children
-
-      prev.subComponents = Render.subComponents(
-        prev,
-        domParent,
-        meta.props.children,
-        prev.subComponents,
-      )
-
-      return prev
-    }
-    Remove.component(prev)
-    return new Fragment(meta, directParent, domParent, index)
-  }
+  // static fragment(
+  //   meta: FragmentMeta,
+  //   prev: AnyComponent | null,
+  //   directParent: ParentComponent,
+  //   domParent: DomComponent | RootComponent,
+  //   index: number,
+  // ): Fragment {
+  //   if (prev === null) {
+  //     return new Fragment(meta, directParent, domParent, index)
+  //   }
+  //
+  //   if (prev.kind === 'fragment') {
+  //     const prevOrder = prev.order
+  //     const newOrder = Order.key(directParent.order, index)
+  //
+  //     if (prevOrder !== newOrder) {
+  //       prev.index = index
+  //       prev.order = newOrder
+  //
+  //       const {subComponents} = prev
+  //
+  //       for (const c of subComponents.values()) {
+  //         const no = Order.key(prev.order, c.index)
+  //
+  //         if (c.order !== no) {
+  //           c.order = no
+  //
+  //           switch (c.kind) {
+  //             case 'dom':
+  //             case 'text':
+  //               Order.move(domParent, c)
+  //               break
+  //             case 'custom':
+  //               c.update()
+  //               break
+  //             case 'fragment':
+  //               // console.error('Not handled!')
+  //               break
+  //           }
+  //         }
+  //       }
+  //     }
+  //
+  //     prev.meta.props.children = meta.props.children
+  //
+  //     prev.subComponents = Render.subComponents(
+  //       prev,
+  //       domParent,
+  //       meta.props.children,
+  //       prev.subComponents,
+  //     )
+  //
+  //     return prev
+  //   }
+  //   Remove.component(prev)
+  //   return new Fragment(meta, directParent, domParent, index)
+  // }
 
   static dom(
     meta: DomMeta,
@@ -223,7 +223,7 @@ export class Render {
               case 'custom':
                 subComponent.update()
                 break
-              case 'fragment':
+              // case 'fragment':
               // throw new Error('Forgot to implement')
             }
           }

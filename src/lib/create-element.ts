@@ -1,7 +1,8 @@
 import {PropsInternal} from './components/types'
 import {Fragment} from './components/fragment'
+import {CSSProperties} from '../jsx-types'
 
-export type Meta = DomMeta | CustomMeta | FragmentMeta | number | string | null
+export type Meta = DomMeta | CustomMeta | number | string | null
 
 export interface DomMeta {
   readonly kind: 'dom'
@@ -15,22 +16,23 @@ export interface CustomMeta {
   readonly props: PropsInternal
 }
 
-export interface FragmentMeta {
-  readonly kind: 'fragment'
-  readonly name: Function
-  readonly props: PropsInternal
-}
+// export interface FragmentMeta {
+//   readonly kind: 'fragment'
+//   readonly name: Function
+//   readonly props: PropsInternal
+// }
+const fragmentStyle: CSSProperties = {display: 'contents'}
 
 // Could we look up the current tree instead of constructing again?
 export function createElement(
   name: string | Function,
   props: ({key?: string} & Record<string, unknown>) | null,
   ...children: unknown[]
-): DomMeta | CustomMeta | FragmentMeta
+): DomMeta | CustomMeta
 export function createElement(
   name: string | Function,
   props: ({key?: string} & Record<string, unknown>) | null,
-): DomMeta | CustomMeta | FragmentMeta {
+): DomMeta | CustomMeta {
   const propsInternal: PropsInternal = props ?? {children: undefined}
 
   if (arguments.length > 2) {
@@ -50,12 +52,16 @@ export function createElement(
     return {kind: 'dom', name, props: propsInternal}
   }
   if (name === Fragment) {
-    return {
-      kind: 'fragment',
-      name,
-      props: propsInternal,
-    }
+    propsInternal.style = fragmentStyle
+    return {kind: 'dom', name: 'div', props: propsInternal}
   }
+  // if (name === Fragment) {
+  //   return {
+  //     kind: 'fragment',
+  //     name,
+  //     props: propsInternal,
+  //   }
+  // }
   return {
     kind: 'custom',
     name,

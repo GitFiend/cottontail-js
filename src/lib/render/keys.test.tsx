@@ -125,5 +125,5 @@ const result = (index: number, numDivs: number): string => {
   for (let i = 0; i < numDivs; i++) {
     r += `<div>${index + i}</div>`
   }
-  return r
+  return `<div style="display: contents;">${r}</div>`
 }
