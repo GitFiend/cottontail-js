@@ -11,7 +11,6 @@ import {TextComponentPool} from '../components/text-component'
 import {Remove} from './remove'
 import {Order} from './order'
 import {Custom, makeCustomComponent} from '../components/custom-component'
-import {Fragment} from '../components/fragment'
 
 export class Render {
   static component(

@@ -2,11 +2,6 @@ import {RefObject} from '../components/ref'
 import {Props} from '../components/types'
 import {setStyles, updateStyles} from './set-styles'
 
-export enum ElementNamespace {
-  html,
-  svg,
-}
-
 // This should only be called the first time or if previous props were null.
 export function setAttributesFromProps(
   element: Element,

@@ -50,8 +50,10 @@ function isPixValue(styleName: string): boolean {
   switch (styleName) {
     case 'width':
     case 'minWidth':
+    case 'maxWidth':
     case 'height':
     case 'minHeight':
+    case 'maxHeight':
     case 'top':
     case 'left':
     case 'right':
