@@ -2,7 +2,6 @@ import {DomComponent} from './dom-component'
 import {RootComponent} from './root-component'
 import {Custom} from './custom-component'
 import {TextComponent} from './text-component'
-import {Fragment} from './fragment'
 import {Meta} from '../create-element'
 
 // We extend Object instead of Record as the user provides a non-index-able type
