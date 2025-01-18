@@ -18,14 +18,13 @@ export interface CustomMeta {
   readonly props: PropsInternal
 }
 
-// export interface FragmentMeta {
-//   readonly kind: 'fragment'
-//   readonly name: Function
-//   readonly props: PropsInternal
-// }
 const fragmentStyle: CSSProperties = {display: 'contents'}
 
-// Could we look up the current tree instead of constructing again?
+/**
+ * createElement transforms JSX elements into DomMeta or CustomMeta.
+ * It is run only on built-in (intrinsic?) components or custom.
+ * Not on say strings, numbers, null or undefined.
+ */
 export function createElement(
   name: string | Function,
   props: ({key?: string} & Record<string, unknown>) | null,
@@ -57,13 +56,6 @@ export function createElement(
     propsInternal.style = fragmentStyle
     return {kind: 'dom', name: 'div', props: propsInternal}
   }
-  // if (name === Fragment) {
-  //   return {
-  //     kind: 'fragment',
-  //     name,
-  //     props: propsInternal,
-  //   }
-  // }
   return {
     kind: 'custom',
     name,
