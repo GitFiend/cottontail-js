@@ -1,5 +1,5 @@
 import {RootComponent} from './components/root-component'
-import {Meta} from './create-element'
+import {Meta, MetaInternal} from './create-element'
 import {Render} from './render/render'
 import {AnyComponent} from './components/types'
 import {GlobalStack} from './model/global-stack'
@@ -8,10 +8,10 @@ import {GlobalStack} from './model/global-stack'
 export class Cottontail {
   readonly root: RootComponent
   private prev: AnyComponent | null = null
-  private meta: Meta
+  private meta: MetaInternal
   element: HTMLElement
 
-  constructor(meta: Meta, element: HTMLElement | null) {
+  constructor(meta: MetaInternal, element: HTMLElement | null) {
     if (element === null) {
       throw new Error('Cottontail render: Root element is null')
     }
@@ -31,7 +31,7 @@ export class Cottontail {
   }
 
   // Only used for tests. Move this?
-  rerender(meta: Meta) {
+  rerender(meta: MetaInternal) {
     if (typeof meta === 'number') {
       this.meta = meta.toString()
     } else if (meta === undefined) {
@@ -44,7 +44,7 @@ export class Cottontail {
   }
 }
 
-export function renderRoot(meta: Meta, element: HTMLElement | null) {
+export function renderRoot(meta: MetaInternal, element: HTMLElement | null) {
   if (element === null) {
     throw new Error('Cottontail render: Root element is null')
   }

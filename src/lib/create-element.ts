@@ -2,7 +2,9 @@ import {PropsInternal} from './components/types'
 import {Fragment} from './components/fragment'
 import {CSSProperties} from '../jsx-types'
 
-export type Meta = DomMeta | CustomMeta | number | string | null
+// Fragment gets converted into DomMeta in the createElement function.
+export type Meta = DomMeta | CustomMeta | number | string | Fragment | null
+export type MetaInternal = DomMeta | CustomMeta | number | string | null
 
 export interface DomMeta {
   readonly kind: 'dom'

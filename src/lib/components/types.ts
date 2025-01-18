@@ -2,7 +2,7 @@ import {DomComponent} from './dom-component'
 import {RootComponent} from './root-component'
 import {Custom} from './custom-component'
 import {TextComponent} from './text-component'
-import {Meta} from '../create-element'
+import {Meta, MetaInternal} from '../create-element'
 
 // We extend Object instead of Record as the user provides a non-index-able type
 export interface Props extends Object {
@@ -13,7 +13,7 @@ export interface Props extends Object {
 
 export interface PropsInternal extends Record<string, unknown> {
   key?: string
-  children?: Meta[]
+  children?: MetaInternal[]
 }
 
 export type AnyComponent = DomComponent | Custom<any> | TextComponent

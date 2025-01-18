@@ -1,4 +1,4 @@
-import {CustomMeta, DomMeta, Meta} from '../create-element'
+import {CustomMeta, DomMeta, Meta, MetaInternal} from '../create-element'
 import {updateAttributes} from './set-attributes'
 import {RootComponent} from '../components/root-component'
 import {
@@ -11,10 +11,11 @@ import {TextComponentPool} from '../components/text-component'
 import {Remove} from './remove'
 import {Order} from './order'
 import {Custom, makeCustomComponent} from '../components/custom-component'
+import {Fragment} from '../components/fragment'
 
 export class Render {
   static component(
-    meta: Meta,
+    meta: MetaInternal,
     prev: AnyComponent | null,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
@@ -240,7 +241,7 @@ export class Render {
   static subComponents(
     directParent: ParentComponent,
     domParent: DomComponent | RootComponent,
-    children: Meta[] | undefined,
+    children: MetaInternal[] | undefined,
     prevComponents: Map<string, AnyComponent>,
   ) {
     // if (__DEV__) {
@@ -282,7 +283,7 @@ export class Render {
   }
 
   private static subComponent(
-    meta: Exclude<Meta, null>,
+    meta: Exclude<MetaInternal, null>,
     parent: ParentComponent,
     domParent: DomComponent | RootComponent,
     prevChildren: Map<string, AnyComponent>,

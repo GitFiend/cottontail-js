@@ -6,8 +6,9 @@ import {equalProps, time, timeEnd} from '../render/util'
 import {Render} from '../render/render'
 import {GlobalStack} from '../model/global-stack'
 import {init$} from '../model/init-observables'
-import {CustomMeta, Meta} from '../create-element'
+import {CustomMeta, Meta, MetaInternal} from '../create-element'
 import {Remove} from '../render/remove'
+import {Fragment} from './fragment'
 
 export abstract class Custom<P extends Props = {}> {
   readonly kind = 'custom' as const
@@ -66,8 +67,12 @@ export abstract class Custom<P extends Props = {}> {
     GlobalStack.pop()
 
     if (newMeta !== null) {
+      if (__DEV__ && newMeta === Fragment) {
+        throw "Shouldn't return a fragment from render!"
+      }
+
       this.subComponent = Render.component(
-        newMeta,
+        newMeta as MetaInternal,
         this.subComponent,
         this,
         this.domParent,

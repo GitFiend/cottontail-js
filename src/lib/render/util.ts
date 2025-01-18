@@ -1,4 +1,4 @@
-import {Meta} from '../create-element'
+import {Meta, MetaInternal} from '../create-element'
 import {Cottontail} from '../cottontail'
 
 // Assumes keys are the same in both objects
@@ -45,23 +45,23 @@ export function changedValues(
   return true
 }
 
-function checkChildrenKeys(children: Meta[]) {
-  let numKeys = 0
-  const set = new Set<string>()
-
-  for (const child of children) {
-    if (child != null && typeof child === 'object') {
-      if (typeof child.props?.key === 'string') {
-        numKeys++
-        set.add(child.props.key)
-      }
-    }
-  }
-
-  if (numKeys !== set.size) {
-    console.error(`Subtrees contain duplicate keys: `, children)
-  }
-}
+// function checkChildrenKeys(children: Meta[]) {
+//   let numKeys = 0
+//   const set = new Set<string>()
+//
+//   for (const child of children) {
+//     if (child != null && typeof child === 'object') {
+//       if (typeof child.props?.key === 'string') {
+//         numKeys++
+//         set.add(child.props.key)
+//       }
+//     }
+//   }
+//
+//   if (numKeys !== set.size) {
+//     console.error(`Subtrees contain duplicate keys: `, children)
+//   }
+// }
 
 export function c(names: TemplateStringsArray, ...flags: boolean[]): string {
   if (names.length === 1) return names[0]
@@ -73,7 +73,7 @@ export function c(names: TemplateStringsArray, ...flags: boolean[]): string {
   return classes.trim()
 }
 
-export function mkRoot(meta: Meta) {
+export function mkRoot(meta: MetaInternal) {
   return new Cottontail(meta, document.createElement('div'))
 }
 
